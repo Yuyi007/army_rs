@@ -174,7 +174,7 @@ end
 
 function m.makeMainSceneTree(view)
   local assets = {
-    -- { scene = 'scenes/game/hero_scene'},
+    { scene = 'scenes/test/test'},
     -- { ui = 'prefab/ui/room/main_room_ui'},
     -- { ui = 'prefab/ui/room/add_room_ui'},
     -- { ui = 'prefab/ui/room/list_con_slot'},

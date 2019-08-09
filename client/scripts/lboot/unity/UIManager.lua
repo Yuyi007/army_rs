@@ -150,13 +150,13 @@ function m:goto(view)
   else
     local specialLoading = view.options and view.options.specialLoading
     local options = {tree = loadTree, nextView = view}
-    if view.options and specialLoading == 'combat' then
-      self.loading = RoomLoadingView.new(options)
-    elseif view.options and specialLoading == 'heroSelect' then
-      self.loading = HeroLoadingView.new(options)
-    else
+    -- if view.options and specialLoading == 'combat' then
+    --   self.loading = RoomLoadingView.new(options)
+    -- elseif view.options and specialLoading == 'heroSelect' then
+    --   self.loading = HeroLoadingView.new(options)
+    -- else
       self.loading = LoadingView.new(options)
-    end
+    -- end
     self.loading:__goto()
   end
 

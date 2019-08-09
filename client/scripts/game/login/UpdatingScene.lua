@@ -88,9 +88,9 @@ function m:init()
     UnityEngine.GL.Clear(true, true, Color.black)
   end
 
-  if mp.setRetryFailOp then
-    mp:setRetryFailOp("retry")
-  end
+  -- if mp.setRetryFailOp then
+  --   mp:setRetryFailOp("retry")
+  -- end
 
   if game.platform == 'ios' or game.platform == 'android' then
     UpdateManager.setDownloader(NativeBatchDownloader)
@@ -110,11 +110,11 @@ function m:init()
       -- self:updateTips()
     end, 4)
 
-    if game.mode == 'development' then
-      self.node:onClick(function()
-        self:enterDebug()
-      end)   
-    end
+    -- if game.mode == 'development' then
+    --   self.node:onClick(function()
+    --     self:enterDebug()
+    --   end)   
+    -- end
   end)
 end
 
@@ -130,9 +130,9 @@ function m:exit()
   if self.um then self.um:stop() end
   self:clearRestartHandler()
 
-  if mp.setRetryFailOp then
-    mp:setRetryFailOp(nil)
-  end
+  -- if mp.setRetryFailOp then
+  --   mp:setRetryFailOp(nil)
+  -- end
 end
 
 function m:clearRestartHandler()
@@ -173,68 +173,69 @@ end
 
 function m:doInit()
   self:initGame()
+  ui:goto(MainSceneView.new())
 
-  local doUpdate = function ()
-    log('UpdatingScene: doUpdate')
+  -- local doUpdate = function ()
+  --   log('UpdatingScene: doUpdate')
 
-    local sdkFuncs = require 'game/sdk'
+  --   local sdkFuncs = require 'game/sdk'
 
-    sdkFuncs.checkUpdate(function ()
-      self:checkInAppUpdate()
-    end)
-  end
+  --   sdkFuncs.checkUpdate(function ()
+      -- self:checkInAppUpdate()
+  --   end)
+  -- end
 
-  local onReconnect = function ()
-    local text = {
-      loc('str_connect_fail')..'.',
-      loc('str_connect_fail')..'..',
-      loc('str_connect_fail')..'...',
-      loc('str_connect_fail')..'....',
-      loc('str_connect_fail')..'.....',
-    }
-    if self.loading_all_txtLoading then
-      self.loading_all_txtLoading:setString (text[self.retryNum % 5 + 1])
-    end
-    self.retryNum = self.retryNum + 1
-    log('UpdatingScene: onReconnect retryNum=%d', self.retryNum)
+  -- local onReconnect = function ()
+  --   local text = {
+  --     loc('str_connect_fail')..'.',
+  --     loc('str_connect_fail')..'..',
+  --     loc('str_connect_fail')..'...',
+  --     loc('str_connect_fail')..'....',
+  --     loc('str_connect_fail')..'.....',
+  --   }
+  --   if self.loading_all_txtLoading then
+  --     self.loading_all_txtLoading:setString (text[self.retryNum % 5 + 1])
+  --   end
+  --   self.retryNum = self.retryNum + 1
+  --   log('UpdatingScene: onReconnect retryNum=%d', self.retryNum)
 
-    ------------------------------------------
-    -- When there is a connection failure:
-    ------------------------------------------
+  --   ------------------------------------------
+  --   -- When there is a connection failure:
+  --   ------------------------------------------
 
-    -- 1. try resolve host to ip
-    if mp:tryResolveAndReplaceHost() then
-      log("UpdatingScene: set server ip to %s", tostring(mp.host))
-      game.server.ip = mp.host
-    end
+  --   -- 1. try resolve host to ip
+  --   if mp:tryResolveAndReplaceHost() then
+  --     log("UpdatingScene: set server ip to %s", tostring(mp.host))
+  --     game.server.ip = mp.host
+  --   end
 
-    -- 2. try swap port and optional port
-    -- local port = game.server.port2
-    -- game.server.port2 = game.server.port
-    -- game.server.port = port
-    -- logd("set server port to %s", tostring(port))
-  end
+  --   -- 2. try swap port and optional port
+  --   -- local port = game.server.port2
+  --   -- game.server.port2 = game.server.port
+  --   -- game.server.port = port
+  --   -- logd("set server port to %s", tostring(port))
+  -- end
 
-  local onConnected = function ()
-    log('UpdatingScene: onConnected retryNum=%s', tostring(self.retryNum))
+  -- local onConnected = function ()
+  --   log('UpdatingScene: onConnected retryNum=%s', tostring(self.retryNum))
 
-    m.signalReconnect():remove(onReconnect)
-    mp.options.showReconnectMask = true
+  --   m.signalReconnect():remove(onReconnect)
+  --   mp.options.showReconnectMask = true
 
-    self:update()
+  --   self:update()
 
-    if game.mode == 'development' then
-      self:performWithDelay(0, doUpdate, false)
-    else
-      doUpdate()
-    end
-  end
-  if mp:isConnected() then
-    onConnected()
-  else
-    m.signalReconnect():add(onReconnect)
-    m.signalConnected():addOnce(onConnected)
-  end
+  --   if game.mode == 'development' then
+  --     self:performWithDelay(0, doUpdate, false)
+  --   else
+  --     doUpdate()
+  --   end
+  -- end
+  -- if mp:isConnected() then
+  --   onConnected()
+  -- else
+  --   m.signalReconnect():add(onReconnect)
+  --   m.signalConnected():addOnce(onConnected)
+  -- end
 end
 
 function m:initGame()
@@ -300,7 +301,9 @@ function m:checkInAppUpdate()
   end
   QualityUtil.applyQualitySettings(settings)
   QualityUtil.saveQualitySettings(settings)
-  sm:playMusic('ui_common/sign_in')
+
+  -- 
+  -- sm:playMusic('ui_common/sign_in')
   local onError = function(info, msg)
     logd('UpdatingScene: onError %s', msg)
 
@@ -339,169 +342,171 @@ function m:checkInAppUpdate()
     log('UpdatingScene: clientVersion=' .. tostring(game.clientVersion))
 
     -- do rpc update again, enter game
-    md:rpcUpdate(function (msg)
-      local devMode = self.options.devMode
-      log('UpdatingScene: devMode=%s', tostring(devMode))
+      logd(">>>enter999")
+    ui:goto(MainSceneView.new())
+    -- md:rpcUpdate(function (msg)
+    --   local devMode = self.options.devMode
+    --   log('UpdatingScene: devMode=%s', tostring(devMode))
 
-      if devMode == 'none' then
-        game.devMode = nil
-      elseif devMode then
-        game.devMode = devMode
-      end
+    --   if devMode == 'none' then
+    --     game.devMode = nil
+    --   elseif devMode then
+    --     game.devMode = devMode
+    --   end
 
-      local restart = require 'game/restart'
+    --   local restart = require 'game/restart'
 
-      self:clearRestartHandler()
-      local delay = 0
-      -- use a longer delay for clicking to enter debug server view
-      if game.mode == 'development' then delay = 1 end
+    --   self:clearRestartHandler()
+    --   local delay = 0
+    --   -- use a longer delay for clicking to enter debug server view
+    --   if game.mode == 'development' then delay = 1 end
 
-      self.restartHandler = scheduler.performWithDelay(delay, function()
-        -- should restart before preload
-        -- otherwise all the manager instances used in LoadingManager (gp, ui, sm etc) would be old
-        restart({ toTitle = false, initGame = true, toLogin = false}, function()
-          local preload = require 'game/preload'
-          preload(self, nil, function()
-              if game.mode == 'development' then
-                ui:goto(LoginViewTest.new())
-              else
-                ui:goto(LoginView.new())
-              end
-            end)
-        end)
-      end)
-    end)
+    --   self.restartHandler = scheduler.performWithDelay(delay, function()
+    --     -- should restart before preload
+    --     -- otherwise all the manager instances used in LoadingManager (gp, ui, sm etc) would be old
+    --     restart({ toTitle = false, initGame = true, toLogin = false}, function()
+    --       local preload = require 'game/preload'
+    --       preload(self, nil, function()
+    --           if game.mode == 'development' then
+    --             ui:goto(MainSceneView.new())
+    --           else
+    --             ui:goto(LoginView.new())
+    --           end
+    --         end)
+    --     end)
+    --   end)
+    -- end)
   end
 
-  local unscheduleRetry = function ()
-    if retryHandle then
-      self:unschedule(retryHandle)
-      retryHandle = nil
-    end
-  end
+  -- local unscheduleRetry = function ()
+  --   if retryHandle then
+  --     self:unschedule(retryHandle)
+  --     retryHandle = nil
+  --   end
+  -- end
 
-  local onRpcError = function ()
-    log('UpdatingScene: onRpcError')
+  -- local onRpcError = function ()
+  --   log('UpdatingScene: onRpcError')
 
-    if self.loading_all_txtLoading then
-      self.loading_all_txtLoading:setString (loc('str_error_version'))
-    end
-    unscheduleRetry()
-    retryHandle = self:performWithDelay(5.0, function () self:checkInAppUpdate() end, false)
-  end
+  --   if self.loading_all_txtLoading then
+  --     self.loading_all_txtLoading:setString (loc('str_error_version'))
+  --   end
+  --   unscheduleRetry()
+  --   retryHandle = self:performWithDelay(5.0, function () self:checkInAppUpdate() end, false)
+  -- end
 
-  m.signalCancelled():clear()
-  m.signalCancelled():addOnce(onRpcError)
+  -- m.signalCancelled():clear()
+  -- m.signalCancelled():addOnce(onRpcError)
 
-  local sent = md:rpcUpdate(function (msg)
-    m.signalCancelled():clear()
-    unscheduleRetry()
-    if msg.success == false then
-      -- 出错，重新请求
-      onRpcError()
-    elseif msg.pkg_url and msg.pkg_version and string.len(msg.pkg_url) > 0 and
-      string.len(msg.pkg_version) > 0 then
-      -- 强制更新
-      local doForceUpdate = function ()
-        OsCommon.showMessageBox{
-          title = loc('str_new_version'),
-          message = loc('str_update_hint'),
-          button = loc('str_lua_7'),
-          onComplete = function ()
-            if game.platform == 'ios' then
-              CCNative:openURL(msg.pkg_url)
-              doForceUpdate()
-            elseif game.platform == 'android' then
-              local filename = string.sub(msg.pkg_url, string.rfind(msg.pkg_url, '/') + 1)
-              downloadFile{
-                url = msg.pkg_url,
-                filename = filename,
-                title = loc('str_lua_36'),
-                desc = loc('str_lua_140'),
-                onRequestSuccess = function ()
-                  logd('onRequestSuccess: exiting')
-                  local exit = require 'scripts/exit'
-                  exit()
-                end,
-              }
-            end
-          end,
-          cancelable = false,
-        }
-      end
-      doForceUpdate()
-      game.appNeedForceUpdate = true
-    elseif msg.url and msg.client_version and string.len(msg.url) > 0 and
-      string.len(msg.client_version) > 0 then
-      -- 游戏内更新
-      local skipUpdate = self.options.skipUpdate
-      if game.editor() then
-        skipUpdate = true
-      end
+  -- local sent = md:rpcUpdate(function (msg)
+  --   m.signalCancelled():clear()
+  --   unscheduleRetry()
+  --   if msg.success == false then
+  --     -- 出错，重新请求
+  --     onRpcError()
+  --   elseif msg.pkg_url and msg.pkg_version and string.len(msg.pkg_url) > 0 and
+  --     string.len(msg.pkg_version) > 0 then
+  --     -- 强制更新
+  --     local doForceUpdate = function ()
+  --       OsCommon.showMessageBox{
+  --         title = loc('str_new_version'),
+  --         message = loc('str_update_hint'),
+  --         button = loc('str_lua_7'),
+  --         onComplete = function ()
+  --           if game.platform == 'ios' then
+  --             CCNative:openURL(msg.pkg_url)
+  --             doForceUpdate()
+  --           elseif game.platform == 'android' then
+  --             local filename = string.sub(msg.pkg_url, string.rfind(msg.pkg_url, '/') + 1)
+  --             downloadFile{
+  --               url = msg.pkg_url,
+  --               filename = filename,
+  --               title = loc('str_lua_36'),
+  --               desc = loc('str_lua_140'),
+  --               onRequestSuccess = function ()
+  --                 logd('onRequestSuccess: exiting')
+  --                 local exit = require 'scripts/exit'
+  --                 exit()
+  --               end,
+  --             }
+  --           end
+  --         end,
+  --         cancelable = false,
+  --       }
+  --     end
+  --     doForceUpdate()
+  --     game.appNeedForceUpdate = true
+  --   elseif msg.url and msg.client_version and string.len(msg.url) > 0 and
+  --     string.len(msg.client_version) > 0 then
+  --     -- 游戏内更新
+  --     local skipUpdate = self.options.skipUpdate
+  --     if game.editor() then
+  --       skipUpdate = true
+  --     end
 
-      local skipVersion = nil
+  --     local skipVersion = nil
 
-      local concurrentDownloads = 2
-      if msg.concurrent_downloads and msg.concurrent_downloads ~= cjson.null then
-        concurrentDownloads = msg.concurrent_downloads
-      end
-      local excludesTagPattern = nil
+  --     local concurrentDownloads = 2
+  --     if msg.concurrent_downloads and msg.concurrent_downloads ~= cjson.null then
+  --       concurrentDownloads = msg.concurrent_downloads
+  --     end
+  --     local excludesTagPattern = nil
 
-      local callback = function()
-        if self.um then self.um:stop() end
+  --     local callback = function()
+  --       if self.um then self.um:stop() end
 
-        local curView = ui.curView
-        if curView and curView ~= self then
-          logd('UpdatingScene: skip no wifi update because you have switched to other scenes! curView=%s %s',
-            tostring(curView), tostring(curView.classname))
-          return
-        end
+  --       local curView = ui.curView
+  --       if curView and curView ~= self then
+  --         logd('UpdatingScene: skip no wifi update because you have switched to other scenes! curView=%s %s',
+  --           tostring(curView), tostring(curView.classname))
+  --         return
+  --       end
 
-        self.um = UpdateManager.new(msg.client_version, msg.url, onProgress, onError, onComplete,
-          {
-          skipUpdate=skipUpdate,
-          skipVersion=skipVersion,
-          allowStart = function ()
-            local curView = ui.curView
-            if curView and curView ~= self then
-              logd('UpdatingScene: skip download because you have switched to other scenes! curView=%s %s',
-                tostring(curView), tostring(curView.classname))
-              return false
-            end
-            return true
-          end,
-          concurrentDownloads=concurrentDownloads,
-          excludesTagPattern=excludesTagPattern,
-          }):start()
-      end
+  --       self.um = UpdateManager.new(msg.client_version, msg.url, onProgress, onError, onComplete,
+  --         {
+  --         skipUpdate=skipUpdate,
+  --         skipVersion=skipVersion,
+  --         allowStart = function ()
+  --           local curView = ui.curView
+  --           if curView and curView ~= self then
+  --             logd('UpdatingScene: skip download because you have switched to other scenes! curView=%s %s',
+  --               tostring(curView), tostring(curView.classname))
+  --             return false
+  --           end
+  --           return true
+  --         end,
+  --         concurrentDownloads=concurrentDownloads,
+  --         excludesTagPattern=excludesTagPattern,
+  --         }):start()
+  --     end
 
-      local wifi = OsCommon.isLocalWifiAvailable()
+  --     local wifi = OsCommon.isLocalWifiAvailable()
 
-      if wifi then
-        logd('checkConnection: wifi available')
-        callback()
-      else
-        logd('checkConnection: NO WIFI')
-        OsCommon.showMessageBox{
-          title = loc('str_lua_77'),
-          message = loc('str_wlan_download_warning'),
-          button = loc('str_lua_7'),
-          onComplete = callback
-        }
-      end
+  --     if wifi then
+  --       logd('checkConnection: wifi available')
+  --       callback()
+  --     else
+  --       logd('checkConnection: NO WIFI')
+  --       OsCommon.showMessageBox{
+  --         title = loc('str_lua_77'),
+  --         message = loc('str_wlan_download_warning'),
+  --         button = loc('str_lua_7'),
+  --         onComplete = callback
+  --       }
+  --     end
 
-    else
-      -- 无更新
-      log('no update, skipping...')
-      if self.loading_all_txtLoading then
-        self.loading_all_txtLoading:setString (loc('str_lua_80'))
-      end
-      onComplete(nil, loc('str_lua_80'))
-    end
-  end)
+  --   else
+  --     -- 无更新
+  --     log('no update, skipping...')
+  --     if self.loading_all_txtLoading then
+  --       self.loading_all_txtLoading:setString (loc('str_lua_80'))
+  --     end
+  --     onComplete(nil, loc('str_lua_80'))
+  --   end
+  -- end)
 
-  if not sent then
-    logd('UpdatingScene: request not sent')
-    onRpcError()
-  end
+  -- if not sent then
+  --   logd('UpdatingScene: request not sent')
+  --   onRpcError()
+  -- end
 end

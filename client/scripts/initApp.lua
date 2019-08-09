@@ -112,7 +112,7 @@ local function initApp()
     -- require 'game/test/PerformanceTest'
   end
 
-  initEnv()
+  -- initEnv()
 
 
   if tracemem then traceMemory('initApp 2') end

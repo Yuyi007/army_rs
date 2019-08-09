@@ -1,4 +1,4 @@
-ViewScene('MainSceneView', 'scenes/game/test', function(self)
+ViewScene('MainSceneView', 'scenes/test/test', function(self)
 end)
 
 local m = MainSceneView
@@ -8,7 +8,7 @@ function m:initSceneNode()
   local function func(taskNode)
     self:__goto()
     
-    sm:playMusic("Sound/main_bgm")
+    -- sm:playMusic("Sound/main_bgm")
     sm:mute(false)
 
     taskNode:finish()

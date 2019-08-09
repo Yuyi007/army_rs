@@ -1,4 +1,4 @@
-View("MainRoomView", "prefab/main_room_ui2", function(self)
+View("MainRoomView", "prefab/ui/room/main_room_ui", function(self)
  
 end)
 

@@ -33,8 +33,8 @@ local function initGame(options)
   if tracemem then traceMemory('initGame 1') end
 
   -- first destroy the old game environment
-  closeConnection()
-  resetResources()
+  -- closeConnection()
+  -- resetResources()
 
   if tracemem then traceMemory('initGame 2') end
   -- init new game environment
@@ -55,7 +55,7 @@ local function initGame(options)
 
   initQuality()
 
-  initConnection()
+  -- initConnection()
 
   -- scheduleLocalNotifications()
   -- GuildUtil.showDungeonNotification()
