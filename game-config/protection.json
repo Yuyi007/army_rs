@@ -1,0 +1,8 @@
+{
+  "diff_buff_ap": -99999,
+  "diff_buff_dp": 99999,
+  "diff_contact_dp": 99999,
+  "diff_contact_ap": -99999,
+  "limit_attr_speed": 90,
+  "limit_skill_cd": 1
+}

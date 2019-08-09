@@ -1,0 +1,61 @@
+<style>
+.success {color:#55aa55;}
+.fail {color:#aa0000}
+div.pager {color: #777777; font-size: 12px; margin-top: 10px}
+#message_id {display: none;}
+</style>
+
+<script>
+</script>
+
+<div id="message_id"></div>
+
+<div class="row">
+  <div class="col-md-2 col-md-offset-10">
+    <a class="btn btn-success" href="<%= url_for :action => 'old_requests' %>">
+      <%= t(:old_requests) %>
+      <span class="glyphicon glyphicon-hand-right"></span>
+    </a>
+  </div>
+</div>
+<hr/>
+
+<table id="new_requests_table" class='table table-striped table-bordered table-hover'>
+  <thead>
+    <tr>
+      <th><%=t :accept %></th>
+      <th><%=t :reject %></th>
+      <th><%=t :site_user %></th>
+      <th><%=t :item %></th>
+      <th><%=t :number1 %></th>
+      <th><%=t :reason %></th>
+      <th><%=t :player_id %></th>
+      <th><%=t :zone %></th>
+      <th><%=t :time %></th>
+    </tr>
+  </thead>
+
+<% @grant_records.each_with_index do |grant_record, i| %>
+  <tbody>
+    <tr class='<%= i % 2 == 0 ? "even" : "odd" %>' id='<%= grant_record.id %>'>
+      <% user = SiteUser.find(grant_record.site_user_id) %>
+      <td class='accept'><%= link_to 'Accept', { :action => 'grant', :id => grant_record.id },
+      { :method => :post, :remote => true, :data => {confirm: 'Are you sure?', :disable_with => 'Processing...' }, :class => "btn btn-success btn-sm" } %></td>
+      <td class='reject'><%= link_to 'Reject', { :action => 'reject', :id => grant_record.id },
+      { :method => :post, :remote => true, :data => {confirm: 'Are you sure?', :disable_with => 'Processing...'}, :class => "btn btn-danger btn-sm" } %></td>
+      <td class='user'><%= link_to user.username, site_user_url(grant_record.site_user_id) %></td>
+      <td class='item'><%= grant_record.item_name %></td>
+      <td class='amount'><%= grant_record.item_amount %></td>
+      <td class='reason'><%= grant_record.reason %></td>
+      <td class='playerId'><%= grant_record.target_id %></td>
+      <td class='playerZone'><%= grant_record.target_zone %></td>
+      <td class='time'><%= TimeHelper.gen_date_time_sec(grant_record.created_at) %></td>
+    </tr>
+  </tbody>
+<% end %>
+</table>
+
+<div class='pager'>
+<%= will_paginate @grant_records %>
+</div>
+

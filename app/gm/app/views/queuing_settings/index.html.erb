@@ -1,0 +1,24 @@
+<form id="queuingForm" action="/queuing_settings/save" method="POST" class="form">
+
+  <div>
+    <h2><%=t :queuing_settings %></h2>
+    <p><%=t :queuing_settings_desc %></p>
+  </div>
+
+  <div>
+  </div>
+
+  <div>
+    <h3><span class="label label-success"><%=t :id_whitelist %></span></h3>
+    <textarea id="id_whitelist" name="id_whitelist" class="form-control" rows="10" maxlength="255"><%= @id_whitelist %></textarea>
+  </div>
+
+  <br/>
+  <input type="submit" value="<%=t :save %>" class="btn btn-info" />
+</form>
+
+<script type="text/javascript">
+
+  ajaxSubmitWithConfirm($('#queuingForm'), '<%=t :confirm_save_queuing %>');
+
+</script>

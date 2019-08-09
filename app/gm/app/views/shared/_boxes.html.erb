@@ -1,0 +1,12 @@
+<!-- _packages.html.erb -->
+
+<% eid ||= 'boxTid' %>
+<select id="<%= eid %>" name="<%= eid %>" class="form-control">
+  <% CocsProxy.instance.getGameConfig('items').each do |tid, value| %>
+    <% if tid =~ /^I[BK].+/ %>
+      <option value='<%= tid %>'>
+        <%= GameConfig.strings[value['name']] || value['name'] %>
+      </option>
+    <% end %>
+  <% end %>
+</select>

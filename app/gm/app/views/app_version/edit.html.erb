@@ -1,0 +1,22 @@
+<h3><%=t :publish_app_version %>: <%= @platform %></h3>
+<form id="appVersionForm" action="/app_version/publish" method="POST" class="form-horizontal">
+  <div>
+    <input id="platform" name="platform" type="hidden" value="<%= @platform %>" style="width:200px" />
+    <input id="sdk" name="sdk" type="hidden" value="<%= @sdk %>" style="width:200px" />
+  </div>
+
+  <div class="row">
+    <div class="col-md-5">
+      <label>app version</label>
+      <input id="version" name="version" type="text" value="<%= @appVersion %>" class="form-control" />
+    </div>
+  </div>
+  
+  <br/>
+  <input type="submit" value="<%=t :publish %>" class="btn btn-success" />
+</form>
+
+<script type="text/javascript">
+  ajaxSubmit($('#appVersionForm'));
+</script>
+

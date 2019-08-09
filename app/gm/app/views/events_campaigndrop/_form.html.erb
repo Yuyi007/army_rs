@@ -1,0 +1,155 @@
+<% drop_id ||= 'id' %>
+<% drop_zone ||= 'zone' %>
+
+<div>
+  <%= render 'shared/items_top' %>
+
+  <div>
+    <div id="campaign_drop">
+      <h2><%=t :campaign_drop_event%></h2>
+      <div id="campaign_drop_hint" style="display:none;width:100%;padding:2px 4px 2px 4px;">
+        <span id="campaign_drop_hint_content" style="color:white;"></span>
+      </div>
+      <form id="data_form" action="/events_campaigndrop/save_campaign_drop/1" method="POST">
+        <table class='gridtable table table-striped table-bordered'>
+          <col width="30px" />
+          <col width="80px" />
+          <col width="80px" />
+          <col width="50px" />
+          <col width="50px" />
+          <col width="50px" />
+          <col width="80px" />
+          <col width="100px" />
+          <col width="100px" />
+          <col width="100px" />
+
+          <tr>
+            <th><%=t :id%></th>
+            <th><%=t :open_date%></th>
+            <th><%=t :close_date%></th>
+            <th><%=t :campaign_normal%></th>
+            <th><%=t :campaign_hard%></th>
+            <th><%=t :campaign_expert%></th>
+            <th><%=t :drop_item_id%></th>
+            <th><%=t :drop_item_num%></th>
+            <th><%=t :drop_round_min%></th>
+            <th><%=t :drop_round_max%></th>
+          </tr>
+
+          <tr>
+            <td><%= text_field_tag :campaign_drop_id, drop_id,  :readonly => true, :size => 3  %></td>
+            <td><%= text_field_tag :startTime, nil %></td>
+            <td><%= text_field_tag :endTime, nil %></td>
+            <td><input id="normalEnabled" name="normalEnabled" type="checkbox" value="" style="width:50px" /></td>
+            <td><input id="hardEnabled" name="hardEnabled" type="checkbox" value="" style="width:50px" /></td>
+            <td><input id="expertEnabled" name="expertEnabled" type="checkbox" value="" style="width:50px" /></td>
+            <td>
+              <%= text_field_tag :campaign_drop_item_name, nil, :class => 'itemName', :readonly => true %>
+              <%= text_field_tag :campaign_drop_item, nil, :class => 'item', :readonly => true %>
+            </td>
+            <td>
+              <%= number_field_tag :campaign_drop_item_num, nil, :class => 'itemNum', :min => 1 %>
+            </td>
+            <td>
+              <%= number_field_tag :campaign_drop_round_min, nil, :class => 'itemNum', :min => 1 %>
+            </td>
+            <td>
+              <%= number_field_tag :campaign_drop_round_max, nil, :class => 'itemNum', :min => 1 %>
+            </td>
+          </tr>
+
+        </table>
+        <%= render 'shared/events_downandup' %>
+      </form>
+
+      <div id="allSelect" class="selectBlock">
+        <!--<div><span>元宝</span><%= number_field_tag :creditNum, 0, :min => 0 %></div>-->
+        <div><span><%=t :search%></span><%= render 'shared/search_items' %></div>
+        <div><span><%=t :equip%></span><%= render 'shared/equipments' %></div>
+        <div><span><%=t :formation%></span><%= render 'shared/formations' %></div>
+        <div><span><%=t :skill%></span><%= render 'shared/skills' %></div>
+        <div><span><%=t :item%></span><%= render 'shared/items2' %></div>
+        <div><span><%=t :parts%></span><%= render 'shared/parts' %></div>
+        <div><span><%=t :soul%></span><%= render 'shared/souls' %></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+<script type="text/javascript">
+
+  /////////////////////////////////////////////
+  // common
+  //
+
+  function getTable(){
+    var data = new Object();
+    data.startTime = $('#startTime').val();
+    data.endTime = $('#endTime').val();
+    data.normalEnabled = $('#normalEnabled').prop('checked');
+    data.hardEnabled = $('#hardEnabled').prop('checked');
+    data.expertEnabled = $('#expertEnabled').prop('checked');
+    data.campaign_drop_item = $('#campaign_drop_item').val();
+    data.campaign_drop_item_num = $('#campaign_drop_item_num').val();
+    data.campaign_drop_item_name = $('#campaign_drop_item_name').val();
+    data.campaign_drop_round_min = $('#campaign_drop_round_min').val();
+    data.campaign_drop_round_max = $('#campaign_drop_round_max').val();
+    return data;
+  }
+
+  function toText(){
+    $('#json').val(JSON.stringify(getTable(), null));
+  }
+
+  function toDisplay(){
+    var data = JSON.parse($('#json').val())
+    for(var name in data){
+      if(typeof(data[name]) == 'function'){
+        //
+      }else{
+        if($('#'.concat(name)).attr('type') == 'checkbox'){
+          $('#'.concat(name)).prop('checked', data[name]);
+        }else{
+          $('#'.concat(name)).val(data[name]);
+        }
+      }
+    }
+  }
+
+  function getData()
+  {
+    var data = {
+                "campaign_drop_id": $("#campaign_drop_id").val(),
+                "startTime": $("#startTime").val(),
+                "endTime": $("#endTime").val(),
+                "normalEnabled": $('#normalEnabled').prop('checked'),
+                "hardEnabled": $('#hardEnabled').prop('checked'),
+                "expertEnabled": $('#expertEnabled').prop('checked'),
+              };
+    data.bonus = {};
+    data.dropRound = {};
+    data.bonus.itemId = $("#campaign_drop_item").val();
+    data.bonus.itemNum = $("#campaign_drop_item_num").val();
+    data.dropRound.min = $("#campaign_drop_round_min").val();
+    data.dropRound.max = $("#campaign_drop_round_max").val();
+
+    return JSON.stringify(data);
+  }
+
+  ////////////////////////////////////////////////////////
+  // campaign drop event
+  //////////////////////////////////////////////////////////
+
+  $('#startTime').datetimepicker();
+  $('#endTime').datetimepicker();
+
+  selectItem($('#campaign_drop_item'), $('#campaign_drop_item_name'), $('#allSelect'));
+  ajaxSubmit2($('#campaign_drop_hint'), $('#campaign_drop_hint_content'), $('#data_form'))
+  ajaxSubmit2($('#campaign_drop_hint'), $('#campaign_drop_hint_content'), $('#copy_form'))
+
+  $(document).ready(initDataSource());
+
+</script>

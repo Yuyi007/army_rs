@@ -1,0 +1,359 @@
+<noscript>Enable Javascript to continue</noscript>
+
+<script type="text/javascript">
+  var itemList = new Array();
+   function getItemName(v) {
+    if (v) {
+      if (v.indexOf('H') == 0) {
+        return ($.trim($("#heroTid option[value='" + v + "']").text()));
+      } else if (v.indexOf('E') == 0) {
+        return ($.trim($("#equipmentTid option[value='" + v + "']").text()));
+      } else if (v.indexOf('F') == 0) {
+        return ($.trim($("#formationTid option[value='" + v + "']").text()));
+      } else if (v.indexOf('S') == 0) {
+        return ($.trim($("#skillTid option[value='" + v + "']").text()));
+      } else if (v.match(/^I[^EFS]/g)) {
+        return ($.trim($("#itemTid option[value='" + v + "']").text()));
+      } else if (v.match(/^I[EFS]/g)) {
+        return ($.trim($("#partTid option[value='" + v + "']").text()));
+      } else if (v.match(/IM002/g)) {
+        return ("元宝");
+      } else if (v.match(/IM001/g)) {
+        return ("银两");
+      } else {
+        return (v + ".null");
+      }
+    } else {
+      return "null";
+    }
+  }  
+</script>
+
+<div class="well">
+  <div class="row">
+    <div class="col-md-2">
+      <h4><span class="label label-info">index</span></h4>
+    </div>
+    <div class="col-md-1">
+      <a href="#" onclick="add()" class="btn btn-info"><%= t(:add) %></a>
+    </div>
+    <div class="col-md-3">
+        <%= text_field_tag "pointed_zones", nil, :size => 40, :placeholder => "2 3 6" %>
+    </div>
+    <div class="col-md-4">
+      <span>target zones:(<%=t :enter_zone_split_with_space_like%>1 2 3 or all)</span>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon">start time</span>
+        <input id="startTime" value="" class="form-control"></input>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon">end time</span>
+        <input id="endTime" value="" class="form-control"></input>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon">min level</span>
+        <input id="minlv" value="" class="form-control"></input>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon">max level</span>
+        <input id="maxlv" value="" class="form-control"></input>
+      </div>
+    </div>
+  </div>
+
+  <hr/>
+
+  <div class="row">
+    <div class="col-md-10">
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="well">
+            <span><%=t :equip%></span>
+            <a href="#" onclick="addEquip()" class="btn btn-success btn-xs"><%= t(:add) %></a>
+            <%= render 'shared/equipments' %>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="well">
+            <span><%=t :formation%></span>
+            <a href="#" onclick="addFormation()" class="btn btn-success btn-xs"><%= t(:add) %></a>
+            <%= render 'shared/formations' %>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="well">
+            <span><%=t :skill%></span>
+            <a href="#" onclick="addSkill()" class="btn btn-success btn-xs"><%= t(:add) %></a>
+            <%= render 'shared/skills' %> 
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="well">
+            <span><%=t :item%></span>
+            <a href="#" onclick="addItem()" class="btn btn-success btn-xs"><%= t(:add) %></a>
+            <%= render 'shared/items2' %>
+            <input id="itemNum" class="form-control" /></div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="well">
+            <span><%=t :parts%></span>
+            <a href="#" onclick="addParts()" class="btn btn-success btn-xs"><%= t(:add) %></a>
+            <%= render 'shared/parts' %>
+            <input id="partNum" class="form-control" /></div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="well"><span>
+            <%=t :soul%></span>
+            <a href="#" onclick="addSoul()" class="btn btn-success btn-xs"><%= t(:add) %></a>
+            <%= render 'shared/heroes' %>
+            <input id="soulNum" class="form-control" /></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="input-group">
+            <a href="#" onclick="addCredit()" class="btn btn-success btn-sm"><%= t(:add) %></a>
+            <span class="input-group-addon"><%=t :credit%>:</span>
+            <input id="creditNum" class="form-control" />
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="input-group">
+            <a href="#" onclick="addSilver()" class="btn btn-success btn-sm"><%= t(:add) %></a>
+            <span class="input-group-addon"><%=t :silver%>:</span>
+            <input id="silverNum" class="form-control" /></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-md-2">
+      <a href="#" onclick="clearItemList()" class="btn btn-success btn-sm"><%= t(:clear) %></a>
+      <div id="itemList"></div>
+    </div>
+  </div>
+
+</div><!-- ./well -->
+
+<% if not @buchang.nil? %>
+  <% @buchang.each_with_index do |subBuchang,i| %>
+    <% if not subBuchang.nil? %>
+      <div class="well">
+
+        <div class="row">
+          <div class="col-md-2">
+            <h4><span class="label label-info">index:<%= i %></span></h4>
+          </div>
+          <div class="col-md-2">
+            <%= link_to t(:delete),  {:controller => "config", :action => "deleteBuchang", :index => i}, :class => "btn btn-danger" %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-3">
+            <div class="input-group">
+              <span class="input-group-addon">start time</span>
+              <input value="<%= Time.at(subBuchang.startTime).to_s(:db) %>" class="form-control" readonly></input>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="input-group">
+              <span class="input-group-addon">end time</span>
+              <input value="<%= Time.at(subBuchang.endTime).to_s(:db) %>" class="form-control" readonly></input>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="input-group">
+              <span class="input-group-addon">min level</span>
+              <input value="<%=subBuchang.minLv %>" class="form-control" readonly></input>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="input-group">
+              <span class="input-group-addon">max level</span>
+              <input value="<%=subBuchang.maxLv %>" class="form-control" readonly></input>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="well">
+            <!-- <div class="input-group"> -->
+              <span class="input-group-addon">target zones:
+                <% if not subBuchang.zones.nil? %>
+                  <% subBuchang.zones.each do |subZone| %>
+                    <script type="text/javascript">
+                      document.write("<%=subZone%>" + "&nbsp");
+                    </script>    
+                  <% end 
+                  end %>
+            
+              </span>
+                         
+            <!-- </div> -->
+          </div>
+        </div>
+        <hr/>
+        <div class="row">
+          <div class="well">
+            <% subBuchang.items.each do |subitem| %>
+              <script type="text/javascript">
+                var itemId = '<%=subitem[0]%>';
+                document.write("<span class='label label-default'>" + getItemName(itemId) + "," + '<%=subitem[1]%>' + "</span>");
+              </script>    
+            <% end %> 
+          </div>
+        </div>
+
+      </div><!-- /.well -->
+    <% end %>
+  <% end %>
+<% end %>
+
+<div style="display:none"><%=@notice %></div>
+<table> 
+</table>
+
+<script type="text/javascript">
+
+  $('#startTime').datetimepicker();
+  $('#endTime').datetimepicker();
+
+  function add()
+  {
+    if (! $('#startTime').datepicker('getDate') )
+    {
+      alert("error startTime");
+      return ;
+    } 
+
+    if (! $('#endTime').datepicker('getDate') )
+    {
+      alert("error endTime");
+      return ;
+    } 
+    
+    if (! $('#minlv').val())
+    {
+      alert("error min level");
+      return ;
+    }
+
+    if (! $('#maxlv').val())
+    {
+      alert("error max level");
+      return ;
+    }
+
+    if (! $('#pointed_zones').val())
+    {
+      alert("error target zones");
+      return ;
+    }
+
+    var str_item = "";
+    for(var i = 0; i < itemList.length; i++)
+    {  
+        str_item += (itemList[i][0] +"," + itemList[i][1]+",");
+    } 
+    $.ajax({
+      type: 'POST', 
+      url: 'addBuchang' ,
+      data: { "minLv":$('#minlv').val(),
+              "maxLv":$('#maxlv').val(),
+              "startTime":($('#startTime').datepicker('getDate').getTime())/1000,
+              "endTime":($('#endTime').datepicker('getDate').getTime())/1000 ,
+              "itemList": str_item ,
+              "zones":$('#pointed_zones').val()
+            }
+    }).done(function (json){
+      showStatus('Load success~', 'success')
+      window.location.reload();
+    }).fail(function (xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+
+  function clearItemList()
+  {
+    itemList = [];
+    displayItem();
+  }
+  function addEquip()
+  {
+    updatePacakge($('#equipmentTid').val(), 1);
+  }
+  function addItem()
+  {
+    updatePacakge($('#itemTid').val(),$('#itemNum').val());
+  }
+  function addSoul()
+  {
+    updatePacakge($('#heroTid').val(), $('#soulNum').val());
+  }
+  function addSkill()
+  {
+    updatePacakge($('#skillTid').val(), 1);
+  }
+  function addFormation()
+  {
+    updatePacakge($('#formationTid').val(), 1);
+  }
+  function addParts()
+  {
+    updatePacakge($('#partTid').val(), $('#partNum').val());
+  }
+
+  function addCredit()
+  {
+    updatePacakge('IM002', $('#creditNum').val());
+  }
+
+  function addSilver()
+  {
+    updatePacakge('IM001', $('#silverNum').val());
+  }
+
+  function updatePacakge(itemId, num)
+  {
+    if (!num)
+    {
+      alert("error num");
+      return ;
+    }
+    itemList.push([itemId,num]);
+    displayItem();
+  }
+
+  function displayItem()
+  {
+    var str_item = ""
+    for(var i = 0; i < itemList.length; i++)
+    {  
+        str_item += (getItemName(itemList[i][0]) +"," + itemList[i][1]+"<br>");
+    } 
+    document.getElementById("itemList").innerHTML = (str_item);   
+  }
+
+
+</script>
+

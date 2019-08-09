@@ -1,0 +1,23 @@
+<p>
+<b><%=t :email %>:</b>
+<%=h @user.email %>
+</p>
+
+<p>
+<b><%=t :username %>:</b>
+<%=h @user.username %>
+</p>
+
+<p>
+<b><%=t :permissions %>:</b>
+<% @role = @user.role_name %>
+<%=h @role %>
+&nbsp;&nbsp;
+<span style='color: #888'>
+<%=h RolesHelper.ROLE_DESC[@role] %>
+</span>
+</p>
+
+<% if @user.can_edit_by? current_user %>
+  <%= link_to t(:edit_account), edit_site_user_url %>
+<% end %>

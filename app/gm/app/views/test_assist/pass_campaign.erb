@@ -1,0 +1,86 @@
+<style>
+  .line_content {margin-left:20px;}
+</style>
+
+<div style='margin-top: 10px;'>
+  <div style='margin-bottom: 20px;background-color:lightblue;vertical-align:middle'>
+    <li><h4><%=t :pass_campaign %></h4></li>
+      <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <span class='input-group-addon'><%=t :ID %></span>
+            <input type='text' name='uid' id='uid' value="" class="form-control"/>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <%= render 'shared/zones' %>
+          </div>
+        </div>
+      </div>
+      <br/>
+      <div class="row" >
+          <div class="col-md-2"><span class='line_content'><%=t :fuben_tid %></span></div>
+          <div class="col-md-2">
+            <div class="input-group">
+              <input type='text' name='fuben_tid' id='fuben_tid' value="" class="form-control"/>
+            </div>
+          </div>
+      </div>
+    <br/>
+      <div class="row" >
+          <div class="col-md-2"><span class='line_content'><%=t :zhandou_tid %></span></div>
+          <div class="col-md-2">
+            <div class="input-group">
+              <input type='text' name='zhandou_tid'  id='zhandou_tid' value=""  class="form-control"/>
+            </div>
+          </div>
+      </div>
+    <br/>
+      <div class="row">
+          <div class="col-md-2"><span class='line_content'></span></div>
+          <div class="col-md-1"><input type="button" value="<%=t :publish %>" class="btn btn-default" onClick="do_pass_campaign();"/></div>
+      </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+function post_reqest(url, data)
+{
+  $.ajax({
+      type: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: url,
+      data: JSON.stringify(data)
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('create success~', 'green')
+        window.location.href = "/test_assist/pass_campaign/";
+      }
+      else
+      {
+        showStatus('create error', 'red')
+      }
+
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+}
+
+function do_pass_campaign()
+{
+  var url = '/test_assist/do_pass_campaign';
+  var data = {
+          "zhandou_tid" : $("#zhandou_tid") .val(),
+          "fuben_tid" : $("#fuben_tid") .val(),
+          "uid" : $("#uid") .val(),
+          "zone": $("#zone") .val()
+          };
+  post_reqest(url, data);
+}
+
+</script>

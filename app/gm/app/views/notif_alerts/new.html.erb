@@ -1,0 +1,7 @@
+
+<h1><%= t(:add_notif_alert) %></h1>
+
+<%= form_for @alert, :url => { :action => "create" }, :html => { :class => "form-signin", :role => "form" } do |f| %>
+<%= render :partial => "form", :object => f, :locals => { :user => @alert } %>
+<%= f.submit t(:save), :class => "btn btn-default btn-sm" %>
+<% end %>

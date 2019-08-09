@@ -1,0 +1,92 @@
+<div>
+  <div>
+    <div id="normal_event">
+      <h2><%=t :normal_event%></h2>
+      <div id="normal_event_hint" style="display:none;">
+        <span id="normal_event_hint_content" style="color:white;"></span>
+      </div>
+      <table class='gridtable table table-striped table-bordered'>
+        <tr>
+          <th><%=t :id%></th>
+          <th><%=t :zones%></th>
+          <th><%=t :tid_with_typename%></th>
+          <th><%=t :prepare_time%></th>
+          <th><%=t :start_time%></th>
+          <th><%=t :end_time%></th>
+          <th><%=t :finish_time%></th>
+        </tr>
+        <tr>
+          <td><%= form.text_field :id, :readonly => true, :size => '5'%></td>
+          <td><%= form.text_field :zones, :size => '50' %></td>
+          <td>
+            <div id="event_list" style="height:auto">
+              <select id = "event_select" name="event_select" value = ""  >
+                <%
+                GameConfig.evt_total_credit.each do |tid, data|
+                %>
+                    <option value = '<%= tid %>'>
+                      <%= "#{tid}-#{GameConfig.strings['str_credit_event']}" %>
+                    </option>
+                <%
+                end
+                %>
+                <%
+                GameConfig.evt_total_login.each do |tid, data|
+                %>
+                    <option value = '<%= tid %>'>
+                      <%= "#{tid}-#{GameConfig.strings['str_login_event']}" %>
+                    </option>
+                <%
+                end
+                %>
+              </select>
+              <%= form.hidden_field :type, :size => '20'%>
+            </div>
+          </td>
+          <td><%= form.text_field :prepare_time, :as => :datetime_picker, :size => '15' %></td>
+          <td><%= form.text_field :start_time, :as => :datetime_picker, :size => '15' %></td>
+          <td><%= form.text_field :end_time, :as => :datetime_picker, :size => '15' %></td>
+          <td><%= form.text_field :finish_time, :as => :datetime_picker, :size => '15' %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  function onFocus()
+  {
+     if($("#normal_event_type").val() == "")
+      {
+        var etype = $("#event_select").val()
+        $("#normal_event_type").val(etype)
+      }
+  }
+  function selectItem()
+  {
+    var etype = $("#event_select").val()
+    // console.log(etype);
+    $("#normal_event_type").val(etype)
+    // $("#event_select").hide();
+  }
+
+  function showItems()
+  {
+    $("#event_select").show();
+  }
+
+  $("#event_select").focus(onFocus)
+  $("#event_select").change(selectItem)
+  $("#normal_event_type").focus(showItems)
+  if($("#normal_event_type").val() == "")
+  {
+    var etype = $("#event_select").val()
+    $("#normal_event_type").val(etype)
+  }
+
+  $('#normal_event_prepare_time').datetimepicker();
+  $('#normal_event_start_time').datetimepicker();
+  $('#normal_event_end_time').datetimepicker();
+  $('#normal_event_finish_time').datetimepicker();
+  // $(document).ready(initDataSource());
+</script>
+

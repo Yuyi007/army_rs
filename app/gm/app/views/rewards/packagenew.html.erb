@@ -1,0 +1,56 @@
+<h1><%= t(:create_package) %></h1>
+
+<br/>
+<a href='/rewards/packagelist/'><%=t :list_package%></a>
+
+
+<%= render :partial => "formpackage", :locals => { :package_id => 0 } %>
+
+<input type="button" onclick="createPackage()" value="<%=t :create%>">
+
+
+<script type="text/javascript">
+initForm()
+function createPackage()
+{
+  var zoneIndex = $("#zone").val();
+  $.ajax({
+    type: 'post',
+    contentType: 'application/json',
+    dataType: 'json',
+    url: '/rewards/createPackage/',
+    data: getData()
+  }).done(function(json){
+    console.log(json);
+	  if(json && json['success'])
+    {
+      showStatus('create success~', 'green')
+      window.location.href = "/rewards/packagelist/";
+    }
+    else if(json)
+    {
+      showStatus(parseError(json), 'red')
+    }
+    else
+    {
+      showStatus('create error', 'red')
+    }
+
+  }).fail(function(xhr, status){
+    showStatus('Something wrong!', 'red');
+  });
+}
+
+function initForm()
+{
+  $("#assetId").val("IP015")
+  $("#value").val(0)
+  $("#price").val(0)
+  $("#weight").val(0)
+  $("#tid").val("<%=t :need_not_fill%>")
+  $('#usable').prop('checked', true)
+  clearItem()
+}
+</script>
+<br/>
+<%= link_to_function (t :back), "history.back()", :class => "btn btn-warning" %>

@@ -1,0 +1,80 @@
+<%= render 'shared/data_top' %>
+
+<style>
+.success { color: green; }
+.fail { color: red; }
+.search { margin-bottom: 20px; }
+.search1 { margin-bottom: 5px; margin-top: 5px;}
+.search-result tbody tr th { font-size: 12px; padding: 4px; max-width: 250px; }
+.search-result tbody tr td { font-size: 12px; padding: 4px; max-width: 250px; }
+.search-result-warn { color: red; }
+</style>
+
+<div style='margin-top: 20px;'>
+
+<a id='link_history_detail' href="/elastic_action_log/index?player_id=<%= params[:player_id] %>&zone=<%= params[:zone] %>" class="btn btn-success"><%=t :detailed_search %></a>
+
+<table class="table table-striped table-bordered table-hover search-result">
+
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+
+  <tr>
+    <th><%= sortable "player_id", params %></th>
+    <th><%= sortable "zone", params %></th>
+    <th><%= sortable "type", params %></th>
+    <th><%= unsortable "params", params, "Param1" %></th>
+    <th><%= unsortable "param2", params %></th>
+    <th><%= unsortable "param3", params %></th>
+    <th><%= unsortable "param4", params %></th>
+    <th><%= unsortable "param5", params %></th>
+    <th><%= sortable "time", params %></th>
+  </tr>
+
+  <% for log in @logs %>
+  <tr class='<%= if log.type =~ /^fail/ then "search-result-warn" else "" end %>' >
+    <td>
+      <% if log.respond_to? :player_id and log.player_id and log.player_id.length %>
+        <%= link_to log.player_id, data_view_url( :id => log.player_id, :zone => log.zone ) %>
+      <% end %>
+    </td>
+    <td><%= log.zone %></td>
+    <td><%= log.type %></td>
+    <% if log.respond_to? :params %>
+    <td><%= log.params.length > 0 and log.params[0] or '' %></td>
+    <td><%= log.params.length > 1 and log.params[1] or ''  %></td>
+    <td><%= log.params.length > 2 and log.params[2] or ''  %></td>
+    <td><%= log.params.length > 3 and log.params[3] or ''  %></td>
+    <td><%= log.params.length > 4 and log.params[4] or ''  %></td>
+    <td><%= log.params.length > 5 and log.params[5] or ''  %></td>
+    <% elsif %>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <% end %>
+    <td><%= TimeHelper.gen_date_time_sec(log.time) %></td>
+  </tr>
+  <% end %>
+
+</table>
+
+<div>
+<%= will_paginate @logs %>
+</div>
+
+<script type='text/javascript'>
+  $('#time_s').datetimepicker();
+  $('#time_e').datetimepicker();
+</script>
+
+</div>

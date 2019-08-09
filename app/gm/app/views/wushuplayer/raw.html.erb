@@ -1,0 +1,60 @@
+<p style="margin-top: 10px; color: red; font-size: large;"><%=t :wushuplayer_edit_warning %></p>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="input-group">
+      <span class="input-group-addon">Id:</span>
+      <input id="id" name="id" type="text" class="form-control" value="<%= params[:id] %>" placeHolder="id" />
+    </div>
+  </div>
+  <div class="col-md-3">
+    <select id="zone" name="zone" class="form-control">
+      <% RsRails.get_config('zones').each_with_index do |z, i| %>
+        <option value='<%= i+1 %>' <%= if params[:zone] == "#{i+1}" then 'selected' else '' end%>>
+          <%= "#{i+1}区 #{z['name']}" %></option>
+      <% end %>
+    </select>
+  </div>
+
+</div>
+
+<br/><br/>
+
+<a href="#" class="btn btn-success" onclick="load(updateView)">Load data</a>
+
+<div id="jsoneditor"></div>
+
+<script type="text/javascript">
+  var editor = new JSONEditor($("#jsoneditor")[0]);
+  function load(){
+    var zone = $("#zone").val()
+    var id = $("#id").val()
+    // window.location.href = "/wushuplayer/load?zone=" + zone + "&id=" + id;
+    $('#json-div').mask('<%=t :loading %>');
+    $.ajax({
+      type: 'GET',
+      url: "load?zone=" + zone + "&id=" + id
+    }).done(function (json){
+      editor.set(json);
+      showStatus('Load success~', 'success');
+      $('#json-div').unmask();
+    }).fail(function (xhr, status) {
+      showStatus('Something wrong!', 'fail');
+      $('#json-div').unmask();
+    });
+  }
+  function updateView(id, zone, json) {
+    editor.set(json);
+  }
+  function toText() {
+    $('#json').val(JSON.stringify(editor.get(), null));
+  }
+  function toJson() {
+    editor.set(JSON.parse($('#json').val()));
+  }
+  function withConfirm(func) {
+    if (confirm("确定进行该操作吗?")) {
+      func();
+    }
+  }
+</script>

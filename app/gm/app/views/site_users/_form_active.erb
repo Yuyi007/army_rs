@@ -1,0 +1,9 @@
+<%= render "shared/error_messages", :target => @user %>
+
+<p>
+  <%=t :change_active, username: @user.username %>
+</p>
+<p>
+  <%= form_active.label :active %>
+  <%= form_active.check_box :active %>
+</p>

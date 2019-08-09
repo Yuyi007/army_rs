@@ -1,0 +1,50 @@
+<a id='top'></a>
+
+<p>
+<b><%=t :id %>:</b>
+<%=h @id %>
+<b><%=t :stage %>:</b>
+<%=h @stage %>
+<b><%=t :player_id %></b>
+<%=h @player_id %>
+<b><%=t :zone %></b>
+<%=h @zone %>
+</p>
+
+<%= link_to t(:data), "/data/view?zone=#{@zone}&id=#{@player_id}" %>
+<a href='#newbie'><%=t :wulin_newbie %></a>
+<a href='#master'><%=t :wulin_master %></a>
+
+<% [ 'newbie', 'master' ].each do |mode| %>
+<div>
+  <h3><a id='<%= mode %>'><%=t "wulin_#{mode}" %></a></h3>
+  <a href='#top'><%=t :back_to_top %></a>
+
+  <% last_heima_fight = WulinDb.getLastHeimaFightInfo(@id, mode, @player_id, @zone) %>
+  <% fight_list, num = WulinDb.getPlayerFightList(@id, mode, @player_id, @zone, WulinModel.getStageIndex(@stage) + 1) %>
+
+  <% if last_heima_fight %>
+  <div>
+    <h5><%=t :wulin_last_heima_fight %></h5>
+    <span><%= last_heima_fight.to_s %></span>
+  </div>
+  <% end %>
+
+  <% if fight_list %>
+  <div>
+    <h5><%=t :wulin_fight_list %></h5>
+    <ol>
+      <% fight_list.each do |fight_info| %>
+        <li>
+          <span><%= fight_info.to_s %></span>
+        </li>
+      <% end %>
+    </ol>
+  </div>
+  <% end %>
+
+<% end %>
+
+<div>
+<%= link_to t(@stage), stages_wldh_url(@id, @stage), :class => "btn btn-info" %>
+</div>

@@ -1,0 +1,6 @@
+<select id="zone" name="zone" class="form-control">
+  <% RsRails.get_config('zones').each_with_index do |z, i| %>
+    <option value='<%= i+1 %>' <%= if params[:zone] == "#{i+1}" then 'selected' else '' end%>>
+      <%= "#{i+1}区 #{z['name']}" %></option>
+  <% end %>
+</select>

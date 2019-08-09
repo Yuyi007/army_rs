@@ -1,0 +1,90 @@
+
+<style>
+.a { background-color: #FFF; }
+.b { background-color: #EEE; }
+.title {
+  margin: 0 0 0 14px;
+  font-weight: bold;
+}
+.content {
+  margin: 0 14px 0 0;
+}
+</style>
+
+<br/>
+
+<div style='margin-top: 10px;'>
+  <div style='margin-bottom: 20px;background-color:lightblue;vertical-align:middle'>
+    <li><h4><%=t :query_guild_data %></h4></li>
+      <div class="row">
+        <div class="col-md-2">
+          <div class="input-group">
+            <span class='input-group-addon'><%=t :guild_id %></span>
+            <input type='text' name='guild_id' id='guild_id' value="" class="form-control"/>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <span class='input-group-addon'><%=t :guild_name %></span>
+            <input type='text' name='guild_name' id='guild_name' value="" class="form-control"/>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <%= render 'shared/zones' %>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+               <div class="col-md-1"><input type="button" value="<%=t :search %>" class="btn btn-default" onClick="search();"/></div>
+
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div id="guild_detail">&nbsp;</div>
+
+<script type="text/javascript">
+
+function showGuild(data)
+{
+	// alert("update data:"+data)
+      var str_table = ("<table class='table table-striped table-bordered table-hover'>"
+                    +"<tr><td>guild_id</td><td>guild_name</td><td>guild_level</td><td>guild_leader</td><td>guild_memeber</td></tr>");
+      str_table += "<tr><td>"+data.id+"</td>";
+      str_table += "<td>"+data.name+"</td>";        
+      str_table += "<td>"+data.level+"</td>";        
+      str_table += "<td>"+data.leader_pid+"</td>";        
+      str_table += "<td>"+data.member_pids.length+"</td></tr>";
+
+    str_table += "</table>"
+    // $('#guild_detail').innerHTML = str_table ; 
+    document.getElementById("guild_detail").innerHTML = (str_table)
+}
+
+function search()
+{
+    var guild_id = $('#guild_id').val();
+    var guild_name = $('#guild_name').val();
+    var zone = $('#zone').val();
+    $.ajax({
+      type: 'POST',
+      url: '/data/guild_search',
+      data: { zone: zone, guild_id: guild_id, guild_name: guild_name },
+      dataType: 'json'
+    }).done(function (json){
+      if (json.success) {
+        showStatus('search guild success~', 'success')
+        showGuild(json.guild)
+      }
+      else {
+        showStatus('search guild failed!', 'fail')
+      }
+    }).fail(function(xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+}
+
+</script>

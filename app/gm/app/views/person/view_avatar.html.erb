@@ -1,0 +1,59 @@
+<%= render 'person_header' %>
+
+<% if @person %>
+  <div class="row">
+    <div class="col-md-2">
+        <span><%=t :person_avtar_default %></span>
+    </div>
+  </div>
+  <table class="table table-striped table-bordered table-hover">
+    <tr>
+      <th><%=t :person_avtar_weapon %></th>
+      <th><%=t :person_avtar_hair %></th>
+      <th><%=t :person_avtar_torso %></th>
+      <th><%=t :person_avtar_leg %></th>
+      <th><%=t :person_avtar_eyewear %></th>
+      <th><%=t :person_avtar_phone %></th>
+      <th><%=t :person_avtar_face %></th>
+    </tr>
+    <% if @person.avatar.default %>
+      <tr>
+        <th><%= @person.avatar.default.weapon.tid %></th>
+        <th><%= @person.avatar.default.hair.tid %></th>
+        <th><%= @person.avatar.default.torso.tid %></th>
+        <th><%= @person.avatar.default.leg.tid %></th>
+        <th><%= @person.avatar.default.eyewear.tid %></th>
+        <th><%= @person.avatar.default.phone.tid %></th>
+        <th><%= @person.avatar.default.face.tid %></th>
+      </tr>
+    <% end %>
+  </table>
+
+  <div class="row">
+    <div class="col-md-2">
+        <span><%=t :person_avtar_parts %></span>
+    </div>
+  </div>
+  <table class="table table-striped table-bordered table-hover">
+    <tr>
+      <th><%=t :person_avtar_weapon %></th>
+      <th><%=t :person_avtar_hair %></th>
+      <th><%=t :person_avtar_torso %></th>
+      <th><%=t :person_avtar_leg %></th>
+      <th><%=t :person_avtar_eyewear %></th>
+      <th><%=t :person_avtar_phone %></th>
+      <th><%=t :person_avtar_face %></th>
+    </tr>
+    <% if @person.avatar.parts %>
+      <tr>
+        <th><%= @person.avatar.parts.weapon.tid %></th>
+        <th><%= @person.avatar.parts.hair.tid %></th>
+        <th><%= @person.avatar.parts.torso.tid %></th>
+        <th><%= @person.avatar.parts.leg.tid %></th>
+        <th><%= @person.avatar.parts.eyewear.tid %></th>
+        <th><%= @person.avatar.parts.phone.tid %></th>
+        <th><%= @person.avatar.parts.face.tid %></th>
+      </tr>
+    <% end %>
+  </table>
+<% end %>

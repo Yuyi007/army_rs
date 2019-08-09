@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+# coding:utf-8
+require "rubygems" # ruby1.9 doesn't "require" it though
+require 'require_all'
+require "thor"
+require "yaml"
+require "erb"
+require "rainbow/ext/string"
+require 'logger'
+require 'oj'
+require 'active_record'
+require 'active_support/core_ext' # DateTime.to_date
+require 'awesome_print'
+require 'hiredis'
+require 'redis'
+require 'mysql'
+require 'mysql2'
+require "string-utf8mb4strip"
+
+STATS_ENV = ENV['STATS_ENV'] ||= 'development' unless defined?(STATS_ENV)
+EXECUTE_CMD = File.expand_path(__FILE__) unless defined?(EXECUTE_CMD)
+
+require_all File.join(File.dirname(__FILE__), '../dig/config/*.rb')
+
+require_all File.join(File.dirname(__FILE__), '../parser/config/*.rb')
+require_all File.join(File.dirname(__FILE__), '../app/models/*.rb')
+require_all File.join(File.dirname(__FILE__), '../parser/generators/*.rb')
+require_all File.join(File.dirname(__FILE__), '../parser/parsers/*.rb')
+
+require_all File.join(File.dirname(__FILE__), '../dig/diggers/*.rb')
+
+StatCommands.start

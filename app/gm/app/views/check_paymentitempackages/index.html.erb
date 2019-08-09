@@ -1,0 +1,200 @@
+<div>
+  <h2><%=t :package%></h2>
+  </hr>
+  <%= render 'shared/paymentpackages' %>
+
+  <div id='packagesInfo' >
+    <table border='1'>
+      <tr>
+        <th width=50><%= t(:store_id) %></th>
+        <th width=50><%= t(:paymentitems_itemsInfo) %></th>
+        <th width=50><%= t(:paymentitems_num) %></th>
+        <th width=50><%= t(:paymentitems_status) %></th>
+        <th width=50><%= t(:paymentitems_needchief) %></th>
+      </tr>
+       <tr>
+        <td><%= text_field_tag :packages_storeId, nil, :readonly => true %></td>
+        <td><%= text_field_tag :packages_itemInfo, nil, :readonly => true %></td>
+        <td><%= text_field_tag :packages_num, nil, :readonly => true %></td>
+        <td><%= text_field_tag :packages_status, nil, :readonly => true %></td>
+        <td><%= text_field_tag :packages_needChief, nil, :readonly => true %></td>
+      </tr>
+      <tr>
+       
+        <th width=50><%= t(:paymentitems_price) %></th>
+        <th width=50><%= t(:paymentitems_specialprice) %></th>
+        <th width=50><%= t(:paymentitems_buytimes) %></th>
+        <th width=100><%= t(:paymentitems_starttime) %></th>
+         <th width=100><%= t(:paymentitems_endtime) %></th>
+      </tr>
+      <tr>
+        <td><%= text_field_tag :packages_price, nil, :readonly => true %></td>
+        <td><%= text_field_tag :packages_specialPrice, nil, :readonly => true %></td>
+        <td><%= text_field_tag :packages_buyTimes, nil, :readonly => true %></td>
+        <td><%= text_field_tag :packages_startTime, nil, :readonly => true %></td>
+        <td><%= text_field_tag :packages_endTime, nil, :readonly => true %></td>
+      </tr>
+      <tr>
+       
+        <th width=50><%= t(:paymentitems_needvip) %></th>
+        <th width=50><%= t(:paymentitems_dailybuy) %></th>
+        <th width=200><%= t(:paymentitems_itemlist) %></th>
+      </tr>
+      <tr>
+      
+        <td><%= text_field_tag :packages_vipLevel, nil, :readonly => true %></td>
+        <td><%= text_field_tag :packages_dayliBuy, nil, :readonly => true %></td>
+          <td>
+            <div id="packagesList">
+            </div>
+          </td>
+      </tr>     
+    </table>
+  </div>
+
+  <h2><%=t :market%></h2>
+  </hr>
+  <%= render 'shared/paymentitems' %>
+
+  <div id='itemsInfo' >
+ 
+    <table border='1'>
+      <tr>
+        <th width=50><%= t(:store_id) %></th>
+        <th width=50><%= t(:paymentitems_itemsInfo) %></th>
+        <th width=50><%= t(:paymentitems_num) %></th>
+        <th width=50><%= t(:paymentitems_status) %></th>
+        <th width=50><%= t(:paymentitems_needchief) %></th>
+      </tr>
+       <tr>
+       	<td><%= text_field_tag :items_storeId, nil, :readonly => true %></td>
+       	<td><%= text_field_tag :items_itemInfo, nil, :readonly => true %></td>
+       	<td><%= text_field_tag :items_num, nil, :readonly => true %></td>
+       	<td><%= text_field_tag :items_status, nil, :readonly => true %></td>
+        <td><%= text_field_tag :items_needChief, nil, :readonly => true %></td>
+      </tr>
+      <tr>
+       
+        <th width=50><%= t(:paymentitems_price) %></th>
+        <th width=50><%= t(:paymentitems_specialprice) %></th>
+        <th width=50><%= t(:paymentitems_buytimes) %></th>
+        <th width=100><%= t(:paymentitems_starttime) %></th>
+        <th width=100><%= t(:paymentitems_endtime) %></th>
+      </tr>
+      <tr>
+      
+        <td><%= text_field_tag :items_price, nil, :readonly => true %></td>
+        <td><%= text_field_tag :items_specialPrice, nil, :readonly => true %></td>
+        <td><%= text_field_tag :items_buyTimes, nil, :readonly => true %></td>
+        <td><%= text_field_tag :items_startTime, nil, :readonly => true %></td>
+         <td><%= text_field_tag :items_endTime, nil, :readonly => true %></td>
+      </tr>
+      <tr>
+       
+        <th width=50><%= t(:paymentitems_needvip) %></th>
+        <th width=50><%= t(:paymentitems_dailybuy) %></th>
+        <th width=200><%= t(:paymentitems_itemlist) %></th>
+      </tr>
+      <tr>
+       
+        <td><%= text_field_tag :items_vipLevel, nil, :readonly => true %></td>
+        <td><%= text_field_tag :items_dayliBuy, nil, :readonly => true %></td>
+          <td>
+            <div id="itemsList">
+            </div>
+          </td>
+      </tr>     
+    </table>
+  </div>
+
+
+  <%= hidden_field_tag :paymentItemsString, getPaymentItems %>
+  <%= hidden_field_tag :paymentPackagesString, getPaymentPackages %>
+</div>
+
+
+<script type="text/javascript">
+  var curSelect = null;
+  var paymentItems = (JSON.parse($("#paymentItemsString").val()))
+  var paymentPackages = (JSON.parse($("#paymentPackagesString").val()))
+
+  $("#paymentPackage").change(onPackagesChange);
+  $("#paymentItem").change(onItemsChange);
+
+  onPackagesChange();
+  onItemsChange(); // load event configs at zone 1
+
+  function onPackagesChange()
+  {
+    handleChange('packages')
+  }
+
+  function onItemsChange()
+  {
+    handleChange('items')
+  }
+
+   function displayItem(tid, callback)
+  {
+    $.ajax({
+      type: 'GET',
+      url: '/check_paymentitempackages/' + tid
+    }).done(function(jsonData){
+      console.log(jsonData);
+      if (callback) {
+        callback(jsonData);
+      }
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+
+  function handleChange(changeType)
+  {
+    var itemsStoreId = $("#paymentItem").val();
+    var packagesStoreId = $("#paymentPackage").val();
+
+    var payments = null;
+    var storeId = null;
+    if(changeType == 'packages')
+    {
+      storeId = packagesStoreId;
+      payments = paymentPackages;
+    }
+    else if(changeType == 'items')
+    {
+      storeId = itemsStoreId
+      payments = paymentItems;
+    }
+    else
+    {
+      return;
+    }
+
+    storeItem = payments[storeId]
+    vipLevel = changeType == 'items' ? storeItem['needVip'] : storeItem['vipLevel']
+    
+    $('#' + changeType + '_storeId').val(storeId)
+    $('#' + changeType + '_weight').val(storeItem['weight'])
+    $('#' + changeType + '_itemInfo').val(storeItem['itemId'] + ':' + storeItem['name'])
+    $('#' + changeType + '_num').val(storeItem['num'])
+    $('#' + changeType + '_status').val(storeItem['status'])
+    $('#' + changeType + '_needChief').val(storeItem['needChief'])
+    $('#' + changeType + '_price').val(storeItem['price'])
+    $('#' + changeType + '_specialPrice').val(storeItem['specialPrice'])
+    $('#' + changeType + '_buyTimes').val(storeItem['buyTimes'])
+    $('#' + changeType + '_startTime').val(storeItem['startTime'])
+    $('#' + changeType + '_endTime').val(storeItem['endTime'])
+    $('#' + changeType + '_vipLevel').val(vipLevel)
+    $('#' + changeType + '_dayliBuy').val(storeItem['dayliBuy'])
+
+    displayItem(storeItem['itemId'], function(data) {
+      if (changeType == 'packages') {
+        document.getElementById("packagesList").innerHTML = data['content']
+      } else {
+        document.getElementById("itemsList").innerHTML = data['content']; 
+      }
+   });
+  
+  }
+</script>

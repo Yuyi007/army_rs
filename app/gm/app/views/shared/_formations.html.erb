@@ -1,0 +1,11 @@
+<select id="formationTid" name="formationTid" class="form-control">
+  <% CocsProxy.instance.getGameConfig('formations').each do |tid, value| %>
+    <option value='<%= tid %>'>
+      <%= 
+        name = GameConfig.strings[value['name']] || value['name'] 
+        grade = tid[1]
+        "#{grade}-#{name}"
+      %>
+    </option>
+  <% end %>
+</select>

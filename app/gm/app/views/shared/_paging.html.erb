@@ -1,0 +1,27 @@
+<div class='pager'>
+  <div class="pagination">
+    <% if not @page.nil? %>
+      <a class="previous_page" rel="prev start" href="<%= @page.pageUrl + '?curPage=1' %>"><%=t :first_page %></a>
+      <% if @page.curPage.to_i > 1 %>
+        <a class="previous_page" rel="prev start" href="<%= @page.pageUrl + '?curPage=' + (@page.curPage.to_i - 1).to_s %>"><%=t :previous_page %></a>
+      <% else %>
+        <span class="previous_page disabled"><%=t :previous_page %></span>
+      <% end %>
+      <% @page.pages.each do |p| %>
+        <% if p.to_i <= @page.curPage.to_i + 4 or p.to_i >= @page.curPage.to_i - 4 %>
+          <% if p.to_i == @page.curPage.to_i %>
+            <em class="current"><%= p %></em>
+          <% else %>
+            <a href="<%= @page.pageUrl + '?curPage=' + p.to_s %>"><%= p %></a>
+          <% end %>
+        <% end %>
+      <% end %>
+      <% if @page.curPage.to_i < @page.pageNum.to_i %>
+        <a class="next_page" rel="next" href="<%= @page.pageUrl + '?curPage=' + (@page.curPage.to_i + 1).to_s %>"><%=t :next_page %></a>
+      <% else %>
+        <span class="next_page disabled"><%=t :next_page %></span>
+      <% end %>
+      <a class="next_page" rel="next" href="<%= @page.pageUrl + '?curPage=' + @page.pageNum.to_s %>"><%=t :last_page %></a>
+    <% end %>
+  </div>
+</div>

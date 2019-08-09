@@ -1,0 +1,272 @@
+
+<noscript>Enable Javascript to continue</noscript>
+
+<style>
+#tabs {margin: 24px 0 12px 0; font-size: 12px;}
+#give_param_div1 {display:none;}
+#give_param_div2 {display:none;}
+#give_param_div3 {display:none;}
+#give_submit {display:none;}
+.glyphicon {margin-right: 10px;}
+.ticks {display:none;}
+</style>
+
+<!-- <div id='report' style='display:none;' class='alert alert-success'>
+  <h3><%=t :send_result %></h3>
+  <span id='summary' class="label label-default"></span>
+  <span id='successed' class="label label-success"></span>
+  <span id='failed' class="label label-danger"></span>
+</div>
+ -->
+
+<div id='tabs'>
+  <form id="give_form" action="save" method="post" class="form" role="form">
+
+    <div>
+      <h4><span class="label label-default"><span class="glyphicon glyphicon-hdd"></span><%= t :zone %></span><h4>
+      <%= render 'shared/zones' %>
+      <input style="visibility:hidden;" type="submit" value="submit" /><br/>
+      <h4><span class="label label-default"><span class="glyphicon glyphicon-user"></span><%=t :id_list %>(<%=t :id_desc %>):</span></h4>
+      <textarea id="ids" name="ids" type="text" class="form-control" rows=8></textarea>
+    </div>
+
+    <h4><%=t :batch_give_desc %></h4>
+
+    <div class="row">
+      <div class="col-md-3">
+        <div class="input-group">
+          <span class=""><%=t :give_type %></span>
+          <input id="give_type_name" name="give_type_name" type="text" class="" value="" placeHolder=""/>
+          <span id="give_type_tick" class="ticks glyphicon glyphicon-ok">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3" id="give_param_div1">
+        <div class="input-group">
+          <span id="give_param_label1" class=""><%=t :give_param1 %></span>
+          <input id="give_param_name1" name="give_param1_name" type="text" class="" value="" placeHolder=""/>
+          <span id="give_param_tick1" class="ticks glyphicon glyphicon-ok">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3" id="give_param_div2">
+        <div class="input-group">
+          <span id="give_param_label2" class=""><%=t :give_param2 %></span>
+          <input id="give_param_name2" name="give_param_name2" type="text" class="" value="" placeHolder=""/>
+          <span id="give_param_tick2" class="ticks glyphicon glyphicon-ok">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3" id="give_param_div3">
+        <div class="input-group">
+          <span id="give_param_label3" class=""><%=t :give_param3 %></span>
+          <input id="give_param_name3" name="give_param_name3" type="text" class="" value="" placeHolder=""/>
+          <span id="give_param_tick3" class="ticks glyphicon glyphicon-ok">
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="display: none;">
+      <input id="give_type" name="give_type" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+      <input id="give_param1" name="give_param1" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+      <input id="give_param2" name="give_param2" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+      <input id="give_param3" name="give_param3" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    </div>
+
+    <div class="row" style="margin-top: 12px;" id="give_submit">
+      <div class="col-md-3">
+        <div class="input-group">
+          <!--input id="submit" type="submit" class="btn btn-default" /-->
+          <input id="btn_add_record" type="button" value="<%=t :add%>" class="btn btn-default" onclick="add_record();" />
+        </div>
+      </div>
+    </div>
+    
+  </form>
+</div><!-- end of tabs -->
+
+<script type="text/javascript">
+  var g_records = new Array();
+  function addRow(row, trHtml){
+    var $tr=$("#table_records tr").eq(row);
+    if($tr.size()==0){
+      alert("指定的table id或行数不存在！");
+      return;
+    }
+    $tr.after(trHtml);
+  }
+  function del_record(i){
+    delete g_records[i];
+    $('#record_row_'+i).remove();
+  }
+ 
+  function add_record(){
+    var category = $("#give_type").val();
+    var name  = $("#give_param_name1").val();
+    var tid   = $("#give_param1").val();
+    var count = $("#give_param2").val();
+
+    var trHtml="<tr id='record_row_"+g_records.length+"' align='center'>\
+                  <td>"+category+"</td>\
+                  <td>"+name+"</td>\
+                  <td>"+tid+"</td>\
+                  <td>"+count+"</td>\
+                  <td><input type='button' value='<%=t :delete%>' class='btn btn-default' onclick='del_record("+g_records.length+");'></td>\
+                </tr>";
+    addRow(-1, trHtml);
+
+    record = {category: category, name: name, tid: tid, count: count}
+    g_records.push(record);
+
+    currentItem(0);
+  }
+
+  function submit_records()
+  { 
+    var ids   = $("#ids").val();
+    var zone  = $("#zone").val();
+    var reason = $("#give_reason").val();
+    $.ajax({
+      type: 'POST',
+      url: 'batch_save',
+      data: {records: g_records, ids: ids, zone: zone, reason: reason}
+    }).done(function(jsonData){
+      console.log(jsonData);
+      window.location.href = "/data_batch/edit";
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+</script>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="input-group">
+      <span class="input-group-addon"><%=t :give_reason %></span>
+      <input id="give_reason" name="give_reason" type="text" class="form-control" value="" placeHolder="<%=t :give_reason %>"/>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8" style="margin-top: 12px;">
+    <table border="1px #ooo" id="table_records" class="table table-striped table-bordered table-hover">
+      <tr align="center">
+      <td><%=t :t %></td>
+      <td><%=t :name %></td>
+      <td>tid</td>
+      <td><%=t :count %></td>
+      <td><%=t :delete %></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+
+<div class="row" style="margin-top: 12px; text-align: center;">
+  <input type="button" class='btn btn-default' onclick="submit_records();" value="<%=t :add%>">
+</div>
+
+<script type="text/javascript">
+  <!-- 可用的编辑项，如发送英雄，发送装备等 -->
+  var edits = [
+    { id: 'give_item', value: '<%=t :give_item %>', label: '<%=t :give_item %>', params: [
+        { url: 'item', name: '<%=t :item_tid %>' },
+        { url: 'number', name: '<%=t :count %>' }
+      ]
+    },
+    { id: 'give_equip', value: '<%=t :give_equip %>', label: '<%=t :give_equip %>', params: [
+        { url: 'equip', name: '<%=t :equip_tid %>' },
+        { url: 'number', name: '<%=t :count %>' }
+      ]
+    },
+    { id: 'give_garment', value: '<%=t :give_garment %>', label: '<%=t :give_garment %>', params: [
+        { url: 'garment', name: '<%=t :garment_tid %>' },
+        { url: 'number', name: '<%=t :count %>' }
+      ]
+    },
+  ];
+  var selectedEditItem = null;
+
+  $(function () {
+    $('#give_type_name').autocomplete({
+      minLength: 0,
+      source: edits,
+      select: function( event, ui ) {
+        if (ui.item) {
+          selectedEditItem = ui.item;
+          initConfigCompletes();
+          $('#give_type').val(ui.item.id);
+          $('#give_type_tick').show();
+          nextItem(0);
+        }
+      },
+    }).focus(function(){
+      $('#give_type_tick').hide();
+      currentItem(0);
+      $(this).autocomplete('search');
+    });
+  });
+
+  function nextItem(idx) {
+    $('#give_param_tick' + idx).show();
+    if (selectedEditItem.params.length > idx) {
+      $('#give_param_label' + (idx + 1)).text(selectedEditItem.params[idx].name);
+      $('#give_param_div' + (idx + 1)).show();
+    } else {
+      $('#give_submit').show();
+    }
+  };
+
+  function currentItem(idx) {
+    for (i = 3; i > idx; --i) {
+      $('#give_param_tick' + i).hide();
+      $('#give_param_div' + i).hide();
+      $('#give_param_name' + i).val('');
+      $('#give_param' + i).val('');
+    }
+    $('#give_param_tick' + idx).hide();
+    $('#give_submit').hide();
+  }
+
+  function initConfigCompletes() {
+    $('[id^=give_param_name]').each(function() {
+      var id = $(this).attr('id');
+      var idx = parseInt(id.substring('give_param_name'.length));
+
+      if (selectedEditItem.params.length > idx - 1) {
+        var params = selectedEditItem.params[idx - 1];
+
+        if (params.url == 'number') {
+          $(this).change(function () {
+            if (parseInt($(this).val()) > 0) {
+              $('#give_param' + idx).val(parseInt($(this).val()))
+              nextItem(idx);
+            } else {
+              currentItem(idx);
+            }
+          })
+        }
+        else {
+          $(this).configcomplete({
+            url: params.url,
+            select: function( event, ui ) {
+              if (ui.item) {
+                $('#give_param' + idx).val(ui.item.id);
+                nextItem(idx);
+              }
+            },
+          }).focus(function() {
+            currentItem(idx);
+            $(this).configcomplete('search');
+          });
+        }
+      }
+    });
+  }
+
+</script>

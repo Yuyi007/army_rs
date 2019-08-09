@@ -1,0 +1,56 @@
+<a class="btn btn-success" href="<%= url_for :action => 'index' %>">
+	<span class="glyphicon glyphicon-hand-left"></span>
+	<%= t(:new_requests) %>
+</a>
+<hr/>
+
+<script>
+$(document).ready(function() {
+    $('#old_requests_table').dataTable(
+    	{
+    		"bJQueryUI": true,
+    		"bLengthChange": true,
+        "bFilter": true,
+        "bAutoWidth": true,
+    		"bPaginate": false,
+        "bSort": false,
+        "bInfo": false,
+    	});
+} );
+</script>
+
+<table id="old_requests_table" class='table table-striped table-bordered table-hover'>
+	<thead>
+		<tr>
+		  <th><%=t :site_user %></th>
+		  <th><%=t :player_id %></th>
+		  <th><%=t :zone %></th>
+		  <th><%=t :item %></th>
+		  <th><%=t :number1 %></th>
+		  <th><%=t :reason %></th>
+		  <th><%=t :status %></th>
+		  <th><%=t :time %></th>
+		</tr>
+	</thead>
+
+  <tbody>
+		<% @old_grant_records.each_with_index do |grant_record, i| %>
+		<tr class='<%= i % 2 == 0 ? "even" : "odd" %>'>
+		  <% user = SiteUser.find(grant_record.site_user_id) %>
+		  <td class='user'><%= link_to user.username, site_user_url(grant_record.site_user_id) %></td>
+		  <td class='playerId'><%= grant_record.target_id %></td>
+		  <td class='playerZone'><%= grant_record.target_zone %></td>
+		  <td class='item'><%= grant_record.item_name %></td>
+		  <td class='amount'><%= grant_record.item_amount %></td>
+		  <td class='reason'><%= grant_record.reason %></td>
+		  <td class='<%= grant_record.status == "accepted" ? "acceptStatus" : "rejectStatus" %>'><%= grant_record.status %></td>
+		  <td class='time'><%= TimeHelper.gen_date_time_sec(grant_record.created_at) %></td>
+		</tr>
+		<% end %>
+	</tbody>
+
+</table>
+
+<div class='pager'>
+<%= will_paginate @old_grant_records %>
+</div>

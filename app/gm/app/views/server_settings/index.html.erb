@@ -1,0 +1,185 @@
+<noscript>Enable Javascript to continue</noscript>
+
+<div style="margin-bottom: 20px;">
+  <span>
+    <input type="checkbox" id="dev_mode" name="dev_mode" value="" <%= if @temp_dev_mode then 'checked' else '' end %>>&nbsp;&nbsp;<%=t :temp_dev_mode %>&nbsp;&nbsp;<br>
+  </span>
+  <span>
+    <%=t :temp_mode_desc %>
+  </span>
+  <span>
+    <a href="#" class="btn btn-success" onclick="set_dev_mode()"><%=t :save %></a>
+  </span>
+</div>
+
+<div>
+  <p><%=t :server_settings_desc %></p>
+</div>
+
+<div style="margin-bottom: 20px;">
+  <span>
+    <input type="checkbox" id="disable_voice_chat" name="disable_voice_chat" value="" <%= if @server_settings.disable_voice_chat then 'checked' else '' end %>>&nbsp;&nbsp;<%=t :disable_voice_chat %>&nbsp;&nbsp;<br>
+  </span>
+</div>
+
+<div style="margin-bottom: 20px;">
+  <span>
+    <input type="checkbox" id="disable_advt_filtering" name="disable_advt_filtering" value="" <%= if @server_settings.disable_advt_filtering then 'checked' else '' end %>>&nbsp;&nbsp;<%=t :disable_advt_filtering %>&nbsp;&nbsp;<br>
+  </span>
+</div>
+
+<table class="table table-striped table-bordered table-hover">
+  <tr>
+    <th><%=t(:name)%></th>
+    <th><%=t(:server_addr)%></th>
+    <th><%=t(:server_ext_addr)%></th>
+    <th><%=t(:main_sync_interval)%></th>
+    <th><%=t(:combat_sync_interval)%></th>
+    <th><%=t(:main_av_level)%></th>
+    <th><%=t(:pve_av_level)%></th>
+  </tr>
+  <% @server_settings.settings.each do |setting| %>
+    <tr class='server_settings'>
+      <td class='server_name'><%= setting.name %></td>
+      <td class='server_addr'><%= setting.addr %></td>
+      <td class='server_ext_addr'><%= setting.ext_addr %></td>
+      <td>
+        <input id="" name="" type="number" class="main_sync_interval" value="<%= setting.main_sync_interval %>" placeHolder=""/>
+      </td>
+      <td>
+        <input id="" name="" type="number" class="combat_sync_interval" value="<%= setting.combat_sync_interval %>" placeHolder=""/>
+      </td>
+      <td>
+        <input id="" name="" type="number" class="main_av_level" value="<%= setting.main_av_level %>" placeHolder=""/>
+      </td>
+      <td>
+        <input id="" name="" type="number" class="pve_av_level" value="<%= setting.pve_av_level %>" placeHolder=""/>
+      </td>
+    </tr>
+  <%end%>
+</table>
+
+<div style="margin-bottom: 20px;">
+  <a href="#" class="btn btn-success" onclick="save()"><%=t :save %></a>
+  &nbsp;&nbsp;&nbsp;
+  <a href="#" class="btn btn-danger" onclick="delete_server_settings()"><%=t :delete_server_settings %></a>
+</div>
+
+<div style="margin-bottom: 20px;">
+  <a href="#" class="btn btn-success" onclick="reload_server_list()"><%=t :reload_server_list %></a>
+</div>
+
+<div style="margin-bottom: 20px;">
+  <a href="#" class="btn btn-success" onclick="garbage_collect_all()"><%=t :garbage_collect_all %></a>
+</div>
+
+<script type="text/javascript">
+  function set_dev_mode(dev_mode) {
+    $.ajax({
+      type: 'POST',
+      url: '/server_settings/dev_mode',
+      data: { 'dev_mode': $('#dev_mode').is(':checked') },
+      dataType: 'json'
+    }).done(function (json){
+      if (json.success) {
+        showStatus('Set dev mode success~', 'success')
+      }
+      else {
+        showStatus('Set dev mode failed!', 'fail')
+      }
+    }).fail(function(xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+  function save() {
+    save_servers('save')
+  }
+  function save_servers(save_type) {
+    settings = []
+    $('.server_settings').each(function (i1, tr) {
+      setting = {}
+      tr = $(tr)
+      setting.name = tr.find('.server_name').text()
+      setting.addr = tr.find('.server_addr').text()
+      setting.ext_addr = tr.find('.server_ext_addr').text()
+      setting.main_sync_interval = tr.find('.main_sync_interval').val()
+      setting.combat_sync_interval = tr.find('.combat_sync_interval').val()
+      settings.push(setting)
+    });
+    $.ajax({
+      type: 'POST',
+      url: '/server_settings/' + save_type,
+      data: {
+        'settings': JSON.stringify(settings, null),
+        'disable_voice_chat': $('#disable_voice_chat').is(':checked'),
+        'disable_advt_filtering': $('#disable_advt_filtering').is(':checked'),
+      },
+      dataType: 'json'
+    }).done(function (json){
+      if (json.success) {
+        showStatus('Save success~', 'success')
+      }
+      else {
+        showStatus('Save failed!', 'fail')
+      }
+    }).fail(function(xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+  function delete_server_settings() {
+    $.ajax({
+      type: 'POST',
+      url: '/server_settings/delete',
+      data: { },
+      dataType: 'json'
+    }).done(function (json){
+      if (json.success) {
+        showStatus('Delete success~', 'success')
+      }
+      else {
+        showStatus('Delete failed!', 'fail')
+      }
+    }).fail(function(xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+  function reload_server_list() {
+    $.ajax({
+      type: 'POST',
+      url: '/server_settings/reload_server_list',
+      data: { },
+      dataType: 'json'
+    }).done(function (json){
+      if (json.success) {
+        showStatus('Reload success~', 'success')
+      }
+      else {
+        showStatus('Reload failed!', 'fail')
+      }
+    }).fail(function(xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+  function garbage_collect_all() {
+    $.ajax({
+      type: 'POST',
+      url: '/server_settings/garbage_collect_all',
+      data: { },
+      dataType: 'json'
+    }).done(function (json){
+      if (json.success) {
+        showStatus('Collect success~', 'success')
+      }
+      else {
+        showStatus('Collect failed!', 'fail')
+      }
+    }).fail(function(xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+  function withConfirm(func) {
+    if (confirm("确定进行该操作吗?")) {
+      func();
+    }
+  }
+</script>

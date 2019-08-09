@@ -1,0 +1,7 @@
+<h1><%=t :edit_campaign_exp %></h1>
+<%= form_for_hash @campaign_exp, 'campaign_exp', {:action => "update"}, :method => :post, :class => "form" do |f| %>
+  <%= render :partial => "form", :object => f, :locals => { :campaign_exp => @campaign_exp } %>
+  <%= f.submit t(:save), :class => "btn btn-info" %>
+<% end %>
+<br />
+<%= link_to t(:campaign_exp_list_url), {:action => "list", :zone => @zone}, :class => "btn btn-warning" %>

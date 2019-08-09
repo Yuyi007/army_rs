@@ -1,0 +1,69 @@
+<div>
+  <div>
+    <div id="notice">
+      <h2><%=t :notice%></h2>
+      <div id="notice_hint" style="display:none;">
+        <span id="notice_hint_content" style="color:white;"></span>
+      </div>
+      <table class='gridtable table table-striped table-bordered'>
+        <col width="5px" />
+        <col width="5px" />
+        <col width="10px" />
+        <col width="10px" />
+        <col width="10px" />
+        <col width="2000px" />
+        <col width="10px" />
+        <tr>
+          <th><%=t :id%></th>
+          <th><%=t :index%></th>
+          <th><%=t :type%></th>
+          <th><%=t :month%></th>
+          <th><%=t :day%></th>
+          <th><%=t :new%></th>
+          <th><%=t :title%></th>
+           <!-- <th><%   @notice.title%></th> -->
+          <th><%=t :content%></th>
+        </tr>
+        <tr>
+          <td><%= form.text_field :id, :readonly => true, :size => '10'%></td>
+          <td><%= form.number_field :tid, :size => '10' %></td>
+          <td >
+            <select id="notice_type" name="notice[type]" >
+              <option value = 1 <% if @notice.type == 1 then %> selected <%end%>>
+                <%=t :noticeGame %>
+              </option>
+              <option value = 2 <% if @notice.type == 2 then %> selected <%end%>>
+                <%=t :noticeActive %>
+              </option>
+            </select>
+          </td>
+          <td >
+            <select id="notice_month" name="notice[month]" >
+              <% 12.times do|i|%>
+                <option value=<%= i+1 %> <% if @notice.month == i+1 then %> selected <%end%>>
+                  <%= i+1 %>
+                </option>
+              <%end%>
+            </select>
+          </td>
+          <td >
+            <select id="notice_day" name="notice[day]" >
+              <% 31.times do|i|%>
+                <option value=<%= i+1 %> <% if @notice.day == i+1 then %> selected <%end%>>
+                  <%= i+1 %>
+                </option>
+              <%end%>
+            </select>
+          </td>
+          <td><%= form.check_box :isNew  %></td>
+          <td><%= form.text_field :title %></td>
+          <td><%= form.text_area :content, :size => '50x20' %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(initDataSource());
+</script>
+<script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>

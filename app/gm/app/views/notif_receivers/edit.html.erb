@@ -1,0 +1,10 @@
+
+<h1><%=t :edit_notif_receiver %></h1>
+
+<%= form_for @receiver, :url => { :action => "update" }, :html => { :class => "form-signin", :role => "form" } do |f| %>
+  <%= render :partial => "form", :object => f, :locals => { :user => @receiver } %>
+  <%= f.submit t(:save), :class => "btn btn-default btn-sm" %>
+<% end %>
+
+<br />
+<%= link_to t(:notif_receivers), notif_receivers_url %>

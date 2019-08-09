@@ -1,0 +1,94 @@
+<h1><%= t(:edit_package) %></h1>
+
+<br/>
+<a href='/rewards/packagelist/'><%=t :list_package%></a>
+
+<%= render :partial => "formpackage", :locals => { :package_id => @id } %>
+<input type="button" onclick="updatePackage()" value="<%=t :save%>">
+
+
+<script type="text/javascript">
+startLoad()
+function startLoad()
+{
+  clearItem()
+  var id = "<%= @id %>"
+
+  console.log("id=" + id);
+
+  $('#package').mask('读取中...');
+
+  getPackageInfo(id, function(json) {
+    $('#package').unmask();
+    $('#tid').val(json['tid'] ? json['tid']:"")
+    $('#id').val(json['id'] ? json['id']:"")
+    $('#name').val(json['name'] ? json['name']:"")
+    $('#desc').val(json['desc'] ? json['desc']:"")
+    $('#assetId').val(json['assetId'] ? json['assetId']:"")
+    $('#packageSubType').val(json['subtype'] ? json['subtype']:"")
+    $('#grade').val(json['grade'] ? json['grade']:"A")
+    $('#value').val(json['value'] ? json['value']:0)
+    $('#price').val(json['price'] ? json['price']:0)
+    $('#weight').val(json['weight'] ? json['weight']:0)
+    $('#detail').val(json['detail'] ? json['detail']:"")
+    document.getElementById("drops").innerHTML = json['drops'] ? json['drops']:""
+    //$('#needKey').prop('checked', json['needKey'] ? json['needKey']:false)
+    $('#usable').prop('checked', json['usable'] ? json['usable']:false)
+  });
+}
+
+function getPackageInfo(id, callback)
+{
+  $.ajax({
+    type: 'GET',
+    url: '/rewards/getPackage/' + id
+  }).done(function(json){
+    console.log(json);
+    if(json)
+    {
+      if (callback) {
+      callback(json);
+      }
+    }
+    else
+    {
+      showStatus('get package data error!', 'red');
+    }
+
+  }).fail(function(xhr, status){
+    showStatus('get package data error!', 'red');
+  });
+}
+
+function updatePackage()
+{
+  var zoneIndex = $("#zone").val();
+  $.ajax({
+    type: 'post',
+    contentType: 'application/json',
+    dataType: 'json',
+    url: '/rewards/updatePackage/',
+    data: getData()
+  }).done(function(json){
+    console.log(json);
+    if(json && json['success'])
+    {
+      showStatus('save success~', 'green')
+      window.location.href = "/rewards/packagelist/";
+    }
+    else if(json)
+    {
+      showStatus(parseError(json), 'red')
+    }
+    else
+    {
+      showStatus('save error', 'red')
+    }
+
+  }).fail(function(xhr, status){
+    showStatus('Something wrong!', 'red');
+  });
+}
+</script>
+<br/>
+<%= link_to_function (t :back), "history.back()", :class => "btn btn-warning" %>

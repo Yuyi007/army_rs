@@ -1,0 +1,346 @@
+<style>
+#tabs {margin: 24px 0 12px 0; font-size: 12px;}
+#give_param_div1 {display:none;}
+#give_param_div2 {display:none;}
+#give_param_div3 {display:none;}
+#give_submit {display:none;}
+.glyphicon {margin-right: 10px;}
+.ticks {display:none;}
+</style>
+
+
+<div>
+  <%= form_tag '/api/process_redeemed_cdkeys', :method => 'post', :class => "form" do %>
+
+    <div class="row">
+      <div class="col-md-3">
+        <div class="input-group">
+          <span><%=t :redeemed_cdkeys_count %>: </span>
+          <span><%= @redeemed_count %></span>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <%= submit_tag t(:process_redeemed_cdkeys), :class => "btn btn-success" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div style="margin-top: 10px">
+  <%= form_tag '/cdkeys/generate', :method => 'post', :class => "form" do %>
+    <div class="row">
+      <div class="col-md-2">
+        <div class="input-group">
+          <span class="input-group-addon"><%= t(:id) %></span>
+          <%= text_field_tag :tid, nil, :class => "form-control" %>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="input-group">
+          <span class="input-group-addon"><%= t(:num) %></span>
+          <%= number_field_tag :num, 1, :class => "form-control" %>
+        </div>
+      </div>
+       <div class="col-md-3">
+        <div class="input-group">
+          <span class="input-group-addon"><%= t(:end_time) %></span>
+          <%= text_field_tag :end_time, params[:end_time], :class => "form-control" %>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="input-group">
+          <input type='hidden' name='item_id' id='item_id' value="" class="form-control"/>
+        </div>
+      </div> 
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="input-group">
+          <span class="input-group-addon"><%= t(:sdks) %></span>
+          <%= text_field_tag :sdks, nil, :class => "form-control" %>
+        </div>
+      </div>
+      <div class="col-md-4">
+          <span class="input-group-addon"><%= t(:sdk_desc) %></span>
+      </div>
+    </div>
+    <div>
+       <div class="row">
+        <div class="col-md-3">
+          <div class="input-group">
+            <span class=""><%=t :give_type %></span>
+            <input id="give_type_name" name="give_type_name" type="text" class="" value="" placeHolder=""/>
+            <span id="give_type_tick" class="ticks glyphicon glyphicon-ok" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3" id="give_param_div1">
+          <div class="input-group">
+            <span id="give_param_label1" class=""><%=t :give_param1 %></span>
+            <input id="give_param_name1" name="give_param1_name" type="text" class="" value="" placeHolder=""/>
+            <span id="give_param_tick1" class="ticks glyphicon glyphicon-ok">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3" id="give_param_div2">
+          <div class="input-group">
+            <span id="give_param_label2" class=""><%=t :give_param2 %></span>
+            <input id="give_param_name2" name="give_param_name2" type="text" class="" value="" placeHolder=""/>
+            <span id="give_param_tick2" class="ticks glyphicon glyphicon-ok">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3" id="give_param_div3">
+          <div class="input-group">
+            <span id="give_param_label3" class=""><%=t :give_param3 %></span>
+            <input id="give_param_name3" name="give_param_name3" type="text" class="" value="" placeHolder=""/>
+            <span id="give_param_tick3" class="ticks glyphicon glyphicon-ok">
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="display: none;">
+        <input id="give_type" name="give_type" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+        <input id="give_param1" name="give_param1" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+        <input id="give_param2" name="give_param2" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+        <input id="give_param3" name="give_param3" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+      </div>
+
+      <div class="row" style="margin-top: 12px;" id="give_submit">
+        <div class="col-md-3">
+          <div class="input-group">
+            <!--input id="submit" type="submit" class="btn btn-default" / -->
+            <input id="btn_add_record" type="button" value="<%=t :add%>" class="btn btn-default" onclick="add_record();" />
+          </div>
+        </div>
+      </div>
+      <script type="text/javascript">
+        var g_records = new Array();
+
+        function addRow(row, trHtml){
+          var $tr=$("#table_records tr").eq(row);
+          if($tr.size()==0){
+            alert("指定的table id或行数不存在！");
+            return;
+          }
+          $tr.after(trHtml);
+        }
+
+        function del_record(i){
+          delete g_records[i];
+          $('#record_row_'+i).remove();
+          sync_bonus();
+        }
+       
+        function add_record(){
+          var category = $("#give_type").val();
+          var name  = $("#give_param_name1").val();
+          var tid   = $("#give_param1").val();
+          var count = $("#give_param2").val();
+          if(count == "")
+          {
+            count = 1;
+          }
+          var trHtml="<tr id='record_row_"+g_records.length+"' align='center'>\
+                        <td>"+category+"</td>\
+                        <td>"+name+"</td>\
+                        <td>"+tid+"</td>\
+                        <td>"+count+"</td>\
+                        <td><input type='button' value='<%=t :delete%>' class='btn btn-default' onclick='del_record("+g_records.length+");'></td>\
+                      </tr>";
+          addRow(-1, trHtml);
+
+          record = {category: category, name: name, tid: tid, count: count}
+          g_records.push(record);
+          sync_bonus();
+          currentItem(0);
+        }
+
+        function sync_bonus()
+        {
+          str_bonus = ""
+          g_records.forEach(function(record){  
+              str_bonus += (record.tid + "*" + record.count + "|")
+          })  
+          // alert("current bonus:"+ str_bonus)
+          $('#item_id').val(str_bonus); 
+        }
+      </script>
+
+      <div class="row">
+        <div class="col-md-8" style="margin-top: 12px;">
+          <table border="1px #ooo" id="table_records" class="table table-striped table-bordered table-hover">
+            <tr align="center">
+            <td><%=t :t %></td>
+            <td><%=t :name %></td>
+            <td>tid</td>
+            <td><%=t :count %></td>
+            <td><%=t :delete %></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+    </div>  
+    <div class="row">
+      <div class="col-md-2">
+        <%= submit_tag t(:generate), :class => "btn btn-warning" %>
+      </div>
+      <div class="col-md-2">
+        <%= submit_tag t(:generate_repeatable), :class => "btn btn-warning", :name => 'generate_repeatable'%>
+      </div>
+      <div class="col-md-2">
+        <%= submit_tag t(:generate_special), :class => "btn btn-warning", :name => 'generate_special'%>
+      </div>
+    </div>
+
+  <% end %>
+
+</div>
+<br/>
+<%= link_to t(:cdkeys_search), cdkeys_index_path, :class => "btn btn-warning" %>
+<!-- %= link_to t(:cdkeys_import), cdkeys_import_from_local_path, :method => "post", :class => "btn btn-danger" % -->
+
+
+<h2><%=t :import_file %></h2>  
+<%= form_tag cdkeys_import_path, multipart: true do %>  
+  <%= file_field_tag :file %>  
+  <%= submit_tag t(:import_file), :class => "btn btn-danger" %>  
+  <%=  t(:import_notice) %>
+<% end %>  
+
+
+<script type="text/javascript">
+  // $(document).ready(initDataSource());
+
+  function selectItem()
+  {
+    $("#item_id").val($("#item_select").val());
+    $("#share_items").hide();
+  }
+
+  function showItems()
+  {
+    // alert("show items");
+    $("#share_items").show();
+  }
+
+  $("#item_select").change(selectItem)
+  // $("#item_id").focus(showItems)
+  $("#share_items").hide();
+  $('#end_time').datetimepicker();
+
+
+  //<!-- 可用的编辑项，如发送英雄，发送装备等 -->
+  var edits = [
+    { id: 'give_item', value: '<%=t :give_item %>', label: '<%=t :give_item %>', params: [
+        { url: 'item', name: '<%=t :item_tid %>' },
+        { url: 'number', name: '<%=t :count %>' }
+      ]
+    },
+    { id: 'give_equip', value: '<%=t :give_equip %>', label: '<%=t :give_equip %>', params: [
+        { url: 'equip', name: '<%=t :equip_tid %>' },
+        { url: 'number', name: '<%=t :count %>' }
+      ]
+    },
+    { id: 'give_garment', value: '<%=t :give_garment %>', label: '<%=t :give_garment %>', params: [
+        { url: 'garment', name: '<%=t :garment_tid %>' },
+        { url: 'number', name: '<%=t :count %>' }
+      ]
+    },
+  ];
+  var selectedEditItem = null;
+
+
+
+  $(function () {
+    $('#give_type_name').autocomplete({
+      minLength: 0,
+      source: edits,
+      select: function( event, ui ) {
+        if (ui.item) {
+          selectedEditItem = ui.item;
+          initConfigCompletes();
+          $('#give_type').val(ui.item.id);
+          $('#give_type_tick').show();
+          // alert("check data:"+ui.item.id);
+          nextItem(0);
+        }
+      },
+    }).focus(function(){
+      $('#give_type_tick').hide();
+      currentItem(0);
+      $(this).autocomplete('search');
+    });
+  });
+
+
+   function nextItem(idx) {
+    // console.log("check nextItem idx:"+idx+"<===>"+ $('#give_type').val());
+    $('#give_param_tick' + idx).show();
+    if((idx == 1) && (($('#give_type').val()) != "give_item"))
+    {
+      $('#give_submit').show();      
+      return;
+    }
+    
+    if (selectedEditItem.params.length > idx) {
+      $('#give_param_label' + (idx + 1)).text(selectedEditItem.params[idx].name);
+      $('#give_param_div' + (idx + 1)).show();
+    } else {
+      $('#give_submit').show();
+    }      
+  };
+
+  function currentItem(idx) {
+    // console.log("check currentItem idx:"+idx);
+    for (i = 3; i > idx; --i) {
+      $('#give_param_tick' + i).hide();
+      $('#give_param_div' + i).hide();
+      $('#give_param_name' + i).val('');
+      $('#give_param' + i).val('');
+    }
+    $('#give_param_tick' + idx).hide();
+    $('#give_submit').hide();
+  }
+
+  function initConfigCompletes() {
+    $('[id^=give_param_name]').each(function() {
+      var id = $(this).attr('id');
+      var idx = parseInt(id.substring('give_param_name'.length));
+
+      if (selectedEditItem.params.length > idx - 1) {
+        var params = selectedEditItem.params[idx - 1];
+        // console.log("check data:"+params);
+        if (params.url == 'number') {
+          $(this).change(function () {
+            if (parseInt($(this).val()) > 0) {
+              $('#give_param' + idx).val(parseInt($(this).val()))
+              nextItem(idx);
+            } else {
+              currentItem(idx);
+            }
+          })
+        }
+        else {
+          $(this).configcomplete({
+            url: params.url,
+            select: function( event, ui ) {
+              if (ui.item) {
+                $('#give_param' + idx).val(ui.item.id);
+                nextItem(idx);
+              }
+            },
+          }).focus(function() {
+            currentItem(idx);
+            $(this).configcomplete('search');
+          });
+        }
+      }
+    });
+  }
+</script>

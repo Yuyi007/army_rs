@@ -1,0 +1,163 @@
+
+<noscript>Enable Javascript to continue</noscript>
+
+<style>
+.btn {
+  margin: 10px 0;
+}
+</style>
+
+<div style="margin: 12px 0 12px 0;">
+  <% commonParamStr = "email=#{params[:email]}&name=#{params[:name]}&id=#{params[:id]}&zone=#{params[:zone]}" %>
+  <%= link_to t(:raw), "/data/raw?#{commonParamStr}", :id => 'link_raw' %>
+  &nbsp;|&nbsp;
+  <%= link_to t(:view), "/data/view?#{commonParamStr}", :id => 'link_view' %>
+  &nbsp;|&nbsp;
+  <%= link_to t(:history), "/data/history?#{commonParamStr}", :id => 'link_history' %>
+  &nbsp;|&nbsp;
+  <%= link_to t(:permission), "/permissions?#{commonParamStr}", :id => 'link_permission' %>
+  &nbsp;|&nbsp;
+</div>
+
+<form id="form" action="" class="form-inline" role="form">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon">Email:</span>
+        <input id="email" name="email" type="text" class="form-control" value="<%= params[:email] %>" placeHolder="email address" />
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon">Name:</span>
+        <input id="name" name="name" type="text" class="form-control" value="<%= params[:name] %>" placeHolder="user name" />
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon">Id:</span>
+        <input id="id" name="id" type="text" class="form-control" value="<%= params[:id] %>" placeHolder="id" />
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <%= render 'shared/zones' %>
+        <input style="visibility:hidden;" type="submit" value="submit" />
+      </div>
+    </div>
+
+  </div>
+</form>
+
+<script type="text/javascript">
+  $(function(){
+    <% if params[:id] != nil || params[:name] != nil || params[:email] != nil then %>
+      if (typeof updateView != 'undefined') {
+        load(updateView);
+      }
+    <% end %>
+    $('#form').submit(function() {
+      if (typeof updateView != 'undefined') {
+        load(updateView);
+        return false; // prevents normal behaviour
+      } else {
+        return true; // submit the form and refresh the page
+      }
+    });
+    $('#id').change(function () {
+      $('#form').attr('action', '' +
+        '?id=' + $('#id').val() +
+        '&email=' + encodeURIComponent($('#email').val()) +
+        '&name=' + $('#name').val() +
+        '&zone=' + $('#zone').val());
+      refreshLinks();
+    });
+    $('#email').change(function () {
+      var email = $('#email').val()
+      var zone = $('#zone').val()
+      lookupEmail(email, zone, null)
+    });
+    $('#zone').change(function () {
+      refreshLinks();
+    })
+  });
+  function refreshLinks() {
+    $('a[id^=link_]').each(function (i, a) {
+      var id = $('#id').val();
+      var zone = $('#zone').val();
+      var k = $(a).attr('href').indexOf('?');
+      var base = k > 0 ? $(a).attr('href').substring(0, k) : $(a).attr('href');
+      $(a).attr('href', base + '?id=' + id + '&zone=' + zone);
+    });
+  }
+  function lookupEmail(email, zone, callback) {
+    $.ajax({
+      type: 'GET',
+      url: '/user/by_email',
+      data: { 'email': email }
+    }).done(function (json){
+      var id = json['id']
+      $('#id').val(id)
+      if (callback)
+        callback(id, zone)
+    }).fail(function (xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+  function lookupName(name, zone, callback) {
+    $.ajax({
+      type: 'GET',
+      url: '/player/' + zone + '/' + name
+    }).done(function (json){
+      var id = json['id']
+      $('#id').val(id)
+      if (callback)
+        callback(id, zone)
+    }).fail(function (xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+  function loadById(id, zone, callback) {
+    $.ajax({
+      type: 'GET',
+      url: '' + zone + '/' + id
+    }).done(function (json){
+      if (callback)
+        callback(id, zone, json);
+      showStatus('Load success~', 'success');
+    }).fail(function (xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+  function load(callback) {
+    var id = $('#id').val()
+    var name = $('#name').val()
+    var email = $('#email').val()
+    var zone = $('#zone').val()
+    if (id && id.length)
+      loadById(id, zone, callback);
+    else if (email && email.length)
+      lookupEmail(email, zone, function(id, zone){ loadById(id, zone, callback); });
+    else if (name && name.length)
+      lookupName(name, zone, function(id, zone){ loadById(id, zone, callback); });
+    else
+      showStatus('Nothing to load~', 'success');
+  }
+  function exportJson() {
+    var id = $('#id').val()
+    var name = $('#name').val()
+    var email = $('#email').val()
+    var zone = $('#zone').val()
+    var e = function (id, zone) {
+      window.open('/data/' + zone + '/' + id + '/json', '_blank')
+    }
+    if (id && id.length)
+      e(id, zone);
+    else if (email && email.length)
+      lookupEmail(email, zone, e);
+    else if (name && name.length)
+      lookupName(name, zone, e);
+    else
+      showStatus('Nothing to export~', 'success')
+  }
+</script>

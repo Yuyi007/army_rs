@@ -1,0 +1,168 @@
+
+<noscript>Enable Javascript to continue</noscript>
+
+
+
+<div class="row">
+  <div class="col-md-2">
+    <select id="type" name="type" class="form-control">
+      <option value='ids'><%= t(:user_ids) %></option>
+      <option value='email'><%= t(:user_email) %></option>
+      <option value='mobile'><%= t(:user_mobile) %></option>
+    </select>
+  </div>
+  <div class="col-md-4">
+    <div class="input-group">
+      <%= text_field_tag :param, nil, :class => "form-control" %>
+    </div>
+  </div>
+  <div class="col-md-2">
+     <!-- <%= submit_tag t(:submit_query), :class => "btn btn-success" %>  -->
+  </div>
+
+  <input type="button" onclick="loadUserData()" value="<%=t :submit_query%>" class="btn btn-success"></input> 
+</div>
+
+  
+<br>
+<div id="userList" style="display: none;">
+  <input type="hidden" id="uid" />
+  <table class='table table-striped table-bordered table-hover'>
+      <tr>
+        <td><%= t(:user_ids) %></td>
+        <td><%= t(:user_email) %></td>
+        <td><%= t(:user_mobile) %></td>
+        <td><%= t(:user_thirdparty) %></td>
+        <td><%= t(:user_reg_time) %></td>
+        <td><%= t(:user_last_login_time) %></td>
+        <td><%= t(:user_game_life) %></td>
+      </tr>
+      <tr id="userData">
+      </tr>
+  </table>
+  <div class="row">
+    <div class="col-md-2">
+     <span><%=t :choose_zone_query_player %>:</span>
+    </div>
+    <div class="col-md-2">
+      <select id="zones" name="zones" class="form-control">
+        <% RsRails.get_config('zones').each_with_index do |z, i| %>
+          <option value='<%= i+1 %>' <%= if @numOpenZones == i + 1 then 'selected' else '' end%>>
+            <%= "#{i+1} #{z['name']}" %></option>
+        <% end %>
+      </select>
+     </div>
+    <div class="col-md-2">
+     <input type="button" onclick="loadPlayerData()" value="<%=t :submit_query%>" class="btn btn-success"></input> 
+    </div>
+  </div> 
+</div>
+<br>
+<div id="playerInfo" style="display: none;">
+  <table class='table table-striped table-bordered table-hover'>
+      <tr>
+        <td><%= t(:person_pname) %></td>
+        <td><%= t(:user_level) %></td>
+        <td><%= t(:user_gender) %></td>
+        <td><%= t(:vip_level) %></td>
+        <td><%= t(:user_gold) %></td>
+        <td><%= t(:user_debris) %></td>
+        <td><%= t(:user_diamond) %></td>
+     <!--    <td><%= t(:user_achievement_level) %></td>
+        <td><%= t(:user_achievement_id) %></td>
+        <td><%= t(:user_achievement_progress) %></td>
+        <td><%= t(:user_duan) %></td>
+        <td><%= t(:user_history_duan) %></td>
+        <td><%= t(:user_title) %></td> -->
+      </tr>
+      <tr id="playerData">
+      </tr>
+  </table>
+
+</div>
+
+<script type="text/javascript">
+  function loadUserData()
+  {
+     $.ajax({
+      type: 'POST',
+      url: 'query',
+      data: {'type' : $('#type').val(),'param' : $('#param').val()}
+    }).done(function(jsonData){
+      console.log(jsonData);
+      if(jsonData['id']==undefined){
+        showStatus("<%= t(:person_no_person) %>", 'fail');
+        $("#userList").hide();
+        $("#playerInfo").hide();
+      }else{
+        updateUserList(jsonData);
+        $("#userList").show();
+        $("#playerInfo").hide();
+        $("#flash").hide();
+      }
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+
+ function loadPlayerData()
+  {   
+    $.ajax({
+      type: 'POST',
+      url: 'query_player',
+      data: {'zone' : $('#zones').val(),'uid' : $('#uid').val()}
+    }).done(function(jsonData){
+      console.log(jsonData);
+      $("#playerInfo").show();
+      updatePlayerList(jsonData);
+      $("#flash").hide();
+    }).fail(function(xhr, status){
+      showStatus("<%= t(:person_no_person) %>", 'fail');
+      // showStatus('Something wrong!', 'fail');
+    });
+  }
+
+
+
+  function getLocalTime(time) {     
+    var timestamp= new Date(time*1000);
+    return timestamp.toLocaleDateString().replace(/\//g, "-") + " " + timestamp.toTimeString().substr(0, 8); 
+  }
+
+  function updateUserList(data)
+  {
+    var reg_time =data['reg_time'];
+    var s=parseInt((new Date()-new Date(reg_time*1000))/(1000*60*60));
+    s=s+"hour";
+    $("#uid").val(data['id']);
+    var str_table = "<td>"+data['id']+"</td>";
+    str_table += "<td>"+data['email']+"</td>";
+    str_table += "<td>"+data['phone']+"</td>";
+    str_table += "<td>"+data['userid']+"</td>";
+    str_table += "<td>"+getLocalTime(reg_time)+"</td>";
+    str_table += "<td>"+getLocalTime(data['last_login_time']) +"</td>";
+    str_table += "<td>"+s+"</td>";
+    document.getElementById("userData").innerHTML = (str_table);
+  }
+
+   function updatePlayerList(data)
+  { 
+    var chief=data['chief'];
+    var player=data['instances']['i1'];
+    var str_table = "<td>"+player['name']+"</td>";
+    str_table += "<td>"+player['level']+"</td>";
+    if(player['gender']==0){
+      str_table += "<td>man</td>";
+    }else if(player['gender']==1){
+      str_table += "<td>women</td>";
+    }else{
+      str_table += "<td>"+player['gender']+"</td>";
+    }
+    str_table += "<td>"+chief['vip_level']+"</td>";
+    str_table += "<td>"+player['coins']+"</td>";
+    str_table += "<td>"+player['fragments']+"</td>";
+    str_table += "<td>"+chief['credits']+"</td>";
+    document.getElementById("playerData").innerHTML = (str_table);
+  }
+
+</script>

@@ -1,0 +1,7 @@
+<h1><%=t :edit_wushu %></h1>
+<%= form_for_hash @wushu, 'wushu', {:action => "update"}, :method => :post, :class => "form" do |f| %>
+  <%= render :partial => "form", :object => f, :locals => { :wushu => @wushu } %>
+  <%= f.submit t(:save), :class => "btn btn-info" %>
+<% end %>
+<br />
+<%= link_to t(:wushu_list_url), wushu_list_url, :class => "btn btn-warning" %>

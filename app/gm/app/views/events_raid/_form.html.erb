@@ -1,0 +1,193 @@
+<% zone ||= 'zone' %>
+<div>
+<label><%=t :open_zone_to%></label>
+<br/>
+<br/>
+<%=t :select_all %>
+<input type="checkbox" id="selectAllCK" value="" onclick="onSelectAll();"/>
+<br/>
+
+<br/>
+  <table>
+  <% CocsProxy.instance.getGameConfig('zones').each_with_index do |z, i| %>
+    <% if i%6 == 0 %>
+      <tr>
+    <% end %>
+    <% if i < CocsProxy.instance.numOpenZones %>
+      <td style="width:200px;">
+      <label><input name="checkbox_zone" type="checkbox" value="<%= i+1 %>" /><%= "#{i+1}#{t :zone} #{z['name']}" %></label><label id="average_<%= i+1 %>"></label>
+      </td>
+    <% end %> 
+  <% end %>
+  </table>
+</div>
+<br/>
+<br/>
+
+<table>
+<tr>
+  <td><%=t :explore_start_date%></td>
+  <td><%= text_field_tag :startTime, nil %></td>
+</tr>
+<tr>
+  <td><%=t :explore_end_date%></td>
+  <td><%= text_field_tag :endTime, nil %></td>
+</tr>
+</table>
+
+<br/>
+<table>
+<tr>
+  <td><%=t :raid_bonus_multiple%></td>
+  <td><label><input name="cbMultiple" type="radio" value="1"/>1x</label>
+      <label><input name="cbMultiple" type="radio" value="2"/>2x</label>
+      <label><input name="cbMultiple" type="radio" value="3"/>3x</label>
+  </td>
+</tr>
+</table>
+
+<br/>
+<fieldset>
+<table>
+<tr>
+  <td><%=t :raid_bonus_special%></td>
+  <td><input id="cbSpecial" type="checkbox" onclick="onClickSpecialCB();" value=""/></td>
+</tr>
+<tr>
+  <td><%=t :raid_open_npc%></td>
+  <td><input id="cbNpc" type="checkbox" value=""/></td>
+</tr>
+<tr>
+  <td><%=t :raid_open_miniboss%></td>
+  <td><input id="cbMiniBoss" type="checkbox" value=""/></td>
+</tr>
+<tr>
+  <td><%=t :raid_open_bigboss%></td>
+  <td><input id="cbBigBoss" type="checkbox" value=""/></td>
+</tr>
+<tr>
+  <td><%=t :raid_open_welfare%></td>
+  <td><input id="cbWelfare" type="checkbox" value=""/></td>
+</tr>
+</table>
+<br/>
+</fieldset>
+
+<script type="text/javascript" >
+  function setCBS()
+  {
+    var bEnable = document.getElementById("cbSpecial").checked
+    document.getElementById("cbNpc").disabled = !bEnable
+    document.getElementById("cbMiniBoss").disabled = !bEnable
+    document.getElementById("cbBigBoss").disabled = !bEnable
+    document.getElementById("cbWelfare").disabled = !bEnable
+    if(!bEnable)
+    {
+      document.getElementById("cbNpc").checked = false
+      document.getElementById("cbMiniBoss").checked = false
+      document.getElementById("cbBigBoss").checked = false
+      document.getElementById("cbWelfare").checked = false
+    }
+  }
+
+  function onClickSpecialCB()
+  {
+    setCBS()
+  }
+
+  function onSelectAll()
+  {
+    var checked = document.getElementById("selectAllCK").checked;
+    var es = document.getElementsByName("checkbox_zone");
+    for (var i = 0; i < es.length; i++) {
+      if(es[i].disabled)
+        continue;
+
+      es[i].checked = checked
+    };
+  }
+
+  var mode = "new"
+  function getData()
+  {
+    var zone = new Array();
+    var es = document.getElementsByName("checkbox_zone");
+    for (var i = 0; i < es.length; i++) {
+      if(es[i].disabled && mode=="new")
+        continue;
+      
+      if (es[i].checked)
+        zone.push(es[i].value)
+    };
+
+    var multiple = 1;
+    var cbs = document.getElementsByName("cbMultiple");
+    for (var i = 0; i < cbs.length; i++) 
+    {
+      if(cbs[i].checked)
+      {
+        multiple = cbs[i].value
+        break;
+      }
+    };
+
+    var evtInfo = {
+        "zones" : zone,
+        "startTime" : $("#startTime").val(),
+        "endTime" : $("#endTime").val(),
+        "multiple" : multiple,
+        "bSpecial" : document.getElementById("cbSpecial").checked,
+        "bOpenNpc" : document.getElementById("cbNpc").checked,
+        "bOpenMiniBoss" : document.getElementById("cbMiniBoss").checked,
+        "bOpenBigBoss" : document.getElementById("cbBigBoss").checked,
+        "bOpenWelfare" : document.getElementById("cbWelfare").checked,
+    }
+    return JSON.stringify(evtInfo);
+  }
+
+  function setData(data)
+  {
+    mode = "edit";
+    var evt = data['event']
+    $("#startTime").val(evt['startTime']);
+    $("#endTime").val(evt['endTime']);
+    var cbs = document.getElementsByName("cbMultiple");
+    for (var i = 0; i < cbs.length; i++) 
+    {
+      if(cbs[i].value == evt['multiple'])
+      {
+        cbs[i].checked = true;
+        break;
+      }
+    }
+    document.getElementById("cbSpecial").checked = evt['bSpecial']
+    document.getElementById("cbNpc").checked = evt['bOpenNpc']
+    document.getElementById("cbMiniBoss").checked = evt['bOpenMiniBoss']
+    document.getElementById("cbBigBoss").checked = evt['bOpenBigBoss']
+    document.getElementById("cbWelfare").checked = evt['bOpenWelfare']
+
+    document.getElementById("selectAllCK").disabled = true;
+    var es = document.getElementsByName("checkbox_zone");
+    for (var i = 0; i < es.length; i++) {
+      if ( es[i].value == <%= zone %>)
+      {
+        es[i].checked = true;
+      }
+      es[i].disabled = true;
+    };
+  }
+
+  function setEventZone(zones)
+  {
+    mode = "new";
+    var es = document.getElementsByName("checkbox_zone");
+    for (var i = 0; i < zones.length; i++) {
+      es[zones[i]-1].checked = true;
+      es[zones[i]-1].disabled = true;
+    };
+  }
+
+  $('#startTime').datetimepicker();
+  $('#endTime').datetimepicker();
+  setCBS();
+</script>

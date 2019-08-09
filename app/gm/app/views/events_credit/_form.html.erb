@@ -1,0 +1,132 @@
+<%= render 'shared/events_top' %>
+<div  class="row">
+  <%= render 'shared/items_top' %>
+  <div>
+    <div id="credit">
+      <h2><%=t :credit_event%></h2>
+      <div id="credit_hint" style="display:none;width:100%;padding:2px 4px 2px 4px;">
+        <span id="credit_hint_content" style="color:white;"></span>
+      </div>
+      <table class='gridtable table table-striped table-bordered'>
+        <col width="20px" />
+        <col width="30px" />
+        <col width="20px" />
+        <col width="20px" />
+        <col width="20px" />
+        <col width="20px" />
+        <tr>
+          <th><%=t :id%></th>
+          <th><%=t :zone%></th>
+          <th><%=t :start_time%></th>
+          <th><%=t :end_time%></th>
+          <th><%=t :close_time%></th>
+          <th><%=t :event_type%></th>
+          <th><%=t :enable_ranking%></th>
+          <th><%=t :reward1%></th>
+          <th><%=t :reward2%></th>
+          <th><%=t :reward3%></th>
+          <th><%=t :reward4%></th>
+        </tr>
+        <tr>
+          <td><%= form.text_field :id,  :readonly => true, :size => 3 %></td>
+          <td><%= form.text_field :zone,  :readonly => true, :size => 3 %></td>
+          <td><%= form.text_field :startTime, :size => 15 %></td>
+          <td><%= form.text_field :endTime, :size => 15 %></td>
+          <td><%= form.text_field :closeTime, :size => 15 %></td>
+          <td><%= form.select :type, options_for_select([[(t :single_credit), :single_credit], [(t :total_credit), :total_credit], [(t :total_paid), :total_paid]], @credit.type) %></td>
+          <td> <%= form.check_box :ranking %> </td>
+           <% 4.times do |index| %>
+          <td>
+            <% @credit.rewards ||= [] %>
+            <% @credit.rewards[index] ||= {} %>
+            <% @credit.rewards[index]['credits'] ||= 0 %>
+            <%= form.label t :need_credits %>
+            <%= number_field_tag %Q{credit[rewards][#{index}][credits]}, @credit['rewards'][index]['credits'] || 1 %>
+            <%= form.label t :max_times %>
+            <% packageId = @credit['rewards'][index]['packageId'] %>
+            <%= number_field_tag %Q{credit[rewards][#{index}][times]}, @credit['rewards'][index]['times'] || 1 %>
+            <% item = CocsProxy.instance.get_package_config_by_tid(packageId) %>
+            <% if item %>
+              <%= link_to (t :edit_package), rewards_packageedit_url(:id => item['id']) %>
+            <% else %>
+              <%= link_to (t :new_package), rewards_packagenew_url() %>
+            <% end %>
+            <%= text_field_tag "credit[rewards][#{index}][packageId]",  @credit['rewards'][index]['packageId'], :class => 'item form-control', :readonly => true %>
+            <%= text_field_tag "item_name_#{index}", item ? item['name'] + '-' + packageId : t(:choose_package), :readonly => true %>
+
+
+          </td>
+          <% end %>
+        </tr>
+      </table>
+       <div id="itemandpackagegmtSelect" class="selectBlock">
+              <div><span><%=t :search%></span><%= render partial: 'shared/search_items', locals: { eid: "autoCompleteItemAndPackageGmt"} %></div>
+              <div><span><%=t :package%></span><%= render 'shared/packages_gmt' %></div>
+            </div>
+      <%= render 'shared/events_downandup' %>
+    </div>
+    <div id="allSelect" class="selectBlock">
+      <div><span><%=t :search%></span><%= render 'shared/search_items' %></div>
+      <div><span><%=t :hero%></span><%= render 'shared/heroes' %></div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  function getTable(){
+    var data = new Object();
+    data.credit_startTime = $('#credit_startTimze').val();
+    data.credit_endTime = $('#credit_endTime').val();
+    data.credit_closeTime = $('#credit_closeTime').val();
+    data.credit_type = $('#credit_type').val();
+    data.credit_rewards_0_packageId = $('#credit_rewards_0_packageId').val();
+    data.credit_rewards_1_packageId = $('#credit_rewards_1_packageId').val();
+    data.credit_rewards_2_packageId = $('#credit_rewards_2_packageId').val();
+    data.credit_rewards_3_packageId = $('#credit_rewards_3_packageId').val();
+
+    data.credit_rewards_0_credits = $('#credit_rewards_0_credits').val();
+    data.credit_rewards_1_credits = $('#credit_rewards_1_credits').val();
+    data.credit_rewards_2_credits = $('#credit_rewards_2_credits').val();
+    data.credit_rewards_3_credits = $('#credit_rewards_3_credits').val();
+
+    data.credit_rewards_0_times = $('#credit_rewards_0_times').val();
+    data.credit_rewards_1_times = $('#credit_rewards_1_times').val();
+    data.credit_rewards_2_times = $('#credit_rewards_2_times').val();
+    data.credit_rewards_3_times = $('#credit_rewards_3_times').val();
+    data.credit_ranking = $('#credit_ranking').prop('checked');
+
+    return data;
+  }
+
+  selectItem($('#credit_rewards_0_packageId'), $('#item_name_0'), $('#itemandpackagegmtSelect'));
+  selectItem($('#credit_rewards_1_packageId'), $('#item_name_1'), $('#itemandpackagegmtSelect'));
+  selectItem($('#credit_rewards_2_packageId'), $('#item_name_2'), $('#itemandpackagegmtSelect'));
+  selectItem($('#credit_rewards_3_packageId'), $('#item_name_3'), $('#itemandpackagegmtSelect'));
+
+  function toText(){
+    $('#json').val(JSON.stringify(getTable(), null));
+  }
+
+  function toDisplay(){
+    var data = JSON.parse($('#json').val())
+    for(var name in data){
+      if(typeof(data[name]) == 'function'){
+        //
+      }else{
+        if($('#'.concat(name)).attr('type') == 'checkbox'){
+          $('#'.concat(name)).prop('checked', data[name]);
+        }else{
+          $('#'.concat(name)).val(data[name]);
+        }
+      }
+    }
+  }
+
+
+
+  $('#credit_startTime').datetimepicker();
+  $('#credit_endTime').datetimepicker();
+  $('#credit_closeTime').datetimepicker();
+
+
+  $(document).ready(initDataSource());
+</script>

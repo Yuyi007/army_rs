@@ -1,0 +1,47 @@
+root 				= "./../.."
+approot 		= root .. "/app/combat"
+libroot 		= root .. "/lib/skynet"
+thread 			= 4
+logger 			= root .. "/combat.log"
+logpath 		= ""
+harbor 			= 1
+address 		= "127.0.0.1:2526"
+master			= "127.0.0.1:2013"
+standalone 	= "127.0.0.1:2013"
+
+udpaddr			= "0.0.0.0"
+udpport			= 6668
+udppid			= 42789
+
+start 			= "entrance"
+bootstrap 	= "snlua bootstrap"
+
+baseservice = libroot.."/service/?.lua;"
+rootservice = approot.."/?.lua;"
+gateservice	= approot..'/gate/?.lua;'
+roomservice	= approot..'/room/?.lua;'
+vfyservice	= approot..'/verifyproxy/?.lua;'
+winnieservice = libroot.."/lualib/winnie/?.lua"
+luaservice 	= baseservice..rootservice..gateservice..roomservice..vfyservice..winnieservice
+
+cpath 			= libroot.."/cservice/?.so"
+lualoader 	= libroot.."/lualib/loader.lua"
+
+--db
+connect_pool = 5 
+redis_host = "127.0.0.1"
+redis_port = 7000
+redis_db = 0
+
+--net host ip binding
+server_ip = "192.168.105.3"
+server_port = 6668
+
+--debug
+debug = true
+debug_console = true
+script_root 	= "/Users/jenkins/rs/app/combat"
+
+
+
+

@@ -1,0 +1,92 @@
+<style>
+  .line_content {margin-left:20px;}
+</style>
+
+<div style='margin-top: 10px;'>
+  <div style='margin-bottom: 20px;background-color:lightblue;vertical-align:middle'>
+    <li><h4><%=t :city_tools %></h4></li>
+      <div class="row">
+      <div class="col-md-2"><span class='line_content'><%=t :choose_zone %></span></div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <%= render 'shared/zones' %>
+          </div>
+        </div>
+      </div>
+      <br/>
+
+      <div class="row" >
+          <div class="col-md-2">
+            <div class="col-md-1"><input type="button" value="<%=t :skip_to_next_city_time %>" class="btn btn-default" onClick="skip_to_next_city_time();"/></div>
+          </div>
+      </div>
+
+      <div class="row" >
+          <div class="col-md-2">
+            <div class="col-md-1"><input type="button" value="<%=t :clear_city_time_offset %>" class="btn btn-default" onClick="clear_city_time_offset();"/></div>
+          </div>
+      </div>
+
+      <div class="row" >
+          <div class="col-md-2">
+            <div class="col-md-1"><input type="button" value="<%=t :skip_to_next_weather %>" class="btn btn-default" onClick="skip_to_next_weather();"/></div>
+          </div>
+      </div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+function post_reqest(url, data)
+{
+  $.ajax({
+      type: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: url,
+      data: JSON.stringify(data)
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('create success~', 'green')
+        window.location.href = "/test_assist/city_tools/";
+      }
+      else
+      {
+        showStatus('create error', 'red')
+      }
+
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+}
+
+function skip_to_next_city_time()
+{
+  var url = '/test_assist/skip_to_next_city_time';
+  var data = {
+          "zone": $("#zone") .val()
+          };
+  post_reqest(url, data);
+}
+
+function clear_city_time_offset()
+{
+  var url = '/test_assist/clear_city_time_offset';
+  var data = {
+          "zone": $("#zone") .val()
+          };
+  post_reqest(url, data);
+}
+
+function skip_to_next_weather()
+{
+  var url = '/test_assist/skip_to_next_weather';
+  var data = {
+          "zone": $("#zone") .val()
+          };
+  post_reqest(url, data);
+}
+
+</script>

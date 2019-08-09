@@ -1,0 +1,74 @@
+<p>
+<b><%=t :id %>:</b>
+<%=h @wulin.id %>
+</p>
+
+<p>
+<b><%=t :start_time %>:</b>
+<%=h @wulin.start_time %>
+</p>
+
+<p>
+<b><%=t :stage %>:</b>
+<%=h @wulin.stage_name %>
+</p>
+
+<p>
+<b><%=t :zones %>:</b>
+<%=h @wulin.zones.collect {|z| z + 1} %>
+</p>
+
+<p>
+<b><%=t :baseTid %>:</b>
+<%=h @wulin.baseConfig.name %>
+</p>
+
+<p>
+<b><%=t :rewardTid %>:</b>
+<%=h @wulin.rewardConfig.name %>
+</p>
+
+<p>
+<b><%=t :division %>:</b>
+<%=h @wulin.division%>
+</p>
+
+<p>
+<b><%=t :counter %>:</b>
+<%=h @wulin.counter%>
+</p>
+
+<p>
+<b><%=t :stages_wulin %>:</b>
+<ol>
+<% WulinModel::STAGES.each do |stage_sym| %>
+  <li>
+    <span><%= link_to t(stage_sym), stages_wldh_url(@wulin.id, stage_sym) %></span>
+    <span><%=t :wulin_stage_duration %>: </span>
+    <% startTime = @wulin.getStageTime(WulinModel.getStageIndex(stage_sym) - 1) %>
+    <% endTime = @wulin.getStageTime(WulinModel.getStageIndex(stage_sym)) %>
+    <% endTime = startTime if endTime == Float::INFINITY %>
+    <span><%= TimeHelper.gen_date_time_sec(Time.at(startTime)) %></span>
+    <span> - </span>
+    <span><%= TimeHelper.gen_date_time_sec(Time.at(endTime)) %></span>
+  </li>
+<% end %>
+</ol>
+</p>
+
+<p>
+<b><%=t :final %>:</b>
+<% @wulin.details.each do |name, detail| %>
+<div>
+<span><%= name %></span>
+<span><%= detail.to_s %></span>
+</div>
+<% end %>
+</p>
+
+
+
+<div>
+<%= link_to t(:edit_wulin), edit_wldh_url, :class => "btn btn-warning" %>
+<%= link_to t(:list_wulin), wldh_list_url, :class => "btn btn-info" %>
+</div>

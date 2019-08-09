@@ -1,0 +1,23 @@
+<div>
+  <h2><%=t :credit_event_bonus_check%></h2>
+  </hr>
+  <div>
+    <table border='1'>
+      <tr>
+        <th width=100><%= t(:ranking) %></th>
+        <th width=200><%= t(:items_list) %></th>
+      </tr>
+      <% @configs.each_with_index do |config,index| %>
+      <tr>
+      <td><%= index+1 %></td>
+      <td>
+        <% for item in config.itemdisplay %>
+          <%= item %>
+          <br/>
+        <% end %>
+      </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>

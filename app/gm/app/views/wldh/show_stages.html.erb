@@ -1,0 +1,78 @@
+
+<a id='top'></a>
+
+<p>
+<b><%=t :id %>:</b>
+<%=h @wulin.id %>
+<b><%=t :stage %>:</b>
+<%=h @stage %>
+</p>
+
+<a href='#newbie'><%=t :wulin_newbie %></a>
+<a href='#master'><%=t :wulin_master %></a>
+
+<% [ 'newbie', 'master' ].each do |mode| %>
+<div>
+  <h3><a id='<%= mode %>'><%=t "wulin_#{mode}" %></a></h3>
+  <a href='#top'><%=t :back_to_top %></a>
+  <a href="#<%= mode %>_rank_list"><%=t :wulin_rank_list %></a>
+  <a href="#<%= mode %>_fight_list"><%=t :wulin_fight_list %></a>
+
+  <% cai_info = WulinDb.getCaiInfo(@wulin.id, mode, @stage) %>
+  <% fight_list = WulinDb.getStageFightList(@wulin.id, mode, @stage) %>
+
+  <% if @stage.to_s.start_with?('taotai') %>
+  <% rank_list = WulinDb.getTaotaiRankItemsByRange(@wulin.id, mode, @stage, 0, -1) %>
+  <% elsif @stage.to_s.start_with?('xunhuan') %>
+  <% rank_list = WulinDb.getXunhuanDynRankItemsByRange(@wulin.id, mode, 0, -1) %>
+  <% else %>
+  <% rank_list = nil %>
+  <% end %>
+
+  <% if cai_info %>
+  <div>
+    <h5><%=t :wulin_cai_info %></h5>
+    <span><%= cai_info.to_s %></span>
+  </div>
+  <% end %>
+
+  <% if rank_list %>
+  <div>
+    <h5><a id='<%= mode %>_rank_list'><%=t :wulin_rank_list %></a></h5>
+    <ol>
+    <% rank_list.each do |rank_info| %>
+      <% p1 = "#{rank_info.playerId}:#{rank_info.playerZone}" %>
+      <li>
+        <span><%= rank_info.to_s %></span>
+        <span> | </span>
+        <span><%= link_to p1, stages_player_wldh_url(@wulin.id, @stage, rank_info.playerZone, rank_info.playerId) %></span>
+      </li>
+    <% end %>
+    </ol>
+  </div>
+  <% end %>
+
+  <% if fight_list %>
+  <div>
+    <h5><a id='<%= mode %>_fight_list'><%=t :wulin_fight_list %></a></h5>
+    <ol>
+      <% fight_list.each do |fight_info| %>
+        <% p1 = "#{fight_info.playerId1}:#{fight_info.playerZone1}" %>
+        <% p2 = "#{fight_info.playerId2}:#{fight_info.playerZone2}" %>
+        <li>
+          <span><%= fight_info.to_s %></span>
+          <span> | </span>
+          <span><%= link_to p1, stages_player_wldh_url(@wulin.id, @stage, fight_info.playerZone1, fight_info.playerId1) %></span>
+          <span><%= link_to p2, stages_player_wldh_url(@wulin.id, @stage, fight_info.playerZone2, fight_info.playerId2) %></span>
+        </li>
+      <% end %>
+    </ol>
+  </div>
+  <% end %>
+
+<% end %>
+
+<div>
+<%= link_to t(:view_wulin), wldh_url, :class => "btn btn-info" %>
+<%= link_to t(:list_wulin), wldh_list_url, :class => "btn btn-info" %>
+</div>

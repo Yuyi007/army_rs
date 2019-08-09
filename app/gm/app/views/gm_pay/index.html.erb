@@ -1,0 +1,30 @@
+<form id="gm_pay" action="/gm_pay/add" method="POST" class="form">
+  <div>
+    <h2><%=t :gm_recharge %></h2>
+  </div>
+  <div style="width:200px">
+    玩家ID <input id="pid" name="pid" type="text" /><br/><br/>
+    <%= render 'shared/zones' %><br/>
+    <%= render 'shared/recharges' %><br/>
+  </div>
+
+  <input type="submit" value="<%=t :save %>" class="btn btn-info" onclick="return check(this.form)" />
+</form>
+
+<script type="text/javascript">
+
+  function check(form) {
+    if(form.pid.value=='') {
+      alert("请输入用户ID!");
+      form.pid.focus();
+      return false;
+     }
+    return true;
+  }
+
+  $('#maintainance_start_at').datetimepicker();
+  $('#maintainance_end_at').datetimepicker();
+
+  ajaxSubmitWithConfirm($('#maintainanceForm'), '<%=t :confirm_save_maintainance %>');
+
+</script>

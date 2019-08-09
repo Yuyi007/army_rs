@@ -1,0 +1,10 @@
+<div id="share_items">
+  <select id = "item_select" name="item_select" value = ""  >
+    <% GameConfig.items.each do |tid, item_data| %>
+          <option value = '<%= tid %>'>
+            <%= "#{item_data['tid']}-#{item_data['name']}" %>
+          </option>
+    <% end %>
+  </select>
+</div>
+

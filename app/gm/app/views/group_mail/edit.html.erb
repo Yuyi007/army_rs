@@ -1,0 +1,169 @@
+<h1><%= t(:edit) %></h1>
+
+<br/>
+<a href='/group_mail/list/'><%=t :back_to_list%></a>
+
+<%= render :partial => "form", :locals => { :id => @id } %>
+<div class="row">
+  <div class="col-md-2">
+     <input id="save" onclick="save()" value='<%=t(:save)%>' class="btn btn-warning" />
+  </div>
+</div>
+
+<script type="text/javascript">
+startLoad();
+
+function startLoad()
+  {
+    var id = <%= @id %>
+
+    $('#mailForm').mask('读取中...');
+
+    getMail(id, function(json) {
+      $('#mailForm').unmask();
+      $("#senderName").val(json['mail']['from_name']);
+      // $('#kind').val(json['mail']['kind']);
+      $('#sub_type').val(json['mail']['sub_type']);
+      $("#send_type").val(json['mail']['send_type']);
+      $("#zones").val(json['zones']);
+      $("#pids").val(json['to_pid']);
+      $("#content_text").val(json['mail']['content']['text']);
+      $("#title_one").val(json['mail']['content']['title_one']);
+      $("#title_two").val(json['mail']['content']['title_two']);
+      if (json['mail'] && json['mail']['content'] && json['mail']['content']['things'])
+      {
+        processAttachments(json['mail']['content']['things']);
+      }
+      $("#start_time").val(json['start_time']);
+      $("#end_time").val(json['end_time']);
+      $("#min_lv").val(json['min_lv']);
+      $("#max_lv").val(json['max_lv']);
+      $("#type").val(json['type']);
+      $("#need_activity").val(json['need_activity']);
+      if (json['to_pid'] == 'all')
+      {
+        document.getElementById("mail_by_pid").checked = false;
+        document.getElementById("pids").disabled = true;
+        document.getElementById("zones").disabled = false;
+      }
+      else
+      {
+        document.getElementById("mail_by_pid").checked = true;
+        document.getElementById("pids").disabled = false;
+        document.getElementById("zones").disabled = true;
+      }
+    });
+  }
+
+  function processAttachments(attachments)
+  {
+    curIndex = 1
+    for (var i = 1; i <= attachments.length; i++)
+    {
+      curIndex++
+      $('#hide_type' + i).val(attachments[i-1]['type']);
+      var params = findLocalParams(attachments[i-1]['type'])
+      for(var j = 1; j <= params.length; j++)
+      {
+        if(showParam(attachments[i-1]['type'], j-1, attachments[i-1]))
+        {
+          $('#param_div' + i + j).show();
+          $('#param_label' + i + j).text(findLabel(attachments[i-1]['type'], j-1));
+          if(j == 1)
+            $('#param' + i + j).val(attachments[i-1]['name']);
+          else
+            $('#param' + i + j).val(attachments[i-1]['params' + j]);
+          $('#hide_param' + i + j).val(attachments[i-1]['params' + j]);
+        }
+      }
+    }
+    if(curIndex > 1)
+      showClearAttachmentBtn(true)
+  }
+
+  function findLocalParams(type)
+  {
+    for(var i = 0; i < edits.length; i++)
+    {
+      if(type == edits[i].id)
+      {
+        return edits[i]['params'];
+      }
+    }
+    return []
+  }
+
+  function findLabel(type, index)
+  {
+    for(var i = 0; i < edits.length; i++)
+    {
+      if(type == edits[i].id)
+      {
+        return edits[i]['params'][index]['name'];
+      }
+    }
+    return ""
+  }
+
+  function showParam(type, index, attachment)
+  {
+    var hasParam = false
+    for(var i = 0; i < edits.length; i++)
+    {
+      if(type == edits[i].id && edits[i]['params'][index] && edits[i]['params'][index] != undefined)
+      {
+        hasParam = true
+      }
+    }
+    return (attachment['params' + (index+1)] && attachment['params' + (index+1)] != "" && attachment['params' + (index+1)] != undefined && hasParam)
+  }
+
+  function getMail(id, callback)
+  {
+    $.ajax({
+      type: 'GET',
+      url: '/group_mail/get_mail/' + id
+    }).done(function(json){
+      console.log(json);
+      if(json)
+      {
+        if (callback) {
+        callback(json);
+        }
+      }
+      else
+      {
+        showStatus('获取邮件信息失败!', 'red');
+      }
+      
+    }).fail(function(xhr, status){
+      showStatus('获取邮件信息失败!', 'red');
+    });
+  }
+
+  function save()
+  {
+    var id = <%= @id %>
+    $.ajax({
+      type: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: '/group_mail/save/' + id,
+      data: getData()
+    }).done(function(json){
+      console.log(json);
+      if(json && json['success'])
+      {
+        showStatus('save success~', 'green')
+        window.location.href = "/group_mail/list/";
+      }
+      else
+      {
+        showStatus('save error', 'red')
+      }
+      
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+  }
+</script>

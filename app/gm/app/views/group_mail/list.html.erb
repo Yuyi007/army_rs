@@ -1,0 +1,276 @@
+<a href="#" onclick="toCreate()" class="btn btn-info"><%=t :create_group_mail%></a>
+
+<br/><br/>
+
+<table style='table-layout:fixed;word-wrap:break-word' id='mailstable' class='table table-striped table-bordered table-hover'>
+  <col width="50px" />
+  <col width="100px" />
+  <col width="130px" />
+  <col width="100px" />
+  <col width="80px" />
+  <col width="150px" />
+  <col width="150px" />
+  <col width="120px" />
+  <tr>
+    <!-- <th><%=t :publishe_one %></th> -->
+    <th><%=t :id %></th>
+    <!-- <th><%=t :mail_kind%></th> -->
+    <!-- <th><%=t :mail_send_type%></th> -->
+    <!-- <th><%=t :mail_type%></th> -->
+    <th><%=t :zones%></th>
+    <th><%=t :pids%></th>
+    <th><%=t :mail_sender_name %></th>
+    <th><%=t :level %></th>
+    <!-- <th><%=t :max_level %></th> -->
+    <!-- <th><%=t :min_level %></th> -->
+    <th><%=t :start_time %></th>
+    <th><%=t :end_time %></th>
+    <th><%=t :things %></th>
+    <th><%=t :actions %></th>
+  </tr>
+
+  <% @mails.each_with_index do |mail, index| %>
+    <tr>
+      <% if not mail.published%>
+        <!-- <td><%=t :no %></td> -->
+        <td><%= mail.id %></td>
+        <!-- <td><%= mail.mail.kind %></td> -->
+        <!-- <td><%= mail.mail.send_type %></td> -->
+        <!-- <td><%= mail.mail.type %></td> -->
+        <td><%= mail.zones %></td>
+        <td><%= mail.to_pid %></td>
+        <td><%= mail.mail.from_name %></td>
+        <td><%= mail.max_lv.to_s + "  " + mail.min_lv.to_s %></td>
+        <!-- <td><%= mail.max_lv %></td> -->
+        <!-- <td><%= mail.min_lv %></td> -->
+        <td><%= mail.start_time %></td>
+        <td><%= mail.end_time %></td>
+        <% str = '' %>
+        <% mail.mail.content.things.each do|m| %><% str = str + m.params1.to_s + "     " + m.params2.to_s + "\r\n" %><% end %>
+        <td style='word-wrap：break-word;white-space: pre'><%= str %></td>
+        <td><a href='#' onclick=deleteCur(<%= mail.id %>)><%=t :delete%></a>    <% if mail.published.nil? and mail.published.to_i == 0 %><a href='#' onclick=editCur(<%= mail.id %>)><%=t :edit%>  <a href='#' onclick=publishCur(<%= mail.id %>)><%=t :publish%><% end %></a></td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+
+<br/><br/><br/><br/>
+
+<table style='table-layout:fixed;word-wrap:break-word' id='mailstable2' class='table table-striped table-bordered table-hover'>
+  <col width="50px" />
+  <col width="100px" />
+  <col width="130px" />
+  <col width="100px" />
+  <col width="80px" />
+  <col width="150px" />
+  <col width="150px" />
+  <col width="120px" />
+  <tr>
+    <!-- <th><%=t :publishe_two %></th> -->
+    <th><%=t :id %></th>
+    <!-- <th><%=t :mail_kind%></th> -->
+    <!-- <th><%=t :mail_send_type%></th> -->
+    <!-- <th><%=t :mail_type%></th> -->
+    <th><%=t :zones%></th>
+    <th><%=t :pids%></th>
+    <th><%=t :mail_sender_name %></th>
+    <th><%=t :level %></th>
+    <!-- <th><%=t :max_level %></th> -->
+    <!-- <th><%=t :min_level %></th> -->
+    <th><%=t :start_time %></th>
+    <th><%=t :end_time %></th>
+    <th><%=t :things %></th>
+    <th><%=t :actions %></th>
+  </tr>
+
+  <% @mails.each_with_index do |mail, index| %>
+    <tr>
+      <% if mail.published and mail.published.to_i == 1%>
+        <!-- <td><%=t :yes %></td> -->
+        <td><%= mail.id %></td>
+        <!-- <td><%= mail.mail.kind %></td> -->
+        <!-- <td><%= mail.mail.send_type %></td> -->
+        <!-- <td><%= mail.mail.type %></td> -->
+        <td><%= mail.zones %></td>
+        <td><%= mail.to_pid %></td>
+        <td><%= mail.mail.from_name %></td>
+        <td><%= mail.max_lv.to_s + "  " + mail.min_lv.to_s %></td>
+        <!-- <td><%= mail.min_lv %></td> -->
+        <td><%= mail.start_time %></td>
+        <td><%= mail.end_time %></td>
+        <% str = '' %>
+        <% mail.mail.content.things.each do|m| %><% str = str + m.params1.to_s + "     " + m.params2.to_s + "\r\n" %><% end %>
+        <td style='word-wrap：break-word;white-space: pre'><%= str %></td>
+        <td><a href='#' onclick=deleteCur(<%= mail.id %>)><%=t :delete%></a></td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+
+<script type="text/javascript">
+
+  /////////////////////////////////////////////
+  // common
+  //
+  //onStart(); // load event configs at zone 1
+
+  /*function onStart()
+  {
+    getMails(function(json) {
+      $("#mailstable tr:not(:first)").empty();
+      var mails = json['mails'] || {};
+      for(var i = 0; i < mails.length; i++)
+      {
+        var mail = mails[i];
+        var index = mail['mail']['index']
+        var id = mail['id'];
+        var title = mail['mail']['title'];
+        var type = mail['mail']['type']
+        var sendType = mail['mail']['send_type']
+        var minLevel = mail['min_lv']
+        var maxLevel = mail['max_lv']
+        var startTime = mail['start_time'];
+        var endTime = mail['end_time'];
+
+        $("#mailstable").append("<tr>" + "<td>" + index + "</td>" + "<td>" + id + "</td>" + "<td>" + title + "</td>" + "<td>" + typeStr(type) + "</td>" + "<td>" + sendTypeStr(sendType) + "</td>" + "<td>" + minLevel + "</td>" + "<td>" + maxLevel + "</td>" + "<td>" + startTime + "</td>" + "<td>" + endTime + "</td>" + "<td>" + "<a href='#' onclick=deleteCur(" + id + ")><%=t :delete%></a>" + "</td>");
+      }
+    });
+  }
+
+  //<a href='/group_mail/edit/" + id + "'><%=t :edit%></a>
+
+  function typeStr(type)
+  {
+    return "<%=t :mail_type_system%>"
+  }
+
+  function sendTypeStr(sendType)
+  {
+    if(sendType == 'specify_mail')
+      return "<%=t :specify_mail%>"
+    else if(sendType == 'all_mail')
+      return "<%=t :all_mail%>"
+    else
+      return "<%=t :permanent_mail%>"
+  }
+
+  function getMails(callback) {
+    $.ajax({
+      type: 'GET',
+      url: '/group_mail/get_mails/'
+    }).done(function(json){
+      console.log(json);
+      if (callback) {
+        callback(json);
+      }
+    }).fail(function(xhr, status){
+      showStatus('获取邮件列表失败!', 'red');
+    });
+  }*/
+
+  function saveIndex(){
+    $.ajax({
+      type: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: '/group_mail/saveIndex/',
+      data: JSON.stringify(getIndexes())
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('save success~', 'green')
+        window.location.href = "/group_mail/list/";
+      }
+      else
+      {
+        showStatus('save error', 'red')
+      }
+
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+  }
+
+  function getIndexes(){
+    var ids = "<%= @ids %>"
+    var indexes = {}
+    ids = ids.split("_")
+    for (var i=0; i<ids.length; i++)
+    {
+      var index = $("#mail_index_" + ids[i]).val();
+      if(index == '')
+        index = 0
+      indexes[ids[i]] = parseInt(index)
+    }
+    return {'indexes': indexes}
+  }
+
+  function toCreate(){
+    window.location.href = "/group_mail/new/";
+  }
+
+  function deleteCur(id)
+  {
+    if(confirm("<%=t :confirm_operation%>"))
+    {
+      deleteMail(id);
+    }
+    else
+    {
+      //
+    }
+  }
+
+  function publishCur(id)
+  {
+    if(confirm("<%=t :confirm_operation%>"))
+    {
+      publishMail(id);
+    }
+  }
+
+  function publishMail(id)
+  {
+    $.ajax({
+      type: 'POST',
+      url: '/group_mail/publish/' + id
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('publish success~', 'green')
+        window.location.href = "/group_mail/list/";
+      }
+      else
+      {
+        showStatus('publish error', 'red')
+      }
+      }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+  }
+
+  function editCur(id)
+  {
+    window.location.href = "/group_mail/edit/" + id;
+  }
+
+  function deleteMail(id)
+  {
+    $.ajax({
+      type: 'POST',
+      url: '/group_mail/delete/' + id
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('delete success~', 'green')
+        window.location.href = "/group_mail/list/";
+      }
+      else
+      {
+        showStatus('delete error', 'red')
+      }
+      }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+  }
+</script>

@@ -1,0 +1,67 @@
+<h1><%= t(:raid_cfg_history) %></h1>
+<br/>
+<br/>
+<a href='/events_raid/list/'><%=t :list_raid_events%></a>
+<br/>
+<br/>
+<div  style="width:150px;">
+    <span><%=t :choose_zone%></span>
+    <%= render 'shared/zones' %>
+</div>
+<br/>
+<br/>
+<table id='grids' class='table table-bordered table-striped table-hover'>
+  <tr>
+    <th><%=t :zone %></th>
+    <th><%=t :explore_start_date %></th>
+    <th><%=t :explore_end_date %></th>
+    <th><%=t :raid_bonus_multiple %></th>
+    <th><%=t :raid_bonus_special %></th>
+    <th><%=t :raid_open_npc %></th>
+    <th><%=t :raid_open_miniboss %></th>
+    <th><%=t :raid_open_bigboss %></th>
+    <th><%=t :raid_open_welfare %></th>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  function onGetEventList(json)
+  {
+    $("#grids tr:not(:first)").empty();
+    var events = json['histories'] || {};
+    for (var i = 0; i < events.length; i++) 
+    {
+      evt = events[i];
+      var row = "";
+      row += "<tr>";
+      row += "<td>"+evt['zone']+"</td>"
+      row += "<td>"+evt['startTime']+"</td>"
+      row += "<td>"+evt['endTime']+"</td>"
+      row += "<td>"+evt['multiple']+"</td>"
+      row += "<td>"+(evt['bSpecial']?"Y":"N")+"</td>"
+      row += "<td>"+(evt['bOpenNpc']?"Y":"N")+"</td>"
+      row += "<td>"+(evt['bOpenMiniBoss']?"Y":"N")+"</td>"
+      row += "<td>"+(evt['bOpenBigBoss']?"Y":"N")+"</td>"
+      row += "<td>"+(evt['bOpenWelfare']?"Y":"N")+"</td>"
+      row += "</tr>";
+      $("#grids").append(row);
+    };
+  }
+
+  $("#zone").change(onZoneChange);
+  onZoneChange();
+  function onZoneChange()
+  {
+    var zoneIndex = $("#zone").val();
+    console.log("zone=" + zoneIndex);
+    $.ajax({
+      type: 'GET',
+      url: '/events_raid/getHistories/'+zoneIndex
+    }).done(function(json){
+      console.log(json);
+      onGetEventList(json)
+    }).fail(function(xhr, status){
+      showStatus('Get event histories failed!', 'red');
+    });
+  }
+</script>

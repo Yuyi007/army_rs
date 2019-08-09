@@ -1,0 +1,41 @@
+<form id="applePushForm" action="/push/apple" method="POST" class="form">
+  <div class="row">
+    <div class="col-md-8">
+      <h4><span class="label label-info"><%=t :push_to_appstore_user %></span></h4>
+
+      <div class="input-group">
+        <label class="input-group-addon">Token</label>
+        <input id="apToken" name="apToken" type="text" value="" class="form-control" />
+      </div>
+
+      <div class="input-group">
+        <label class="input-group-addon"><%=t :empty_standFor_pushToAllUser %></label>
+      </div>
+
+      <br/>
+
+      <div class="input-group">
+        <label class="input-group-addon">Text</label>
+        <input id="apText" name="apText" type="text" value="" class="form-control" />
+      </div>
+
+      <br/>
+
+      <div class="checkbox">
+        <label><input id="apSandbox" name="apSandbox" type="checkbox" value="true" checked />Sandbox</label>
+      </div>
+      <div class="checkbox">
+        <label><input id="apBadge" name="apBadge" type="checkbox" value="1" checked />Badge</label>
+      </div>
+      <div class="checkbox">
+        <label><input id="apSound" name="apSound" type="checkbox" value="default" checked />Sound</label>
+      </div>
+
+      <input type="submit" value="<%=t :push %>" class="btn btn-info" />
+    </div>
+  </div>
+</form>
+
+<script type="text/javascript">
+  ajaxSubmit($('#applePushForm'));
+</script>

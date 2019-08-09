@@ -1,0 +1,48 @@
+<% eid ||= 'zhuweiTid' %>
+<div class="row">
+  <div class="col-md-4">
+    <select id="zhuweiTid" name="zhuweiTid" class="form-control">
+    <% (1..7).each do |i| %>
+      <option value= '<%= i - 1 %>'>
+        <%= GameConfig.strings['str_zhuwei_position' + i.to_s] %>
+      </option>
+    <% end %>
+  </select>
+  </div>
+  <div class="col-md-4">
+    <select id="zhuweiHeroTid" name="zhuweiHeroTid" class="form-control">
+    <% CocsProxy.instance.getGameConfig('zhuwei')['heroes'].each do |value| %>
+      <option value='<%= value.tid %>'>
+        <%= GameConfig.strings[value.desc] %>
+      </option>
+    <% end %>
+  </select>
+  </div>
+  <div class="col-md-4">
+    <select id="zhuweiAttributeTid" name="zhuweiAttributeTid" class="form-control">
+    <% CocsProxy.instance.getGameConfig('zhuwei')['attributes'].each do |value| %>
+        <option value='<%= value.tid %>'>
+          <%= value.grade + '-' + GameConfig.strings[value.attr] %>
+        </option>
+      <% end %>
+  </select>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+$("#zhuweiTid").change(function(){
+  var index = $("#zhuweiTid").val()
+
+  $.ajax({
+    type: 'GET',
+    url: 'getZhuweiAttributes',
+    data: {'index': index },
+    dataType: 'json'
+  }).done(function(json){
+    $("#zhuweiAttributeTid").html(json.resultHtml)
+  }).fail(function(xhr, status){
+    alert("Something wrong!");
+  });
+});
+</script>

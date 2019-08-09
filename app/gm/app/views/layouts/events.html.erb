@@ -1,0 +1,47 @@
+<% content_for :events do %>
+  <div class="btn-group btn-group-sm">
+    <a href="<%= events_zhaoxian_list_path %>" class="btn btn-info" id="zhaoxian_link">
+      <span class="glyphicon glyphicon-user"></span>
+      <%= t(:zhaoxian_event) %>
+    </a>
+    <a href="<%= events_zonemarket_list_path %>" class="btn btn-info" id="zonemarket_link">
+      <span class="glyphicon glyphicon-user"></span>
+      <%= t(:zonemarket_event) %>
+    </a>
+    <a href="<%= events_soul_list_path %>" class="btn btn-info" id="soul_link">
+      <span class="glyphicon glyphicon-leaf"></span>
+      <%= t(:pick_hero_send_soul) %>
+    </a>
+    <a href="<%= events_campaigndrop_list_path %>" class="btn btn-info" id="campaigndrop_link">
+      <span class="glyphicon glyphicon-tint"></span>
+      <%= t(:campaign_drop_event) %>
+    </a>
+    <a href="<%= events_xuezhan_list_path %>" class="btn btn-info" id="xuezhan_link">
+      <span class="glyphicon glyphicon-usd"></span>
+      <%= t(:xuezhan_event) %>
+    </a>
+
+    <a href="<%= events_campaign_exp_list_path %>" class="btn btn-info" id="campaign_exp_link">
+      <span class="glyphicon glyphicon-usd"></span>
+      <%= t(:campaign_exp_event) %>
+    </a>
+
+    <a href="<%= events_credit_list_path %>" class="btn btn-info" id="credit_link">
+      <span class="glyphicon glyphicon-usd"></span>
+      <%= t(:credit_event) %>
+    </a>
+  </div>
+
+  <hr/>
+
+  <%= yield %>
+
+  <% if @active %>
+    <script>
+    $("#" + "<%= @active %>").removeClass("btn-info")
+    $("#" + "<%= @active %>").addClass("btn-warning")
+    </script>
+  <% end %>
+
+<% end %>
+<%= render template: "layouts/main" %>

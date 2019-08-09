@@ -1,0 +1,325 @@
+<style type="text/css">
+  .value { width: 80px; }
+  .item { display: none; visibility: hidden; }
+  .itemName {}
+  .itemNum { width: 80px; }
+  .autoCompleteBlock {position: absolute; display: none; z-index: 999;}
+  .selectBlock { position:absolute;display:none;width:180px;padding:8px;border:1px solid gray;background-color:#D6D1B9; }
+</style>
+
+<div id="heroSelect" class='autoCompleteBlock well'>
+  <div><span><%=t :search %></span><%= text_field_tag 'heroSelectAutoComplete', nil, :class => "form-control"%></div>
+  <div><span><%=t :hero %></span><%= render 'shared/heroes' %></div>
+</div>
+
+<script type="text/javascript">
+  var lastSelectedItem = null;
+  var lastSelectedItemName = null;
+  var lastSelectBlock = null;
+  var sourceDataInitedArray = new Array(false, false, false, false, false, false, false, false, false, false, false, false, false);
+  var sourceItemsTypeArray = new Array("All", "Koujuepart", "Hero", "Soul", "Equipment", "Formation", "Skill", "Item", "Package", "Box", "Allpart", "Koujue", "ItemAndPackageGmt");
+  var selectTypeArray = new Array("allSelect", "koujuepartSelect", "heroSelect", "soulSelect", "equipmentSelect", "formationSelect", "skillSelect", "itemSelect", "packageSelect", "boxSelect", "allpartSelect", "koujueSelect", "itemandpackagegmtSelect");
+
+  function initDataSource(sourceTypeIndex) {
+    for(var i = 0; i <= sourceItemsTypeArray.length-1; i++)
+    {
+      if(sourceTypeIndex && sourceTypeIndex != i)
+      {
+        continue;
+      }
+      var sourceItemsType = sourceItemsTypeArray[i];
+      if($("#autoComplete".concat(sourceItemsType)).length > 0)
+      {
+        $("#autoComplete".concat(sourceItemsType)).autocomplete({
+          minChars: 0,
+          max: 10,
+          autoFill: true,
+          mustMatch: false,
+          matchContains: true,
+          scrollHeight: 200,
+          source: getSourceData(sourceItemsType),
+          focus: function( event, ui ) {
+            return false;
+          },
+          select: function( event, ui ) {
+            itemAutoCompleteSelected(ui.item.value);
+            $(this).val("");
+            return false;
+          }
+        })
+      }
+    }
+  }
+
+  function getSourceData(sourceItemsType)
+  {
+  	var sourceArray = new Array();
+  	var tidNameArray = new Array();
+  	if(sourceItemsType == "All")
+  	{
+  		tidNameArray.push("equipmentTid");
+  		tidNameArray.push("soulTid");
+  		tidNameArray.push("formationTid");
+  		tidNameArray.push("skillTid");
+  		tidNameArray.push("itemTid");
+  		tidNameArray.push("partTid");
+  	}
+  	else if(sourceItemsType == "Koujuepart")
+  	{
+  		tidNameArray.push("koujuePartTid");
+  	}
+  	else if(sourceItemsType == "Hero")
+  	{
+  		tidNameArray.push("heroTid");
+  	}
+  	else if(sourceItemsType == "Soul")
+  	{
+  		tidNameArray.push("soulTid");
+  	}
+  	else if(sourceItemsType == "Equipment")
+  	{
+  		tidNameArray.push("equipmentTid");
+  	}
+  	else if(sourceItemsType == "Formation")
+  	{
+  		tidNameArray.push("formationTid");
+  	}
+  	else if(sourceItemsType == "Skill")
+  	{
+  		tidNameArray.push("skillTid");
+  	}
+  	else if(sourceItemsType == "Item")
+  	{
+  		tidNameArray.push("itemTid");
+  	}
+  	else if(sourceItemsType == "Package")
+  	{
+  		tidNameArray.push("packageTid");
+  	}
+  	else if(sourceItemsType == "Box")
+  	{
+  		tidNameArray.push("boxTid");
+  	}
+  	else if(sourceItemsType == "Allpart")
+  	{
+  		tidNameArray.push("partTid");
+  	}
+  	else if(sourceItemsType == "Koujue")
+  	{
+  		tidNameArray.push("koujueTid");
+  	}
+    else if(sourceItemsType == "ItemAndPackageGmt")
+    {
+      tidNameArray.push("packageTid")
+      tidNameArray.push("itemTid")
+    }
+  	for(var i = 0; i <= tidNameArray.length-1; i++)
+  	{
+  		if($("select[name='" + tidNameArray[i] + "'] option").length > 0)
+  		{
+  			$("select[name='" + tidNameArray[i] + "'] option").each(function(){
+  				var data = {};
+  				data['value'] = $(this).val();
+  				data['label'] = $.trim($("#" + tidNameArray[i] + " option[value='" + data['value'] + "']").text());
+  				sourceArray.push(data);
+  			});
+  		}
+  	}
+  	return sourceArray;
+  }
+
+  function unbindItemEvents() {
+  	for(var i = 0; i <= selectTypeArray.length-1; i++)
+  	{
+  		if($("#".concat(selectTypeArray[i])).length > 0)
+  		{
+  			$("#".concat(selectTypeArray[i])).unbind('click', clickItemSelect);
+  		}
+  	}
+    //$('#itemSelect').unbind('click', clickItemSelect);
+    $('#main').unbind('click', itemCanceled);
+    $('#creditNum').unbind('change', itemChanged);
+    $('#soulTid').unbind('change', itemChanged);
+    $('#heroTid').unbind('change', itemChanged);
+    $('#equipmentTid').unbind('change', itemChanged);
+    $('#formationTid').unbind('change', itemChanged);
+    $('#skillTid').unbind('change', itemChanged);
+    $('#itemTid').unbind('change', itemChanged);
+    $('#partTid').unbind('change', itemChanged);
+    $('#boxTid').unbind('change', itemChanged);
+    $('#packageTid').unbind('change', itemChanged);
+    $('#koujueTid').unbind('change', itemChanged);
+    $('#koujuePartTid').unbind('change', itemChanged);
+  }
+
+  function bindItemEvents() {
+  	for(var i = 0; i <= selectTypeArray.length-1; i++)
+  	{
+  		if($("#".concat(selectTypeArray[i])).length > 0)
+  		{
+  			$("#".concat(selectTypeArray[i])).click(clickItemSelect);
+  		}
+  	}
+    //$('#itemSelect').click(clickItemSelect);
+    $('#main').click(itemCanceled);
+    $('#creditNum').change(itemChanged);
+    $('#soulTid').change(itemChanged);
+    $('#heroTid').change(itemChanged);
+    $('#equipmentTid').change(itemChanged);
+    $('#formationTid').change(itemChanged);
+    $('#skillTid').change(itemChanged);
+    $('#itemTid').change(itemChanged);
+    $('#partTid').change(itemChanged);
+    $('#boxTid').change(itemChanged);
+    $('#packageTid').change(itemChanged);
+    $('#koujueTid').change(itemChanged);
+    $('#koujuePartTid').change(itemChanged);
+  }
+
+  function clickItemSelect(evt) {
+    evt.stopPropagation();
+  }
+
+  function selectItem(o, oName, selectBlock, callback, param) {
+    oName.click(function () {
+      unbindItemEvents();
+      refreshItems(o.val());
+      fadeOutSelect();
+
+      lastSelectedItem = o;
+      lastSelectedItemName = oName;
+      lastSelectBlock = selectBlock;
+
+      if(sourceDataInitedArray[param] == false)
+      {
+        initDataSource(param);
+        sourceDataInitedArray[param] = true;
+      }
+
+      var offset = oName.offset();
+
+      lastSelectBlock.css("top", offset.top + 36 );
+      lastSelectBlock.css("left", offset.left);
+      lastSelectBlock.fadeIn(100);
+
+      setTimeout(function () {
+        bindItemEvents();
+      }, 10);
+    });
+  }
+
+  function itemChanged() {
+    unbindItemEvents();
+    var v = $(this).val();
+    updateItemName(v, lastSelectedItemName);
+    lastSelectedItem.val(v);
+    fadeOutSelect();
+    //$('#itemSelect').fadeOut(400);
+  }
+
+  function itemCanceled() {
+    unbindItemEvents();
+    fadeOutSelect();
+    //$('#itemSelect').fadeOut(400);
+  }
+
+  function refreshItems(v) {
+    $('#equipmentTid').val(null);
+    $('#formationTid').val(null);
+    $('#skillTid').val(null);
+    $('#itemTid').val(null);
+    $('#partTid').val(null);
+    $('#soulTid').val(null);
+    $('#heroTid').val(null);
+    $('#creditNum').val(0);
+    if (v) {
+      if (v.indexOf('H') == 0) {
+      	if($('#soulTid').length > 0)
+      	{
+      		$('#soulTid').val(v);
+      	}
+      	if($('#heroTid').length > 0)
+      	{
+      		$('#heroTid').val(v);
+      	}
+      } else if (v.indexOf('E') == 0) {
+        $('#equipmentTid').val(v);
+      } else if (v.indexOf('F') == 0) {
+        $('#formationTid').val(v);
+      } else if (v.indexOf('S') == 0) {
+        $('#skillTid').val(v);
+      } else if (v.indexOf('koujue') == 0) {
+        $('#koujueTid').val(v);
+      } else if (v.match(/^I[^EFSJ]/g)) {
+        $('#itemTid').val(v);
+      } else if (v.match(/^I[EFSJ]/g)) {
+        $('#partTid').val(v);
+      } else if (v.match(/\d+/g)) {
+        $('#creditNum').val(v);
+      }
+    }
+  }
+
+  function updateItemName(v, obj) {
+    console.log(v)
+    if (v) {
+      if (v.indexOf("H") == 0) {
+        if($("#soulTid option[value='" + v + "']").length > 0)
+        {
+          obj.val($.trim($("#soulTid option[value='" + v + "']").text()));
+        }
+        if($("#heroTid option[value='" + v + "']").length > 0)
+        {
+          obj.val($.trim($("#heroTid option[value='" + v + "']").text()));
+        }
+      } else if (v.indexOf('E') == 0) {
+        obj.val($.trim($("#equipmentTid option[value='" + v + "']").text()));
+      } else if (v.indexOf('F') == 0) {
+        obj.val($.trim($("#formationTid option[value='" + v + "']").text()));
+      } else if (v.indexOf('S') == 0) {
+        obj.val($.trim($("#skillTid option[value='" + v + "']").text()));
+      } else if(v.indexOf('koujue') == 0){
+      	obj.val($.trim($("#koujueTid option[value='" + v + "']").text()))
+      } else if (v.match(/^I[^EFSJ]/g)) {
+        if(v.indexOf('IP') == 0 && ($("#packageTid option[value='" + v + "']").length > 0))
+        {
+          obj.val($.trim($("#packageTid option[value='" + v + "']").text()));
+        }
+        if((v.indexOf('IPGM') != 0)  && ($("#itemTid option[value='" + v + "']").length > 0))
+        {
+          obj.val($.trim($("#itemTid option[value='" + v + "']").text()));
+        }
+      } else if (v.match(/^I[EFSJ]/g)) {
+        obj.val($.trim($("#partTid option[value='" + v + "']").text()));
+      } else if (v.match(/credit/g)) {
+        obj.val("元宝");
+      } else {
+        obj.val(null);
+      }
+    } else {
+      obj.val(null);
+    }
+  }
+
+  function itemAutoCompleteSelected(value){
+	  unbindItemEvents();
+	  updateItemName(value, lastSelectedItemName);
+	  lastSelectedItem.val(value);
+	  refreshItems(value);
+	  fadeOutSelect();
+	  //$('#itemSelect').fadeOut(400);
+  }
+
+  function fadeOutSelect()
+  {
+  	if(lastSelectBlock)
+    {
+    	lastSelectBlock.fadeOut(400);
+    	lastSelectBlock = null;
+    }
+  }
+
+  /////////// for data/give ////////////
+  //////////////////////////////////////
+
+</script>

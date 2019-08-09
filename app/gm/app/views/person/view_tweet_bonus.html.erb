@@ -1,0 +1,30 @@
+<%= render 'person_header' %>
+<%= render 'person_tweet_header' %>
+<table class="table table-striped table-bordered table-hover">
+  <tr>
+    <th><%=t :id %></th>
+    <th><%=t :count %></th>
+    <th><%=t :kind %></th>
+    <th><%=t :desc %></th>
+    <th><%=t :reply_text %></th>
+    <th><%=t :chance %></th>
+    <th><%=t :drop_tid %></th>
+    <th><%=t :num %></th>
+    <th><%=t :share_end_time %></th>
+    <th><%=t :duration_min %></th>
+  </tr>
+  <% if @bonus %>
+    <tr>
+      <th><%= @bonus.id %></th>
+      <th><%= @bonus.count %></th>
+      <th><%= @bonus.bonus.kind %></th>
+      <th><%= @bonus.bonus.desc %></th>
+      <th><%= @bonus.bonus.reply_text %></th>
+      <th><%= @bonus.bonus.chance %></th>
+      <th><%= @bonus.bonus.drop_tid %></th>
+      <th><%= @bonus.bonus.num %></th>
+      <th><%= Time.at(@bonus.bonus.share_end_time).strftime('%Y-%m-%d %H:%M') %></th>
+      <th><%= @bonus.bonus.duration_min %></th>
+    </tr>
+  <% end %>
+</table>

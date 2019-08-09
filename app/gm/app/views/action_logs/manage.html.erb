@@ -1,0 +1,36 @@
+
+<div>
+  <%= form_tag '/action_logs/process_remain_logs', :method => 'post', :class => "form" do %>
+
+    <div class="row">
+      <div class="col-md-3">
+        <div class="input-group">
+          <span><%=t :remain_log_count %>: </span>
+          <span><%= @remain_log_count %></span>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <%= submit_tag t(:process_action_log), :class => "btn btn-success" %>
+      </div>
+    </div>
+
+  <% end %>
+</div>
+
+<div style="margin-top: 10px">
+  <%= form_tag '/action_logs/delete_old', :method => 'post', :class => "form" do %>
+
+    <div class="row">
+      <div class="col-md-3">
+        <div class="input-group">
+          <span class="input-group-addon"><%= t(:days) %></span>
+          <%= text_field_tag :days, 60, :class => "form-control" %>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <%= submit_tag t(:delete_old_action_logs), :class => "btn btn-danger" %>
+      </div>
+    </div>
+
+  <% end %>
+</div>

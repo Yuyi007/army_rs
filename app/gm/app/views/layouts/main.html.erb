@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gm Tools</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="google" value="notranslate" />
+  <meta name="robots" value="noindex, nofollow" />
+  <meta name="google-translate-customization" content="dc805aaf1f63d1b6-c2d80aa6128c926e-gb59cec15f093eb3d-f"></meta>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <%= csrf_meta_tags %>
+
+  <%= stylesheet_link_tag "application", :media => "all" %>
+  <%= stylesheet_link_tag "/jsoneditor/jsoneditor.css" %>
+  <%= stylesheet_link_tag "/stylesheets/jquery-ui-1.10.3.custom.min.css" %>
+  <%= stylesheet_link_tag "/stylesheets/jquery-ui-timepicker-addon.css" %>
+  <%= stylesheet_link_tag "/stylesheets/jquery.loadmask.css" %>
+  <%= stylesheet_link_tag "bootstrap.min.css" %>
+  <%= stylesheet_link_tag "bootstrap-theme.min.css" %>
+  <%= stylesheet_link_tag "jquery.dataTables.css" %>
+
+  <%= javascript_include_tag "application" %>
+  <!-- <%= javascript_pluggable_tag %>
+  <%= javascript_include_tag "/javascripts/jquery-ui-1.10.3.custom.min.js" %>
+  <%= javascript_include_tag "/javascripts/jquery-ui-timepicker-addon.js" %>
+  <%= javascript_include_tag "/javascripts/jquery.loadmask.min.js" %>
+  <%= javascript_include_tag "/javascripts/main.js" %> -->
+  <%= javascript_include_tag "bootstrap.min.js" %>
+  <%= javascript_include_tag "jquery.dataTables.min.js" %>
+  <%= javascript_include_tag "/jsoneditor/jsoneditor-min.js" %>
+  <%= javascript_include_tag "/jsoneditor/json2.js" %>
+  <%= javascript_include_tag "nicEdit" %>
+
+<style type="text/css">
+  html, body {
+    height: 100%;
+  }
+  #dom-id {margin: 3px 0 13px; font-weight: bold; font-size: 16px}
+  #wrap {
+    min-height: 100%;
+    height: auto;
+    margin: 0 auto -60px;
+    padding: 0 0 60px;
+  }
+  #footer {
+    height: 60px;
+    background-color: #f5f5f5;
+  }
+  .container {
+  }
+</style>
+</head>
+
+
+
+<body style="padding-top: 60px;">
+  <div id="wrap">
+    <div id="main" class="container">
+
+
+      <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li>
+              <a href="<%= url_for('/') %>">
+                <span class="glyphicon glyphicon-home"></span>
+                <%= t(:dashboard) %>
+              </a>
+            </li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-hdd"></span>
+                <%= t(:data) %><b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="<%= url_for('/data/raw') %>"><%= t(:view) %></a></li>
+                <li><a href="<%= url_for('/data_batch/edit') %>"><%= t(:batch_give) %></a></li>
+                <li><a href="<%= url_for('/grant_records') %>"><%= t(:view_grant_records) %></a></li>
+                <li><a href="<%= url_for('/action_logs/index') %>"><%= t(:action_logs) %></a></li>
+                <li><a href="<%= url_for('/data_query/index') %>"><%= t(:query_data) %></a></li>
+               
+              </ul>
+            </li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-wrench"></span>
+                <%= t(:operation) %><b class="caret"></b>
+              </a>
+
+              <ul class="dropdown-menu">
+                <li><a href="<%= url_for('/server_settings/index') %>"><%= t(:server_settings) %></a></li>
+                <li><a href="<%= url_for('/maintainance/index') %>"><%= t(:maintainance) %></a></li>
+                <li><a href="<%= url_for('/queuing_settings/index') %>"><%= t(:queuing_settings) %></a></li>
+                <li><a href="<%= url_for('/zone_settings/index') %>"><%= t(:zone_settings) %></a></li>
+                <li><a href="<%= url_for('/zone/index') %>"><%= t(:manage_zones) %></a></li>
+                <li><a href="<%= url_for('/online/index') %>"><%= t(:online_data) %></a></li>
+                <li><a href="<%= url_for('/app_version/index') %>"><%= t(:publish_force_update) %></a></li>
+                <li><a href="<%= url_for('/client_version/index') %>"><%= t(:publish_update) %></a></li>
+                <li class="divider"></li>
+                <li><a href="<%= url_for('/cdkeys/manage') %>"><%= t(:cdkey) %></a></li>
+                <li><a href="<%= url_for('/channel/index') %>"><%= t(:send_message) %></a></li>
+                <li><a href="<%= url_for('/push/index') %>"><%= t(:push_message) %></a></li>
+                <li><a href="<%= url_for('/bills/index') %>"><%= t(:bills) %></a></li>
+                <li><a href="<%= url_for('/bills/low_search') %>"><%= t(:bills_low) %></a></li>
+                <li><a href="<%= url_for('/gm_pay/index') %>"><%= t(:gm_recharge) %></a></li>
+                <li class="divider"></li>
+                <li><a href="<%= url_for('/notice/list') %>"><%= t(:manage_notices) %></a></li>
+                <li class="divider"></li>
+                <li><a href="<%= url_for('/mail/index') %>"><%= t(:send_mail) %></a></li>
+                <li><a href="<%= url_for('/group_mail/list') %>"><%= t(:send_group_mail) %></a></li>
+                <li><a href="<%= url_for('/player/index') %>"><%= t(:manage_players) %></a></li>
+                <li><a href="<%= url_for('/anti_cheat/index') %>"><%= t(:manage_anti_cheat) %></a></li>
+                <li class="divider"></li>
+                <li><a href="<%= url_for('/rewards/packagelist') %>"><%= t(:rewards_edit) %></a></li>
+                <li><a href="<%= url_for('/mysteryshop/shoplist') %>"><%= t(:mystery_shop) %></a></li>
+                <li><a href="<%= url_for('/booth/list') %>"><%= t(:manage_booth) %></a></li>
+                <li><a href="<%= url_for('/booth/group_list') %>"><%= t(:booth_group) %></a></li>
+              </ul>
+
+            </li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-cog"></span>
+                <%= t(:game_dync_set) %><b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="<%= url_for('/matching_pools/list') %>"><%= t(:matching_pools) %></a></li>
+                <li><a href="<%= url_for('/control_matching_pools/index') %>"><%= t(:control_matching_pools) %></a></li>
+                <li><a href="<%= url_for('/control_combat/index') %>"><%= t(:control_combat) %></a></li>
+<!--                 <li><a href="<%= url_for('/server_settings/index') %>"><%= t(:server_settings) %></a></li> -->  
+                <li><a href="<%= url_for('/maintainance/index') %>"><%= t(:maintainance) %></a></li>
+                <li><a href="<%= url_for('/queuing_settings/index') %>"><%= t(:queuing_settings) %></a></li>
+                <li><a href="<%= url_for('/zone_settings/index') %>"><%= t(:zone_settings) %></a></li>
+                <li><a href="<%= url_for('/zone/index') %>"><%= t(:manage_zones) %></a></li>
+                <li><a href="<%= url_for('/online/index') %>"><%= t(:online_data) %></a></li>
+                <li><a href="<%= url_for('/app_version/index') %>"><%= t(:publish_force_update) %></a></li>
+                <li><a href="<%= url_for('/client_version/index') %>"><%= t(:publish_update) %></a></li>
+              </ul>
+            </li>
+
+             <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-cog"></span>
+                <%= t(:operation_tool) %><b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+               <li><a href="<%= url_for('/notice/list') %>"><%= t(:manage_notices) %></a></li>
+                <li class="divider"></li>
+                <li><a href="<%= url_for('/mail/index') %>"><%= t(:send_mail) %></a></li>
+                <li><a href="<%= url_for('/group_mail/list') %>"><%= t(:send_group_mail) %></a></li>
+                <li><a href="<%= url_for('/user/index') %>"><%= t(:manage_players) %></a></li>
+                <li><a href="<%= url_for('/channel/index') %>"><%= t(:send_message) %></a></li>
+              </ul>
+            </li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-cog"></span>
+                <%= t(:manage) %><b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="<%= url_for('/site_users/list') %>"><%= t(:user_list) %></a></li>
+                <li><a href="<%= url_for('/site_user_records/index') %>"><%= t(:view_records) %></a></li>
+                <li><a href="<%= url_for('/notif_receivers/list') %>"><%= t(:notif_receivers) %></a></li>
+                <li><a href="<%= url_for('/notif_alerts/list') %>"><%= t(:notif_alerts) %></a></li>
+                <li><a href="<%= url_for('/hot_patch/server_tools') %>"><%= t(:hot_patch_server) %></a></li>
+                <li><a href="<%= url_for('/hot_patch/client_tools') %>"><%= t(:hot_patch_client) %></a></li>
+              </ul>
+            </li>
+
+          </ul>
+
+          <p class="navbar-text navbar-right">
+            <%=t :language %>
+            <select id="lang" name="lang" class="selectpicker">
+              <option value='zh' <%= 'selected' if cookies[:lang] == 'zh' %>>简体中文</option>
+              <option value='en' <%= 'selected' if cookies[:lang] == 'en' %>>English</option>
+            </select>
+          </p>
+
+          <% if current_user %>
+            <p class="navbar-text navbar-right">
+              <span class="glyphicon glyphicon-user"></span>
+              <%=t (:logged_in_as) %>
+              <%= link_to current_user.username, site_user_url(current_user), {:class => 'navbar-link'} %>
+              |
+              <%= link_to t(:logout), '/logout', {:class => 'navbar-link'}%>
+            </p>
+          <% else %>
+            <p class="navbar-text navbar-right">
+              <%= link_to t(:login), new_user_session_url, {:class => 'navbar-link'} %>
+            </p>
+          <% end %>
+        </div>
+      </nav> <!-- /.nav -->
+
+      <%= render_navigation(:renderer => :breadcrumbs, :join_with => ' &raquo; ', :prefix => 'Breadcrumbs: ') %>
+
+      <noscript>Enable Javascript to continue</noscript>
+
+      <div class="row">
+        <% if flash[:error] -%>
+          <div class='alert alert-danger'><%=h flash[:error] %></div>
+        <% end -%>
+        <% if flash[:notice] -%>
+          <div class='alert alert-warning'><%=h flash[:notice] %></div>
+        <% end -%>
+        <% if flash[:success] -%>
+          <div class='alert alert-success'><%=h flash[:success] %></div>
+        <% end -%>
+      </div>
+
+      <div id="flash" class="alert" style="display:none;"></div>
+
+      <%= if content_for?(:content) then yield(:content);
+          elsif content_for?(:events) then yield(:events);
+          elsif content_for?(:check) then yield(:check);
+          elsif content_for?(:rewards) then yield(:rewards);
+         else yield end %>
+
+      <div class="clearfix"></div>
+    </div><!-- /.container -->
+  </div><!-- /wrapper -->
+
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted text-right" style="margin-top: 18px">Copyright © 2014 Firevale. All rights reserved.</p>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    function removeStatusClass(){
+      $('#flash').removeClass('alert-danger')
+      $('#flash').removeClass('alert-success')
+      $('#flash').removeClass('alert-info')
+      $('#flash').removeClass('alert-warning')
+    }
+
+    // display flash (auto disappear)
+    // status : success, fail, warning, info
+    function showStatus(text, status) {
+      switch (status){
+        case "success":
+          removeStatusClass()
+          $('#flash').addClass('alert-success')
+          break;
+        case "fail":
+          removeStatusClass()
+          $('#flash').addClass('alert-danger')
+          break
+        case "info":
+          removeStatusClass()
+          $('#flash').addClass('alert-info')
+          break
+        case "warning":
+          removeStatusClass()
+          $('#flash').addClass('alert-warning')
+          break
+        default:
+          removeStatusClass()
+      }
+
+      $('#flash').text(text)
+      $('#flash').show()
+      //setTimeout(function () { $('#flash').fadeOut() }, 2000)
+    }
+
+    $('#lang').change(onChangeLanguage);
+  </script>
+
+</body>
+</html>

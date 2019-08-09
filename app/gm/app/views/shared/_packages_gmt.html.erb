@@ -1,0 +1,13 @@
+<% eid ||= 'packageTid' %>
+<select id="<%= eid %>" name="<%= eid %>" class="form-control">
+<option value='<%= '' %>'>
+        <%= '' %>
+      </option>
+  <% CocsProxy.instance.get_package_configs.each do |value| %>
+    <% if value.tid =~ /^IP.+/ && value.name %>
+      <option value='<%= value.tid %>'>
+        <%= value.name + '-' + value.tid %>
+      </option>
+    <% end %>
+  <% end %>
+</select>

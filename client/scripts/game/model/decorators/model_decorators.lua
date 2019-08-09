@@ -1,0 +1,1 @@
+require 'game/model/decorators/ChatMessageDecorator'

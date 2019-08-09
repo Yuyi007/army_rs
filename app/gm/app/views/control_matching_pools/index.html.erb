@@ -1,0 +1,162 @@
+
+<noscript>Enable Javascript to continue</noscript>
+
+
+
+<div class="row">
+  <div class="col-md-2">
+    <input type="hidden"  id="matching_status" value="<%=@matching_status %>">
+    <input type="button" id="stop_matching" onclick="updateMatchingStatus(1)" value="<%=t :stop_matching%>" class="btn btn-success">
+    </input> 
+    <input type="button" id="open_matching" onclick="updateMatchingStatus(0)" value="<%=t :open_matching%>" class="btn btn-success">
+      
+    </input> 
+  </div>
+  <div class="col-md-2">
+    <input type="hidden"  id="room_status" value="<%=@room_status %>">
+    <input type="button" id="stop_room"  onclick="updateRoomStatus(1)" value="<%=t :stop_room%>" class="btn btn-success"></input> 
+    <input type="button" id="open_room" onclick="updateRoomStatus(0)" value="<%=t :open_room%>" class="btn btn-success"></input> 
+  </div>
+</div>
+<div class="row" style="margin-top: 10px;">
+  <div class="col-md-2">
+    <h4><%=t(:control_matching_pools_list) %> </h4>
+  </div>
+  <div class="col-md-2">
+     <select id="zones" name="zones" class="form-control">
+      <% RsRails.get_config('zones').each_with_index do |z, i| %>
+        <option value='<%= i+1 %>'>
+          <%= "#{i+1} #{z['name']}" %></option>
+      <% end %>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <input type="button" onclick="loadMatchingPools()" value="<%=t :submit_query%>" class="btn btn-success"></input> 
+  </div>
+</div>
+  
+<br>
+<div id="matchingPool" style="display: none">
+  <table class='table table-striped table-bordered table-hover'>
+      <thead>
+      <tr>
+        <th><%= t(:matching_id) %></th>
+        <th><%= t(:matching_pools_name) %></th>
+        <th><%= t(:matching_pool_score_min) %></th>
+        <th><%= t(:matching_pool_score_max) %></th>
+        <th><%= t(:team_num) %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr >
+
+<% @pools.each do |mt, mapts| %>
+  <% mapts.each do |ct, pools| %>
+      
+      <% pools.each do |pool| %>
+        <tr>
+          <td><%= pool.id %></td>
+          <td><%= "#{t pools[0].map_name}-#{t pools[0].comabt_name}" %> </td>
+          <td><%= pool.score_min %></td>
+          <td><%= pool.score_max %></td>
+          <td id="pools_<%=pool.id %>" >0</td>
+        </tr>
+      <% end %>
+  <% end %>
+<% end %>
+</tbody>
+  </table>
+
+</div>
+
+
+<script type="text/javascript">
+
+  $(function(){
+    var matching_status=$("#matching_status").val();
+    var room_status=$("#room_status").val();
+    console.log(matching_status)
+    console.log(room_status)
+    if(matching_status == '' || matching_status == 0){
+      $("#stop_matching").show()
+      $("#open_matching").hide()
+    }else{
+      $("#stop_matching").hide()
+      $("#open_matching").show()
+    }
+    if(room_status == '' || matching_status == 0){
+        $("#stop_room").show()
+        $("#open_room").hide()
+      }else{
+        $("#stop_room").hide()
+        $("#open_room").show()
+      }
+
+  })
+
+  function updateMatchingStatus(status)
+  {
+     $.ajax({
+      type: 'POST',
+      url: 'set_matching_close_status',
+      data: {'status' : status}
+    }).done(function(jsonData){
+      console.log(jsonData);
+      if(status==1){
+        $("#stop_matching").hide()
+        $("#open_matching").show()
+      }else{
+        $("#stop_matching").show()
+        $("#open_matching").hide()
+      }
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+
+ function updateRoomStatus(status)
+  {   
+
+    $.ajax({
+      type: 'POST',
+      url: 'set_create_room_status',
+      data: {'status' : status}
+    }).done(function(jsonData){
+      console.log(jsonData);
+      if(status==1){
+        $("#stop_room").hide()
+        $("#open_room").show()
+      }else{
+        $("#stop_room").show()
+        $("#open_room").hide()
+      }
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+
+   function loadMatchingPools(status)
+  {   
+
+    $.ajax({
+      type: 'POST',
+      url: 'list',
+      data: {'zone' : $("#zones").val()}
+    }).done(function(jsonData){
+      console.log(jsonData);
+      updateMatchingPoolsNum(jsonData)
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+
+  function updateMatchingPoolsNum(data)
+  {
+    for(var i=0; i<data.length;i++){
+      var item=data[i];
+      $("#pools_"+item['pool_id']).html(item['team_num'])
+    }
+    $("#matchingPool").show();
+  }
+
+</script>

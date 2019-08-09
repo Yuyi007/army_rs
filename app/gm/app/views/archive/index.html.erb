@@ -1,0 +1,70 @@
+
+<noscript>Enable Javascript to continue</noscript>
+<h3>Archive Data tools</h3>
+
+<div>
+  <span>Player Id: <%= @id %></span>&nbsp;
+  <span>Zone: <%= @zone %></span>
+</div>
+
+<% if @archive_times.length > 0 %>
+
+<div>
+  <ol>
+  <% @archive_times.each do |time| %>
+  <% ts = time.to_s %>
+  <% now = Time.now %>
+  <% days = ((now - time) / 86400).to_i; hours = ((now - time) % 86400 / 3600).to_i; mins = ((now - time) % 3600 / 60).to_i %>
+    <li>
+      <a href='#' onclick='load("<%= ts %>");'><%= TimeHelper.gen_date_time_sec(time) %></a>&nbsp;
+      <span><%= days %>d <%= hours %>h <%= mins %>m ago </span>&nbsp;
+      <form action='<%= archive_delete_url(@zone, @id, ts) %>' method='post' style='display: inline;'>
+        <input type='submit' value='<%=t :delete %>' class='btn btn-danger'></input>
+      </form>
+    </li>
+  <% end %>
+  </ol>
+</div>
+
+<style>
+.btn {
+  margin: 10px 0;
+}
+</style>
+
+<div id="jsoneditor"></div>
+<a href="#" onclick="toText()" class="btn btn-info">Down!</a>
+<textarea id="json" rows="10" class="form-control"></textarea>
+
+<script type="text/javascript">
+  var editor = new JSONEditor($("#jsoneditor")[0]);
+  window.onload = function() {
+  };
+  function load(time) {
+    id = '<%= @id %>';
+    zone = '<%= @zone %>';
+    $.ajax({
+      type: 'GET',
+      url: '/archive/' + zone + '/' + id + '/' + time
+    }).done(function (json){
+      editor.set(json);
+      showStatus('Load success~', 'success');
+    }).fail(function (xhr, status) {
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+  function toText() {
+    $('#json').val(JSON.stringify(editor.get(), null))
+  }
+  function toJson() {
+    editor.set(JSON.parse($('#json').val()))
+  }
+</script>
+
+<% else %>
+
+<div>
+  <h3>No archives available</h3>
+</div>
+
+<% end %>

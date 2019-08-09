@@ -1,0 +1,7 @@
+
+<h1><%= t(:add_notif_receiver) %></h1>
+
+<%= form_for @receiver, :url => { :action => "create" }, :html => { :class => "form-signin", :role => "form" } do |f| %>
+<%= render :partial => "form", :object => f, :locals => { :user => @receiver } %>
+<%= f.submit t(:save), :class => "btn btn-default btn-sm" %>
+<% end %>

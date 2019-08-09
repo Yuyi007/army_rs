@@ -1,0 +1,21 @@
+<h2><span class="glyphicon glyphicon-credit-card"></span><%=t :credit_event_bonus_check%></h2>
+
+<table class="table table-bordered table-striped table-hover">
+  <tr>
+    <th><%= t(:ranking) %></th>
+    <th><%= t(:rank_bonus_request_credit) %></th>
+    <th><%= t(:items_list) %></th>
+  </tr>
+  <% @configs.each_with_index do |config,index| %>
+  <tr>
+  <td><%= index+1 %></td>
+  <td><%= config.requestcredits %></td>
+  <td>
+    <% for item in config.itemdisplay %>
+      <%= item %>
+      <br/>
+    <% end %>
+  </td>
+  </tr>
+  <% end %>
+</table>

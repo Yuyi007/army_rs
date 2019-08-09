@@ -1,0 +1,85 @@
+<div>
+  <div>
+    <div id="limit_event">
+      <h2><%=t :limit_event%></h2>
+      <div id="limit_event_hint" style="display:none;">
+        <span id="limit_event_hint_content" style="color:white;"></span>
+      </div>
+      <table class='gridtable table table-striped table-bordered'>
+        <tr>
+          <th><%=t :id%></th>
+          <th><%=t :event_id%></th>
+          <th><%=t :donate_max%></th>
+          <th><%=t :prepare_time%></th>
+          <th><%=t :start_time%></th>
+          <th><%=t :end_time%></th>
+          <th><%=t :finish_time%></th>
+        </tr>
+        <tr>
+          <td><%= form.text_field :id, :readonly => true, :size => '5'%></td>
+          <td>
+            <div id="event_list" style="height:auto">
+              <select id = "event_select" name="event_select" value = ""  >
+                <%
+                GameConfig.daily_activity.each do |tid, item_data|
+                  if item_data['type'] == "operate"
+                %>
+                    <option value = '<%= tid %>'>
+                      <%= "#{item_data['tid']}-#{item_data['name']}" %>
+                    </option>
+                <%
+                  end
+                end
+                %>
+              </select>
+              <%= form.hidden_field :event_id, :size => '20'%>
+            </div>
+          </td>
+          <td><%= form.text_field :donate_max, :size => '5' %></td>
+          <td><%= form.text_field :prepare_time, :as => :datetime_picker %></td>
+          <td><%= form.text_field :start_time, :as => :datetime_picker %></td>
+          <td><%= form.text_field :end_time, :as => :datetime_picker %></td>
+          <td><%= form.text_field :finish_time, :as => :datetime_picker %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+
+  function onFocus()
+  {
+     if($("#limit_event_event_id").val() == "")
+      {
+        var eventId = $("#event_select").val()
+        $("#limit_event_event_id").val(eventId)
+      }
+  }
+  function selectItem()
+  {
+    var eventId = $("#event_select").val()
+    $("#limit_event_event_id").val(eventId)
+    $("#event_select").hide();
+  }
+
+  function showItems()
+  {
+    $("#event_select").show();
+  }
+
+  $("#event_select").focus(onFocus)
+  $("#event_select").change(selectItem)
+  $("#limit_event_event_id").focus(showItems)
+  if($("#limit_event_event_id").val() == "")
+  {
+    var eventId = $("#event_select").val()
+    $("#limit_event_event_id").val(eventId)
+  }
+
+  $('#limit_event_prepare_time').datetimepicker();
+  $('#limit_event_start_time').datetimepicker();
+  $('#limit_event_end_time').datetimepicker();
+  $('#limit_event_finish_time').datetimepicker();
+  $(document).ready(initDataSource());
+</script>
+

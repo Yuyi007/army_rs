@@ -1,0 +1,580 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  hello: Hello world
+  login: Login
+  language: Language
+  welcome_to: Welcome to GM Tools
+  no_permission: No permissions
+  register: Register
+  logged_in_as: Logged in as
+  logout: Logout
+  dashboard: Dashboard
+  data: Data
+  view: View
+  zone_id: Zone ID
+  online_clients: Online Clients
+  gate_online_clients: Gate Online Clients
+  view_detail: View details
+  view_ranks: View ranks
+  view_cantloss_ranks: Invincible Myth Ranks
+  view_yunbiao_rank: View Yunbiao Ranks
+  yunbiao_bonus_rank: Bonus Rank
+  yunbiao_lobby_name: Lobby ID
+  edit_data: Edit data
+  operation: Operation
+  operations: Operations
+  maintainance: Maintainance
+  manage_zones: Zones
+  publish_force_update: Force update
+  publish_update: Update
+  send_message: Message
+  push_message: Push
+  bills: Bills
+  manage_events: Events
+  manage_notices: Notices
+  online_data: Online
+  see_gate_online: See Gate Online
+  send_mail: Send mail
+  manage_players: Players
+  manage: Manage
+  user_list: Users
+  view_records: View records
+  errors_happened: "%{count} errors happened"
+  register_user: Register user
+  username: Username
+  email: Email
+  permissions: Permissions
+  last_request_at: Last request at
+  last_login_at: Last login at
+  actions: Actions
+  edit: Edit
+  login_count: Login count
+  failed_login_count: Failed login count
+  last_login_ip: Last login ip
+  current_login_at: Current login at
+  current_login_ip: Current login ip
+  updated_at: Updated at
+  active: Active
+  edit_suspend: Suspend account
+  suspend: Suspend
+  suspended: Suspended
+  reset_failed_login_count: Reset failed login count
+  change_active: "Change active status of %{username}"
+  verified: Verified
+  deliver_verification_instructions: Deliever verfification instructions
+  skip_verification: Skip verification
+  edit_account: Edit account
+  manage_account: Manage account
+  save: Save
+  edit_permissions: Edit permissions
+  back_to_user_list: Back to user list
+  manage_users: Manage users
+  view_account: View account
+  change_permission: "Change permission of %{username}"
+  perm_admin: All privileges
+  perm_p0: All privileges except manage users
+  perm_p1: 'View data, send gift, send notices, send chat, manage events, etc.'
+  perm_p2: 'View data, send notices, send chats, etc.'
+  perm_p3: 'View data'
+  perm_p4: 'No privileges'
+  perm_guest: 'No privileges'
+  permission_details: Permission details
+  zone: zone
+  search: Search
+  send_notice_to_update_messages: Send notice to update messges
+  sdk: SDK
+  push_to_appstore_user: Push to Appstore user
+  push: Push
+  empty_standFor_pushToAllUser: 'if the text is empty, push to all App store users'
+  publish: Publish
+  system: System
+  confirm_save_zone_settings: Confirm to save zone settings?
+  confirm_save_maintainance: Confirm to save maintainance settings?
+  confirm_operation: Confirm this opertion?
+  confirm_sure: Are you sure?
+  all_save_success: All success!
+  save_fail_list: Failed list
+  save_num: Save num
+  skip_movie: Skip opening movie
+  set_level: Modify level
+  set_hero_level: Modify hero level
+  delete_player: Delete player data
+  manage_config: Manage config
+  market: Market
+  items: Items
+  edit_config: Edit config
+  view_config: View config
+  load: Load
+  load_config: Load config
+  load_raw_config: Load raw config
+  validate_config: Validate config
+  save_config: Save config
+  loading: Loading...
+  saving: Saving...
+  maintainance_time: Maintainance time
+  ip_whitelist: IP whitelist
+  id_whitelist: ID whitelist
+  kick_player: Kick Player
+  modify_campaigns: Modify Campaigns
+  manage_wulin: Manage Wulin
+  wulin: Wulin
+  start_time: Start time
+  end_time: End time
+  create_wulin: Create Wulin
+  create: Create
+  edit_wulin: Edit Wulin
+  view_wulin: View Wulin
+  list_wulin: List Wulin
+  stage: Stage
+  delete_success: "%{name} was successfully deleted."
+  update_success: "%{name} was successfully updated."
+  update_failed: "update %{name} failed, repeated zones: %{repeatedZones}"
+  create_success: "%{name} was successfully created."
+  create_failed: "create %{name} failed, repeated zones: %{repeatedZones}"
+  boost_to_next_stage: Boost to next stage
+  boost_to_next_stage_confirm: Are you sure to boost to next stage? This will modify start time of the wulin event and take effect immediately.
+  boost_success: "%{name} was successfully boosted."
+  enroll_num: "Enroll num"
+  auto_enroll: "Auto enroll"
+  is_enrolling: "Is enrolling"
+  enroll_error: "%{name} auto enroll failed."
+  enroll_success: "%{name} auto enroll is in progress, please wait."
+  stage_taotai: stage 1
+  stage_not_activated: not activated
+  zones: Zones
+  not_started: not started
+  activation: activation
+  activated: activated
+  activate: activate
+  activate_success: "%{name} was successfully activted."
+  baseTid: Base Config
+  rewardTid: Reward Config
+  used_zones: Used Zones
+  status: Status
+  closed: Closed
+  unknown: Unknown
+  num_enroll: Num Enrolled
+  reset_all_stages: Reset all stages
+  reset_stages_success: "%{name} stages was successfully reset."
+  query_data: Query Data
+  total_player_count: Total player count
+  last_cache_players_time: Last cache players time
+  cache_players: Cache players
+  debug_query: Debug query
+  submit_query: Submit query
+  input_debug_players: Input debug players (seperate with spaces e.g. 10000001:1 10000300:2)
+  max_players: Max players
+  min_players: Min players
+  running: Running
+  not_started: not started
+  enroll: enroll
+  enroll_wait: enroll wait
+  taotai1_zhen: eliminition 1 formation
+  taotai1_cai: eliminition 1 guess
+  taotai1_da: eliminition 1 fight
+  taotai1_wait: eliminition 1 wait
+  taotai2_zhen: eliminition 2 formation
+  taotai2_cai: eliminition 2 guess
+  taotai2_da: eliminition 2 fight
+  taotai2_wait: eliminition 2 wait
+  taotai3_zhen: eliminition 3 formation
+  taotai3_cai: eliminition 3 guess
+  taotai3_da: eliminition 3 fight
+  taotai3_wait: eliminition 3 wait
+  taotai4_zhen: eliminition 4 formation
+  taotai4_cai: eliminition 4 guess
+  taotai4_da: eliminition 4 fight
+  taotai4_wait: eliminition 4 wait
+  xunhuan1_zhen: round robin formation
+  xunhuan1_cai: round robin guess
+  xunhuan1_da: round robin fight
+  xunhuan1_wait: round robin wait
+  f32_zhen: Top32 formation
+  f32_cai: Top32 guess
+  f32_da: Top32 fight
+  f32_wait: Top32 wait
+  f16_zhen: Top16 formation
+  f16_cai: Top16 guess
+  f16_da: Top16 fight
+  f16_wait: Top16 wait
+  f8_zhen: Top8 formation
+  f8_cai: Top8 guess
+  f8_da: Top8 fight
+  f8_wait: Top8 wait
+  f4_zhen: Top4 formation
+  f4_cai: Top4 guess
+  f4_da: Top4 fight
+  f4_wait: Top4 wait
+  final_zhen: Final formation
+  final_cai: Final guess
+  final_da: Final fight
+  final_wait: Final wait
+  end: Finished
+  campaign_drop_event: Campaign Drop Event
+  explore_event: Explore Event
+  reason: reason
+  view_grant_records: grant request
+  site_user: user
+  action: action
+  time: time
+  accept: accept
+  reject: reject
+  send_package: send packages
+  send_boxes: send boxes
+  modify_zhuwei: modify zhuwei
+  add_credit_fail1: user has charged
+  add_credit_fail2: 1-10 level money limit 6480
+  add_credit_fail3: 11-20 level money limit 19400
+  add_credit_fail4: 21-32 level money limit 32400
+  new_requests: new requests
+  old_requests: old requests
+  need_no_grant: need no grant
+  need_grant: need grant
+  add_credit_only_fail: can not charge num larger than vip level
+  create_creditevent: create credit event
+  create_exploreevent: create explore event
+  edit_creditevent: edit credit event
+  edit_exploreevent: edit explore event
+  list_creditevent: back to credit event list
+  list_exploreevent: back to explre event list
+  creditevent_type: type
+  create_dropevent: create campaign drop event
+  edit_dropevent: edit campaigndrop event
+  list_dropevent: back to campaign drop event list
+  force_copy: force copy
+  force_copy_tips: force copy will delete event data of destination zone and ensure the copy success,continue?
+  error_time_overlap: time overlap with current exist events
+  error_invalid_cur_event: will make a current exist events invalid
+  error_out_of_date: the start time is too early
+  error_no_fonts: no fonts
+  error_no_auth: no auth
+  error_zone: zone error occurred
+  error_fonts: fonts lost
+  operation_success: operation success
+  operation_failed: operation failed
+  modify_xiulian_status: modify xiulian status
+  delete: Delete
+  total_credit: total credit
+  single_credit: single credit
+  total_credit_paid: total credit paid
+  config_check: config check
+  paymentitems_check: payment items config check
+  credit_event_bonus_check: credit event rankbonus config check
+  package_id: package id
+  redeem_request: redeem request
+  type_param: type param
+  purchase_type: purchase type
+  price: price
+  sell_num: sell number
+  items_list: items list
+  vip_level: vip level
+  user_level: user level
+  campaign_progress: campaign progress
+  rank_bonus_request_credit: request recharge/paid credits for redeem rank bonus
+  rank_bonus_enable: rank bonus enable opened
+  explore_start_date: start date
+  explore_end_date: end date
+  explore_close_date: close date
+  explore_coefficient: adjust coefficient
+  explore_history_average: base value
+  select_all: select all
+  detail: detail
+  getExploreEvents_fail: get explore events fail!
+  getExploreDetail_fail: get explore events dettail fail!
+  accelerate: accelerate
+  explore_status: status
+  explore_history: history
+  rewards_edit: rewards edit
+  reward_item_id: item ID
+  reward_item_name: item name
+  reward_item_desc: item description
+  reward_item_res: item resource
+  reward_item_type: item type
+  reward_item_grade: item grade
+  reward_item_value: item value
+  reward_item_drop_probability: item drop probability
+  reward_item_prices: item price
+  reward_item_useable: useable
+  reward_item_weight: weight
+  reward_item_effect_desc: effect description
+  reward_item_content_item: content
+  reward_item_need_key: need key
+  create_package: create package
+  create_store: create store
+  edit_package: edit package
+  edit_store: edit store
+  list_package: back to package list
+  list_store: back to store list
+  item_num: item number
+  error_item_empty: item or item number is empty!
+  error_item_repeat: add duplicate items!
+  grade_A: grade A
+  grade_B: grade B
+  grade_C: grade C
+  grade_D: grade D
+  store_item: store item
+  store_slot: store slot
+  status_non: no status
+  status_hot: hot
+  status_new: new
+  query: Query
+  item: Item
+  user_id: User Id
+  redeem_time: Redeem Time
+  need_not_fill: need not fill
+  grant_tips: "last alert time:%{time} last alert user:%{user}, grant the alert?"
+  granted: accepted
+  need_grant: waiting for grant
+  rejected: rejected
+  reward_days: reward last days
+  back_value: reward
+  jubao_event: jubao event
+  error_wrong_data: wrong data!
+  create_jubao: create jubao event
+  list_jubao: list jubao events
+  edit_jubao: edit jubao event
+  delete_batch: delete batch
+  batch_modify_coefficient: batch modify coefficient
+  already_collect: already collect
+  modify_average_notice: Can only be modified in wait state
+  grant_status: grant status
+  grant_actions: grant action
+  raw: Raw
+  history: History
+  permission: Permission
+  batch_give: Batch edit
+  batch_give_desc: 'Will directly modify player data if with enough permission, or grants will be sent.'
+  id_list_empty: Id list is empty!
+  id_list: Id list
+  id_desc: Seperated by comma, limit to 100, e.g. 10000001:i1 or 10000001(use current character)
+  count: Count
+  give_type: Give type
+  give_param1: Param1
+  give_param2: Param2
+  give_param3: Param3
+  give_reason: Reason
+  give_hero: Give Hero
+  give_equip: Give Equipment
+  give_garment: Give Garment
+  give_item: Give Item
+  give_skill: Give Skill
+  pass_campaign: Pass Campaign
+  fuben_tid: Campaign Name
+  zhandou_tid: Fight Name
+  item_tid: Item Id
+  hero_tid: Hero Type Id
+  equip_tid: Equip Type Id
+  garment_tid: Garment Type Id
+  skill_tid: Skill Type Id
+  no_data: No data
+  action_logs: Action logs
+  detailed_search: Detailed search
+  advanced: Advanced
+  manage_action_logs: Manage action logs
+  remain_log_count: Remain log count
+  delete_old_action_logs: Delete old action logs before days
+  process_remain_logs: Process remain logs
+  days: Days
+  t: Type
+  action_type: Action Type
+  update: Update
+  name: Name
+  zones: Zones
+  list_of_current_denies: List of current denies
+  create_deny: Create deny
+  list_item_draggable: List Item Draggable
+  sort: Sort
+  list_of_current_posts: List of current posts
+  create_post: Create post
+  is_new: Is new
+  title: Title
+  message: Message
+  test_assist: Test assist
+  fix_num_onlines: Fix onlines
+  clear_num_onlines: Clear all onlines
+  ladon_special_evts: Ladon special events
+  ladon_special_task: Special task
+  special_task_id: Task ID
+  ladon_special_feed: Special feed
+  special_feed_tid: food ID
+  ladon_touch: Ladon touch
+  view_action_logs_new: view action logs (new)
+  search_field_params_help: 可匹配所有参数，支持前缀匹配
+  manage_notices_new: Manage Notices(new)
+  are_you_sure_to_delete: Are you sure to delete?
+  functions_open: open functions
+  process_redeemed_cdkeys: process redeemed cdkeys
+  generate: generate
+  redeemed_cdkeys_count: redeemed cdkeys count
+  import: import
+  export: export
+  set_current_login_days: set today is which login days
+  login_award_test: login award test
+  hell_campaign_capture: hell campaign test tool
+  set_map_id: set map id to clean it(Z1001)
+  title_login_bonus:  login bonus
+  title_level_bonus: level bonus
+  title_adv_bonus: adv bonus
+  title_collect_bonus:  collect bonus
+  title_charge_bonus: charge bonus
+  title_total_paid_bonus: total paid bonus
+  ops_title: daily events
+  event_type: Event Type
+  disappear_date: Disappear Date
+  copy: Copy
+  clear_bag: Clear Bag
+  ops_warning: WARNING!!
+  ops_title_desc: You can input an existing id to modify the times of the events，but you cannot change the event type，it will cause different players have different event types，please use alphabet characters or underscores or numbers for an event id!
+  skill_tools: Skill Tools
+  unlock_all_skills: Unlock all skills
+  set_credit: Set Credit
+  set_energy: Set Energy
+  energy: Energy
+  send_item: Send Item
+  send_equip: Send Equip
+  send_garment: Send Garment
+  city_tools: City Tools
+  choose_zone: Choose Zone
+  start_city_event: start city event
+  finish_city_event: finish city event
+  incr_city_attr: incr city attr
+  decr_city_attr: decr city attr
+  city_attr_index: city attr index
+  city_attr_value: city attr value
+  clear_city: Clear City
+  send_ability_items: Send Ability Items
+  send_gift_items: Send Gift Items
+  quest_tools: Quest Tools
+  quest_id: Quest ID
+  story_id: Package ID
+  send_main_quest: Send Main Quest
+  send_branch_quest: Send Branch Quest
+  send_story_quest: Send Story Quest
+  reset_quests: Reset All
+  unlock_all: unlock_all_fun
+  delete_all_city_repos: Delete all city repos
+  change_city_attr: change city attr
+  skip_to_next_city_time: skip to next city time
+  clear_city_time_offset: clear city time offset
+  skip_to_next_weather: skip to next weather
+  raw_data_edit_warning: Editing raw data, online player operations will be overwrite!
+  mystery_shop: mystery shop
+  create_mystery_shop: create shop
+  scene: scene
+  position: position
+  npc: npc
+  direction: direction
+  duration: duration
+  start: start
+  server_settings: Server Settings
+  server_addr: Server Address
+  server_ext_addr: Server External Address
+  main_sync_interval: Main Scene Sync Interval
+  combat_sync_interval: Combat Sync Interval
+  main_av_level: Main Scene Validation Level
+  pve_av_level: Pve Validation Level
+  service_zones: Service Zones
+  auto_set_service_zones: Auto set gate server service zones
+  delete_server_settings: Delete Server Settings
+  zone_settings: Zone Settings
+  delete_zone_settings: Delete Zone Settings
+  restore_default_settings: Restore Default Settings
+  auto_set_zone_max_online: Auto set zone max online
+  auto_set_zone_settings: Auto set zone settings
+  queuing_settings: Queuing Settings
+  confirm_save_queuing: Confirm to save queuing settings
+  server_settings_desc: Server Settings Section
+  disable_voice_chat: Disable Voice Chat
+  zone_settings_desc: To be edited...
+  queuing_settings_desc: Those who in the id whitelist can enter game regardless of online num limit.
+  maintainance_desc: Those who in the id whitelist can enter game regardless of maintainance settings.
+  send_debug_suit: Send debug suit
+  notify_upload_log: Request client logs
+  lua_script_desc: (Below texts for lua scripts to run on client)
+  show_auto_log: Show loading stuck auto logs
+  zone_split: Zone Split
+  zone_divisions: Zone Divisions
+  temp_dev_mode: Temp Dev Mode
+  temp_load_test_opt: Temp load_test_opt
+  temp_mode_desc: (will reset after server restart)
+  person_view: View person data
+  recommend: Recommend
+  disable_advt_filtering: Disable advertisement filtering
+  reload_server_list: Reload server list
+  notif_alerts: Notification Alerts
+  add_notif_alert: Add Notification Alert
+  edit_notif_alert: Edit Notification Alert
+  enabled: Enabled
+  online_warn: Online Number Warning
+  online_warn_desc: Send alert when online number is too many
+  receivers: 'Receivers Id List (e.g. 1, 2, 3), Empty for all'
+  check_now: Check Now
+  notif_receivers: Notification Receivers
+  add_notif_receiver: Add Notification Receiver
+  edit_notif_receiver: Edit Notification Receiver
+  hot_patch_server: Hot Patch Server
+  hot_patch_client: Hot Patch Client
+  clear_patch_client_code: Clear Patch Client Lua Code
+  patch_client_code: Patch Client Lua Code
+  reload_server_config: Reload Server Config
+  patch_ruby_code: Patch Server Ruby Code
+  patch_elixir_code: Patch Server Elixir Code
+  mobile: Mobile
+  email: Email
+  garbage_collect_all: Garbage Collect All
+  enable_loadtest: Enable Loadtest
+  zone_group: Zone Group
+  manage_anti_cheat: Manage Anti Cheat
+  search_cheaters: Search cheaters
+  manage_cheat_monitor: Manage Cheat Monitor
+  clear_all_monitors: Clear All Monitors
+  clear_all_cheaters: Clear All Cheaters
+
+  game_dync_set: Server dynamic set
+  matching_pools: Matching pools setting
+  process_action_log: sync actionlogs
+
+  user_email: Player account
+  user_mobile: Mobile
+  user_thirdparty: Thirdparty key 
+  user_reg_time: Registration time
+  user_last_login_time: Last logon time
+  user_game_life: Game career
+  user_gender: Gender
+  user_gold: Quantity of gold coins
+  user_debris: Number of fragments
+  user_diamond: Diamond quantity
+  user_achievement_level: Star achievement 
+  user_achievement_id: Completion Achievement ID
+  user_achievement_progress: Achievement progress
+  user_duan: Current paragraph 
+  user_history_duan: Historical paragraph
+  user_title: Title
+
+  control_matching_pools: Monitoring Matching Pool
+  control_combat: Monitoring Combat Server
+  control_matching_pools_list: Query the matching pool list
+  control_combat_list: Query the combat suit list
+  stop_matching: Stop matching
+  open_matching: Open matching
+  stop_room: Stop opening the room
+  open_room: Opening the room
+  matching_id: Matching pool ID
+  team_num: Number of troops
+  room_num: Number of rooms
+  matching_pools_name: Matching pool name
+  server_port: Server port
+  server_begin_tick_time: Start time stamp
+  server_tick_time: Active time stamp
+  server_client_num: Number of client connections
+  server_send_bytes: Number of bytes sent(K)
+  server_recv_bytes: Number of bytes received(K)
+  choose_zone_query_player: Select partition to query for user role information
+  operation_tool: Operation tool
+  running_status: Running status
+
+
+
+

@@ -1,0 +1,76 @@
+<%= render 'shared/events_top' %>
+<div>
+  <div>
+    <div id="xuezhan">
+      <h2><%=t :xuezhan_event%></h2>
+      <div id="xuezhan_hint" style="display:none;width:100%;padding:2px 4px 2px 4px;">
+        <span id="xuezhan_hint_content" style="color:white;"></span>
+      </div>
+        <table class='gridtable table table-striped table-bordered'>
+          <col width="20px" />
+          <col width="30px" />
+          <col width="30px" />
+          <col width="30px" />
+          <col width="200px" />
+          <tr>
+            <th><%=t :id%></th>
+            <th><%=t :zone%></th>
+            <th><%=t :open_date%></th>
+            <th><%=t :end_date%></th>
+            <th><%=t :reward_tids%></th>
+            <th><%=t :event_type%></th>
+
+          </tr>
+          <tr>
+            <td><%= form.text_field :id,  :readonly => true, :size => 3 %></td>
+          <td><%= form.text_field :zone,  :readonly => true, :size => 3 %></td>
+            <td><%= form.text_field :startTime, :as => :datetime_picker %></td>
+            <td><%= form.text_field :endTime %></td>
+            <td><% tids = GameConfig.config.xuezhanNewConfig['activeBonus'].map {|k, v| ["#{k}-#{v.heroNum}", k]} %>
+            <%= select("xuezhan", "rewardTids", options_for_select(tids, @xuezhan.rewardTids), {}, {:multiple => true, :size => tids.size, :class => "form-control"}) %></td>
+            <td><%= form.select :event_type, options_for_select([[(t :drop), :drop], [(t :double), :double]], @xuezhan.event_type) %></td>
+
+          </tr>
+        </table>
+        <%= render 'shared/events_downandup' %>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+
+  function getTable(){
+    var data = new Object();
+    data.xuezhan_startTime = $('#xuezhan_startTime').val();
+    data.xuezhan_endTime = $('#xuezhan_endTime').val();
+    data.xuezhan_enabled = $('#xuezhan_enabled').prop('checked');
+    data.xuezhan_rewardTids = $('#xuezhan_rewardTids').val();
+    data.xuezhan_drop_event = $('#xuezhan_drop_event').prop('checked')
+    data.xuezhan_double_event = $('#xuezhan_double_event').prop('checked')
+    return data;
+  }
+
+  function toText(){
+    $('#json').val(JSON.stringify(getTable(), null));
+  }
+
+  function toDisplay(){
+    var data = JSON.parse($('#json').val())
+    for(var name in data){
+      if(typeof(data[name]) == 'function'){
+        //
+      }else{
+        if($('#'.concat(name)).attr('type') == 'checkbox'){
+          $('#'.concat(name)).prop('checked', data[name]);
+        }else{
+          $('#'.concat(name)).val(data[name]);
+        }
+      }
+    }
+  }
+
+
+  $('#xuezhan_startTime').datetimepicker();
+  $('#xuezhan_endTime').datetimepicker();
+
+  $(document).ready(initDataSource());
+</script>

@@ -1,0 +1,106 @@
+<style>
+  .line_content {margin-left:20px;}
+</style>
+
+<div style='margin-top: 10px;'>
+  <div style='padding: 20px; margin-bottom: 20px; background-color:lightblue; vertical-align:middle'>
+
+    <h4><%=t :hot_patch_server_tools %></h4>
+
+    <div class="row">
+      <div class="col-md-2">
+        <input type="button" value="<%=t :reload_server_config %>" class="btn btn-default" onClick="withConfirm(reload_server_config);"/>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2">
+        <br>
+        <br>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2">
+        <input type="button" value="<%=t :patch_ruby_code %>" class="btn btn-default" onClick="withConfirm(patch_ruby_code);"/>
+      </div>
+    </div>
+
+    <textarea id="server_ruby_code" name="server_ruby_code" type="text" class="form-control" rows=8></textarea>
+
+    <div class="row">
+      <div class="col-md-2">
+        <br>
+        <br>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2">
+        <input type="button" value="<%=t :patch_elixir_code %>" class="btn btn-default" onClick="withConfirm(patch_elixir_code);"/>
+      </div>
+    </div>
+
+    <textarea id="server_elixir_code" name="server_elixir_code" type="text" class="form-control" rows=8></textarea>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+function post_request(url, data)
+{
+  $.ajax({
+      type: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: url,
+      data: JSON.stringify(data)
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('alter success~', 'green')
+        window.location.href = "/hot_patch/server_tools/";
+      }
+      else
+      {
+        showStatus('alter error, may this user or sub_type not exist', 'red')
+      }
+
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+}
+
+function patch_ruby_code()
+{
+  var url = '/hot_patch/patch_ruby_code';
+  var data = {
+    "server_ruby_code" : $("#server_ruby_code").val(),
+  };
+  post_request(url, data);
+}
+
+function patch_elixir_code()
+{
+  var url = '/hot_patch/patch_elixir_code';
+  var data = {
+    "server_elixir_code" : $("#server_elixir_code").val(),
+  };
+  post_request(url, data);
+}
+
+function reload_server_config()
+{
+  var url = '/hot_patch/reload_server_config';
+  var data = {};
+  post_request(url, data);
+}
+
+function withConfirm(func) {
+  if (confirm("<%=t :confirm_operation %>")) {
+    func();
+  }
+}
+
+</script>

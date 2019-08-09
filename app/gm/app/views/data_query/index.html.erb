@@ -1,0 +1,127 @@
+
+<noscript>Enable Javascript to continue</noscript>
+
+<div id="query">
+  <form action="" class="form">
+    <div class="form-group">
+      <label>do_model</label>
+      <textarea id="do_model" class="form-control" rows="10"><%= @do_model %></textarea>
+    </div>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" class="checkbox" id="colddata"></input>
+        Query Cold data
+      </label>
+    </div>
+  </form>
+
+  <a href="#" onclick="debug();" class="btn btn-success"><%=t :debug_query %></a>
+  <a href="#" onclick="withConfirm(submit_query);" class="btn btn-danger"><%=t :submit_query %></a>
+
+  <h4>
+    <span class="glyphicon glyphicon-user" style="margin-right:10px">
+    </span><%=t :total_player_count %>: <%= @total_player_count %>
+  </h4>
+
+  <h4><span class="glyphicon glyphicon-tasks" style="margin-right:10px"></span>All queries</h4>
+  <table class='table table-striped table-bordered table-hover'>
+    <th>id</th>
+    <th>pid</th>
+    <th>start time</th>
+    <th>end time</th>
+    <th>status</th>
+    <th>logfile</th>
+    <th>action</th>
+    <% @queries.each do |id, q| %>
+    <tr>
+      <td><%= id %></td>
+      <td><%= q[:pid] %></td>
+      <td><%= TimeHelper.genDateTime(q[:startTime]) %></td>
+      <td><%= if q[:endTime] then TimeHelper.genDateTime(q[:endTime]) else '' end %></td>
+      <td><%= q[:status] %></td>
+      <td><%= link_to q[:logfile], "log/#{id}", :target => "_blank" %></td>
+      <td><%= link_to 'delete', "log/#{id}", :method => :DELETE %></td>
+    </tr>
+    <% end %>
+  </table>
+
+</div>
+
+<script type="text/javascript">
+
+  function cache() {
+    $('#query').mask('loading...');
+    $.ajax({
+      type: 'POST', 
+      url: 'cache', 
+      data: { }, 
+      dataType: 'json'
+    }).done(function (json){
+      $('#query').unmask();
+      showStatus('Success~', 'success');
+      location.reload(true);
+    }).fail(function(xhr, status) {
+      $('#query').unmask();
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+
+  function debug() {
+    var players = window.prompt("<%=t :input_debug_players %>", "");
+    if (players) {
+      $('#query').mask('loading...');
+      $.ajax({
+        type: 'POST', 
+        url: 'debug', 
+        data: { 
+          'on_start': '',//$('#on_start').val(), 
+          'on_finish': '',//$('#on_finish').val(), 
+          'do_model': $('#do_model').val(), 
+          'colddata': $('#colddata').is(':checked'), 
+          'players': players 
+        }, 
+        dataType: 'json'
+      }).success(function (json){
+        $('#query').unmask();
+        showStatus('Success~', 'success');
+        location.reload(true);
+      }).fail(function(xhr, status) {
+        $('#query').unmask();
+        showStatus('Something wrong!', 'fail')
+      });
+    }
+  }
+
+  function submit_query() {
+    var confirm = window.prompt("Prove you are a programmer", "");
+    if (confirm != "ruby rocks")
+      return;
+
+    $('#query').mask('loading...');
+    $.ajax({
+      type: 'POST', 
+      url: 'submit', 
+      data: { 
+        'on_start': '',//$('#on_start').val(), 
+        'on_finish': '',//$('#on_finish').val(), 
+        'do_model': $('#do_model').val(), 
+        'colddata': $('#colddata').is(':checked')
+      }, 
+      dataType: 'json'
+    }).done(function (json){
+      $('#query').unmask();
+      showStatus('success~', 'success');
+      location.reload(true);
+    }).fail(function(xhr, status) {
+      $('#query').unmask();
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+
+  function withConfirm(func) {
+    if (confirm("<%=t :confirm_operation %>")) {
+      func();
+    }
+  }
+</script>
+

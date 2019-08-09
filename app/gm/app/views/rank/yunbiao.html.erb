@@ -1,0 +1,91 @@
+<div class="row">
+  <div class="col-md-2">
+    <a href="#" onclick="loadData()" class="btn btn-success"><%=t :view_yunbiao_rank %></a>
+  </div>
+  <div class="col-md-5">
+    <div class="row">
+      <div class="col-md-4">
+        <h4>select lobby</h4>
+      </div>
+      <div class="col-md-8">
+        <%= render 'shared/yunbiao_ranks' %>
+      </div>
+    </div> 
+  </div>
+</div>
+<div id='rankData'></div>
+
+<script type="text/javascript">
+
+  function loadData(){
+    lobbyId = $('#yunbiao_ranks').val()
+
+    $.ajax({
+      type: 'GET', 
+      url: 'yunbiaoResult' ,
+      data: { 'rankIndex': lobbyId }
+    }).done(function (res){
+      showStatus('Load success~', 'success')
+
+      console.log(res);
+
+      str_html = "<table class='table table-striped table-bordered table-hover'>";
+      //str_html += "<tr><td width=100><b>rank data</b></td></tr>";
+      str_html = processDisplayPlayer(str_html, res)
+      str_html += "</table>"
+      document.getElementById("rankData").innerHTML = (str_html)
+
+    }).fail(function (xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+
+  function processDisplayPlayer(str_html, playerData) {
+    str_html += "" + 
+      "<tr>" +
+      "<td width=100><b>rank</b></td>"+
+      "<td width=100><b>zone</b></td>"+
+      "<td width=100><b>id</b></td>"+
+      "<td width=100><b>name</b></td>"+
+      "<td width=100><b>level</b></td>"+
+      "<td width=100><b>viplevel</b></td>"+
+      "<td width=100><b>score</b></td>"+
+      "<td width=100><b>win times</b></td>"+
+      "<td width=100><b>success times</b></td>"+
+      "</tr>";
+
+    console.log(playerData);
+
+    for( var i=0 ;i<playerData.length;i++)
+    {
+      res = playerData[i]
+      str_html += ("<tr><td>"+ (i+1)
+        +"</td><td>"+res['zone']
+        +"</td><td>"+res['id']
+        +"</td><td>"+res['name']
+        +"</td><td>"+res['level']
+        +"</td><td>"+res['vipLevel']
+        +"</td><td>"+res['yunbiaoScore']
+        +"</td><td>"+res['attackWin']
+        +"</td><td>"+res['defendWin']
+        +"</td></tr>")
+    }
+    return str_html
+  }
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

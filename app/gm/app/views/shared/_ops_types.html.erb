@@ -1,0 +1,8 @@
+<% eid ||= 'ops_type' %>
+<select id="<%= eid %>" name="<%= eid %>" class="form-control">
+  <% RsRails.get_config('ops_task').each_pair do |tid, value| %>
+     <option value='<%= tid %>'>
+      <%=t "title_#{tid}" %>
+    </option>
+  <% end %>
+</select>

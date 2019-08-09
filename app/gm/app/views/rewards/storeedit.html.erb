@@ -1,0 +1,89 @@
+<h1><%= t(:edit_store) %></h1>
+
+<br/>
+<a href='/rewards/storelist/'><%=t :list_store%></a>
+
+<%= render :partial => "formstore", :locals => { :package_id => @id } %>
+<input type="button" onclick="updateStore()" value="<%=t :save%>">
+
+<script type="text/javascript">
+startLoad()
+function startLoad()
+{
+  var id = "<%= @id %>"
+
+  $('#store').mask('读取中...');
+
+  getStoreInfo(id, function(json) {
+    $('#store').unmask();
+    $('#tid').val(json['tid'] ? json['tid']:"")
+    $('#id').val(json['id'] ? json['id']:"")
+    $('#weight').val(json['weight'] ? json['weight']:0)
+    $('#itemId').val(json['itemId'] ? json['itemId']:"")
+    updateItemName(json['itemId'], $("#itemName"))
+    $('#num').val(json['num'] ? json['num']:0)
+    $('#status').val(json['status'] ? json['status']:0)
+    $('#needChief').val(json['needChief'] ? json['needChief']:0)
+    $('#price').val(json['price'] ? json['price']:0)
+    $('#specialPrice').val(json['specialPrice'] ? json['specialPrice']:0)
+    $('#vipLevel').val(json['vipLevel'] ? json['vipLevel']:0)
+    $('#buyTimes').val(json['buyTimes'] ? json['buyTimes']:0)
+    $('#startTime').val(json['startTime'] ? json['startTime']:"")
+    $('#endTime').val(json['endTime'] ? json['endTime']:"")
+    $('#dayliBuy').prop('checked', json['dayliBuy'] ? json['dayliBuy']:false)
+  });
+}
+
+function getStoreInfo(id, callback)
+{
+  $.ajax({
+    type: 'GET',
+    url: '/rewards/getStore/' + id
+  }).done(function(json){
+    console.log(json);
+    if(json)
+    {
+      if (callback) {
+      callback(json);
+      }
+    }
+    else
+    {
+      showStatus('get store data error!', 'red');
+    }
+
+  }).fail(function(xhr, status){
+    showStatus('get store data error!', 'red');
+  });
+}
+
+function updateStore()
+{
+  var zoneIndex = $("#zone").val();
+  $.ajax({
+    type: 'post',
+    contentType: 'application/json',
+    dataType: 'json',
+    url: '/rewards/updateStore/',
+    data: getData()
+  }).done(function(json){
+    console.log(json);
+    if(json && json['success'])
+    {
+      showStatus('save success~', 'green')
+      window.location.href = "/rewards/storelist/";
+    }
+    else if(json)
+    {
+      showStatus(parseError(json), 'red')
+    }
+    else
+    {
+      showStatus('save error', 'red')
+    }
+
+  }).fail(function(xhr, status){
+    showStatus('Something wrong!', 'red');
+  });
+}
+</script>

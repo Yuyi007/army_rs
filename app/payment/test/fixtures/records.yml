@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  transId: MyString
+  timestamp: 2013-04-01
+  playerId: MyString
+  zone: MyString
+  goodsId: MyString
+
+two:
+  transId: MyString
+  timestamp: 2013-04-01
+  playerId: MyString
+  zone: MyString
+  goodsId: MyString

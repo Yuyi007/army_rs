@@ -1,0 +1,122 @@
+<div style='margin-bottom: 20px;background-color:lightblue;vertical-align:middle'>
+<br/>
+<div >
+  <div class="col-md-3">
+  <label><%=t :choose_zone %>:</label>
+  <%= render 'shared/zones' %>
+  </div>
+</div>
+<div>
+  <div class="col-md-3">
+  <label><%=t :choose_scene %>:</label>
+  <%= render 'shared/scenes' %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-3">
+  <label><%=t :choose_npc %>:</label>
+  <%= render 'shared/npcs' %>
+  </div>
+</div>
+
+<br/>
+<div style='margin-left: 20px;'>
+    <label><%=t :set_shop_pos %>:</label>
+    <br/>
+    <div class="col-md-2">
+    <label>x:</label>
+    <input id="posX" name="posX" type="text" value="<%= @edit_shop.pos.x if !@edit_shop.nil? %>" class="form-control" />
+    </div>
+    <div class="col-md-2">
+    <label>y:</label>
+    <input id="posY" name="posY" type="text" value="<%= @edit_shop.pos.y if !@edit_shop.nil? %>" class="form-control" />
+    </div>
+    <div class="col-md-2">
+    <label>z:</label>
+    <input id="posZ" name="posZ" type="text" value="<%= @edit_shop.pos.z if !@edit_shop.nil? %>" class="form-control" />
+    </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2">
+    <label><%=t :set_shop_dir %>:</label>
+    <input id="dir" name="dir" type="text" value="<%= @edit_shop.dir if !@edit_shop.nil? %>" class="form-control" />
+  </div>
+</div>
+
+<br/>
+
+<div class="row"  style='margin-left: 10px;'>
+  <div class="col-md-2">
+    <label><%=t :set_shop_duration %>:</label>
+    <input id="duration" name="duration" type="text" value="<%= @edit_shop.duration if !@edit_shop.nil? %>" class="form-control" />
+  </div>
+</div>
+
+<br/>
+
+<div class="row" style='margin-left: 10px;'>
+  <div class="col-md-8">
+    <label><%=t :set_shop_note %>:</label>
+    <textarea id="note" name="note" type="text" value="<%= @edit_shop.note if !@edit_shop.nil? %>"  class="form-control" rows=8><%= @edit_shop.note if !@edit_shop.nil? %></textarea>
+  </div>
+</div>
+
+<br/>
+
+<div class="row" style='margin-left: 10px;'>
+  <div class="col-md-3">
+    <div class="input-group">
+      <input type="button" onclick="saveShop()" value="<%=t :save%>" class="btn btn-default" />
+    </div>
+  </div>
+</div>
+
+<br/>
+</div>
+<script type="text/javascript">
+  function saveShop()
+  {
+    var zone = $('#zone').val()
+    var scene = $('#scene').val()
+    var npc = $('#npc').val()
+    var duration = $('#duration').val()
+    var note = $('#note').val()
+    var posX = $('#posX').val()
+    var posY = $('#posY').val()
+    var posZ = $('#posZ').val()
+    var dir = $('#dir').val()
+    var data = {
+      'zone': zone, 
+      'scene': scene,
+      'npc': npc, 
+      'duration': duration,
+      'posX': posX,
+      'posY': posY,
+      'posZ': posZ,
+      'dir': dir,
+      'note': note
+    }
+
+    $('#query').mask('saving...');
+    $.ajax({
+      type: 'POST',
+      url: '/mysteryshop/save',
+      data: data,
+      dataType: 'json'
+     }).success(function(jsont){
+       $('#query').unmask();
+        showStatus('Success~', 'success');
+        window.location.href = "/mysteryshop/shoplist"
+     }).fail(function(xhr, status){
+      $('#query').unmask();
+      showStatus('somthing wrong!', 'red');
+    });
+  }
+</script>
+
+
+
+
+
+

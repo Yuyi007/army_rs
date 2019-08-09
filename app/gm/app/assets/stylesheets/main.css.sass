@@ -1,0 +1,77 @@
+
+#main.main_content
+  border: 0 solid #D6D1B9
+  padding: 0px
+  height: auto!important
+  height: 800px
+  min-height: 800px
+ 
+  #navigation
+    position: absolute
+    left: 10px
+    width: 120px
+    height: 10px
+    background-color: #f7f7f7
+    z-index: 999
+ 
+    ul
+      padding-left: 5px
+      height: 100%
+ 
+      ul
+        padding-left: 20px
+ 
+    a
+      text-decoration: none
+      background-color: transparent
+      color: #999999
+      &:hover, &:active
+        text-decoration: underline
+        color: #6BC3F5
+ 
+    li 
+      border: medium none
+      list-style-image: none
+      list-style-type: none
+      padding: 2px
+ 
+ 
+      a.selected 
+        color: #6BC3F5
+        text-decoration: underline
+ 
+      li
+        font-size: 10pt
+
+  .content
+    width: 100%
+    padding: 10px 10px 10px 10px
+    
+    .profiles
+      position: relative
+      right: 20px
+      float: right
+      margin-bottom: 5px
+      
+    .breadcrumbs
+      margin-bottom: 5px
+      
+    .content_inner
+
+      .error
+        margin: 5px
+        padding: 5px
+        color: white
+        background-color: red
+      
+      .notice
+        margin: 5px
+        padding: 5px
+        color: white
+        background-color: green
+
+      .yield
+        height: 100%
+
+  .clear_float
+    clear: both

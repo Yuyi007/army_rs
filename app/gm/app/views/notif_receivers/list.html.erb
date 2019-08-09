@@ -1,0 +1,33 @@
+
+<div>
+<%= link_to t(:add_notif_receiver), new_notif_receiver_url, { :class => "btn btn-success btn-sm"} %>
+</div>
+
+<br/>
+
+<table class='table table-striped table-bordered table-hover'>
+
+  <tr>
+    <th><%=t :id %></th>
+    <th><%=t :name %></th>
+    <th><%=t :mobile %></th>
+    <th><%=t :email %></th>
+    <th><%=t :actions %></th>
+  </tr>
+
+  <% for receiver in @receivers %>
+  <tr>
+    <td><%= link_to receiver.id, notif_receiver_url(receiver.id) %></td>
+    <td><%= receiver.name %></td>
+    <td><%= receiver.mobile %></td>
+    <td><%= receiver.email %></td>
+    <td>
+      <% if current_user.role_name == 'admin' %>
+        <%= link_to t(:edit), edit_notif_receiver_url(receiver.id), {:class => "btn btn-success"} %>
+        <%= link_to t(:delete), notif_receiver_url(receiver.id), {:class => "btn btn-danger", :method => :delete } %>
+      <% end %>
+    </td>
+  </tr>
+  <% end %>
+
+</table>

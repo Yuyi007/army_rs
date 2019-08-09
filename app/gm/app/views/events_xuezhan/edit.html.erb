@@ -1,0 +1,7 @@
+<h1><%=t :edit_notice %></h1>
+<%= form_for_hash @xuezhan, 'xuezhan', {:action => "update"}, :method => :post, :class => "form" do |f| %>
+  <%= render :partial => "form", :object => f, :locals => { :xuezhan => @xuezhan } %>
+  <%= f.submit t(:save), :class => "btn btn-info" %>
+<% end %>
+<br />
+<%= link_to t(:xuezhan_list_url), events_xuezhan_list_url, :class => "btn btn-warning" %>

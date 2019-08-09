@@ -1,0 +1,144 @@
+<h1><%= t(:edit_dropevent) %></h1>
+
+<br/>
+<a href='/events_campaigndrop/list/'><%=t :list_dropevent%></a>
+
+<%= render :partial => "form", :locals => { :drop_id => @id, :drop_zone => @zone } %>
+
+
+<input type="button" onclick="saveDropEvent()" value="<%=t :save%>">
+<form id="copyForm" action="events_campaigndrop/copy_campaign_drop/1/copy" method="POST">
+    <div><%=t :copy_current_config_to_zone%>，<%=t :confirm_your_config_saved%></div>
+    <span><%=t :enter_zone_split_with_space_like%>2 3 6 </span>
+    <%= text_field_tag "copy_zones", nil, :size => 100, :placeholder => "2 3 6" %>
+    <input type="button" onclick="copyDropEvent()" value="<%=t :copy_current_config_to_zone%>">
+</form>
+
+<script type="text/javascript">
+startLoad();
+ajaxSubmit($('#copyForm'));
+
+function startLoad()
+  {
+    var zoneIndex = <%= @zone %>;
+    var id = <%= @id %>
+    console.log("zone=" + zoneIndex);
+
+    console.log("id=" + id);
+
+    $('#campaign_drop').mask('读取中...');
+
+    getDropEvent(zoneIndex, id, function(json) {
+      $('#campaign_drop').unmask();
+        $('#startTime').val(json['startTime'] ? json['startTime']:"")
+        $('#endTime').val(json['endTime'] ? json['endTime']:"")
+        $('#normalEnabled').prop('checked', json['normalEnabled'] ? json['normalEnabled']:false)
+        $('#hardEnabled').prop('checked', json['hardEnabled'] ? json['hardEnabled']:false)
+        $('#expertEnabled').prop('checked', json['expertEnabled'] ? json['expertEnabled']:false)
+        if(json['bonus'])
+        {
+          $('#campaign_drop_item').val(json['bonus']['itemId'])
+          updateItemName(json['bonus']['itemId'], $('#campaign_drop_item_name'));
+          //$('#campaign_drop_item_name').val(json['bonus']['itemName'])
+          $('#campaign_drop_item_num').val(json['bonus']['itemNum'])
+        }
+        else
+        {
+          $('#campaign_drop_item').val("")
+          $('#campaign_drop_item_name').val("")
+          $('#campaign_drop_item_num').val("")
+        }
+        if(json['dropRound'])
+        {
+          $('#campaign_drop_round_min').val(json['dropRound']['min'])
+          $('#campaign_drop_round_max').val(json['dropRound']['max'])
+        }
+        else
+        {
+          $('#campaign_drop_round_min').val("")
+          $('#campaign_drop_round_max').val("")
+        }
+    });
+  }
+
+  function getDropEvent(zone, id, callback)
+  {
+    $.ajax({
+      type: 'GET',
+      url: '/events_campaigndrop/get_campaign_drop/' + zone + '/' + id
+    }).done(function(json){
+      console.log(json);
+      if(json)
+      {
+        if (callback) {
+        callback(json);
+        }
+      }
+      else
+      {
+        showStatus('获取充值活动当前配置失败!', 'red');
+      }
+
+    }).fail(function(xhr, status){
+      showStatus('获取充值活动当前配置失败!', 'red');
+    });
+  }
+
+  function saveDropEvent()
+  {
+    var zoneIndex = <%= @zone %>;
+    var id = <%= @id %>
+    $.ajax({
+      type: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: '/events_campaigndrop/save_campaign_drop/' + zoneIndex + "/" + id,
+      data: getData()
+    }).done(function(json){
+      console.log(json);
+      if(json && json['success'])
+      {
+        showStatus('save success~', 'green')
+      }
+      else if(json)
+      {
+        //showStatus('save error, reason: ' + json['reason'], 'red')
+        showStatus(parseError(json), 'red')
+      }
+      else
+      {
+        showStatus('save error', 'red')
+      }
+
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+  }
+
+  function copyDropEvent()
+  {
+    $.ajax({
+      type: 'POST',
+      url: '/events_campaigndrop/copy_campaign_drop/' + <%= @zone %> + '/' + <%= @id %> + "/copy",
+      data: {
+              "tozones":$("#copy_zones").val(),
+            }
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('copy success~', 'green')
+      }
+      else if(json)
+      {
+        //showStatus('copy error, reason: ' + json['reason'], 'red')
+        showStatus(parseError(json), 'red')
+      }
+      else
+      {
+        showStatus('copy error', 'red')
+      }
+      }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+  }
+</script>

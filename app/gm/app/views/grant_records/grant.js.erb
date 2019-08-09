@@ -1,0 +1,48 @@
+$("#<%= escape_javascript(params[:id]) %>").remove()
+
+<%
+  succ = []
+	fail = []
+	logger.info("@res = #{@res}")
+	if @res
+	  @res.each do |id, value|
+	    if value[:success] 
+	      succ << id
+	    else
+	      fail << [id, value]
+	    end
+	  end
+	end
+%>
+
+$("#message_id").empty()
+$("#message_id").show()
+
+<% if succ.length > 0 %>
+  var success_html = "<div class='alert alert-success'> \
+                        Grant request \
+                        #<%= escape_javascript(@res[succ[0]][:request_id].to_s) %> \
+                        successfully: <%= succ.length.to_s %> \
+                      </div>"
+  console.log(success_html)
+  $("#message_id").append(success_html)
+<% end %>
+
+<% if fail.length > 0 %>
+  <%= logger.info("************fail = #{fail}") %>
+	<% fail.each do |v| %>
+    <%= logger.info("**********v=#{v}") %>
+    <%= logger.info("**********v0=#{v[0]}") %>
+    <%= logger.info("**********v1=#{v[1]}") %>
+    <%= logger.info("**********v1_code=#{v[1][:code]}") %>
+
+	  var fail_html = "<div class='alert alert-danger'> \
+	                     Failed: #<%= escape_javascript(v[0]) %> \
+	                     Reason: <%= if v[1][:code].length != 0;err = t(v[1][:code]);else;err = 'Unknow reason';end;escape_javascript(err) %> \
+	                   </div>"
+		console.log(fail_html)
+		$("#message_id").append(fail_html)
+	<% end %>
+<% end %>
+
+

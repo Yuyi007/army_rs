@@ -1,0 +1,64 @@
+<%= render 'shared/events_top' %>
+<div>
+  <%= render 'shared/items_top' %>
+  <div>
+    <div id="zonemarket">
+      <h2><%=t :zonemarket_event%></h2>
+      <div id="zonemarket_hint" style="display:none;width:100%;padding:2px 4px 2px 4px;">
+        <span id="zonemarket_hint_content" style="color:white;"></span>
+      </div>
+      <table class='gridtable table table-striped table-bordered'>
+        <col width="20px" />
+        <col width="30px" />
+        <col width="20px" />
+        <col width="20px" />
+        <tr>
+          <th><%=t :id%></th>
+          <th><%=t :zone%></th>
+          <th><%=t :start_time%></th>
+          <th><%=t :end_time%></th>
+        </tr>
+        <tr>
+          <td><%= form.text_field :id,  :readonly => true, :size => 3 %></td>
+          <td><%= form.text_field :zone,  :readonly => true, :size => 3 %></td>
+          <td><%= form.text_field :startTime, :size => 15 %></td>
+          <td><%= form.text_field :endTime, :size => 15 %></td>
+        </tr>
+      </table>
+      <%= render 'shared/events_downandup' %>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  function getTable(){
+    var data = new Object();
+    data.zonemarket_startTime = $('#zonemarket_startTime').val();
+    data.zonemarket_endTime = $('#zonemarket_endTime').val();
+    data.zonemarket_maxNum = $('#zonemarket_maxNum').val();
+    return data;
+  }
+
+  function toText(){
+    $('#json').val(JSON.stringify(getTable(), null));
+  }
+
+  function toDisplay(){
+    var data = JSON.parse($('#json').val())
+    for(var name in data){
+      if(typeof(data[name]) == 'function'){
+        //
+      }else{
+        if($('#'.concat(name)).attr('type') == 'checkbox'){
+          $('#'.concat(name)).prop('checked', data[name]);
+        }else{
+          $('#'.concat(name)).val(data[name]);
+        }
+      }
+    }
+  }
+
+  $('#zonemarket_startTime').datetimepicker();
+  $('#zonemarket_endTime').datetimepicker();
+
+  $(document).ready(initDataSource());
+</script>

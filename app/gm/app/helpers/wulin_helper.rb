@@ -1,0 +1,2 @@
+module WulinHelper
+end

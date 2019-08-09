@@ -1,0 +1,177 @@
+<%= render 'shared/data_top' %>
+
+<p style="margin-top: 10px; color: red; font-size: large;"><%=t :raw_data_edit_warning %></p>
+
+<a href="#" class="btn btn-success" onclick="load(updateView)">Load data</a>
+<a href="#" class="btn btn-success" onclick="exportJson()">Export json</a>
+<a href="#" class="btn btn-success" id='archive'>Archives</a>
+&nbsp;|&nbsp;
+
+<% if @allow_edit %>
+<a href="#" class="btn btn-success" onclick="kick()">Kick player</a>
+<a href="#" class="btn btn-warning" onclick="withConfirm(save)">Save data</a>
+&nbsp;|&nbsp;
+<a href="#" class="btn btn-danger" onclick="withConfirm(del)">Delete data</a>
+<% end %>
+<div class="col-md-2">
+  <select id="permission_type" name="permission_type" class="form-control">
+    <option value='normal'><%= t(:normal) %></option>
+    <option value='dlogin'><%= t(:deny_login) %></option>
+    <option value='dtalk'><%= t(:deny_talk) %></option>
+  </select>
+</div> 
+<div id="jsoneditor"></div>
+
+<div style="margin: 10px 340px 10px">
+  <a href="#" onclick="toText()" class="btn btn-info">Down!</a>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <% if @allow_edit %>
+    <a href="#" onclick="toJson()" class="btn btn-info">Up!</a>
+  <% end %>
+</div>
+
+<textarea id="json" rows="10" class="form-control"></textarea>
+
+<script type="text/javascript">
+  var editor = new JSONEditor($("#jsoneditor")[0]);
+  function onIdZoneChanged() {
+    $('#archive').attr('href', '/archive' +
+      '/' + $('#zone').val() +
+      '/' + $('#id').val());
+  }
+
+  function onPermissionChanged()
+  {
+    var id = $('#id').val();
+    // alert("check id now:"+id);
+    if(!!id)
+    {
+      var permission_type = $("#permission_type").val();
+      var zone = $('#zone').val();
+
+      var result = confirm("Are you sure to change("+id+")permission to:"+permission_type);
+
+      if(!result)
+      {
+        return
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: '/player/set_player_permission',
+        data: {"id":id, "zone":zone, "permission_type":permission_type},
+        dataType: 'json'
+      }).done(function (jsonData) {
+        showStatus('permission change success~', 'success')
+      }).fail(function(xhr, status) {
+        showStatus('Something wrong onPermissionChanged!', 'fail')
+      });
+    }
+  }
+
+  window.onload = function() {
+    onIdZoneChanged();
+    $('#id').change(onIdZoneChanged);
+    $('#zone').change(onIdZoneChanged);
+    $("#permission_type").change(onPermissionChanged);
+  };
+  function kick() {
+    var id = $('#id').val()
+    var zone = $('#zone').val()
+    $.ajax({
+      type: 'POST',
+      url: '/player/kick/' + zone + '/' + id,
+      data: { },
+      dataType: 'json'
+    }).done(function (json){
+      if (json.success) {
+        showStatus('Kick success~', 'success')
+      }
+      else {
+        showStatus('Kick failed!', 'fail')
+      }
+    }).fail(function(xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+  function save() {
+    var id = $('#id').val()
+    var zone = $('#zone').val()
+    $.ajax({
+      type: 'PUT',
+      url: '' + zone + '/' + id,
+      data: { 'model': JSON.stringify(editor.get(), null) },
+      dataType: 'json'
+    }).done(function (json){
+      if (json.success) {
+        showStatus('Save success~', 'success')
+      }
+      else {
+        showStatus('Save failed!', 'fail')
+      }
+    }).fail(function(xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+  function del() {
+    var id = $('#id').val()
+    var zone = $('#zone').val()
+    $.ajax({
+      type: 'DELETE',
+      url: '' + zone + '/' + id,
+      data: { },
+      dataType: 'json'
+    }).done(function (json) {
+      if (json.success) {
+        showStatus('Delete success~', 'success')
+      }
+      else {
+        showStatus('Delete failed!', 'fail')
+      }
+    }).fail(function(xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+  function updateView(id, zone, json) {
+    editor.set(json);
+    getPermission(id)
+  }
+
+  function getPermission(id)
+  {
+    $.ajax({
+      type: 'POST',
+      url: '/player/get_permission',
+      data: {"id":id},
+      dataType: 'json'
+    }).done(function (jsonData) {
+      console.log(jsonData);
+      // alert("json11:" + jsonData)
+      updatePermission(jsonData.permission)
+    }).fail(function(xhr, status) {
+      showStatus('Something wrong getPermission!', 'fail')
+    });
+  }
+
+
+  function updatePermission(permission)
+  {
+    // alert("check now permission:"+permission);
+    if(permission == "" || permission == null){
+      permission = "normal"
+    }
+    // alert("check now permission11:"+permission);
+    $('#permission_type').val(permission);
+  }
+  function toText() {
+    $('#json').val(JSON.stringify(editor.get(), null));
+  }
+  function toJson() {
+    editor.set(JSON.parse($('#json').val()));
+  }
+  function withConfirm(func) {
+    if (confirm("确定进行该操作吗?")) {
+      func();
+    }
+  }
+</script>

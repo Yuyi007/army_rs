@@ -1,0 +1,9 @@
+<select id="partTid" name="partTid" class="form-control">
+  <% CocsProxy.instance.getGameConfig('items').each do |tid, value| %>
+    <% if tid =~ /^I[EFSJ].+/ %>
+      <option value='<%= tid %>'>
+        <%= GameConfig.strings[value['name']] || value['name'] %>
+      </option>
+    <% end %>
+  <% end %>
+</select>

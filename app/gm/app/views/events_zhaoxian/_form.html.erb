@@ -1,0 +1,93 @@
+<%= render 'shared/events_top' %>
+<div>
+  <%= render 'shared/items_top' %>
+  <div>
+    <div id="zhaoxian">
+      <h2><%=t :zhaoxian_event%></h2>
+      <div id="zhaoxian_hint" style="display:none;width:100%;padding:2px 4px 2px 4px;">
+        <span id="zhaoxian_hint_content" style="color:white;"></span>
+      </div>
+      <table class='gridtable table table-striped table-bordered'>
+        <col width="20px" />
+        <col width="30px" />
+        <col width="20px" />
+        <col width="20px" />
+        <col width="40px" />
+        <col width="40px" />
+        <col width="40px" />
+        <col width="40px" />
+        <tr>
+          <th><%=t :id%></th>
+          <th><%=t :zone%></th>
+          <th><%=t :start_time%></th>
+          <th><%=t :end_time%></th>
+          <th><%=t :hero1%></th>
+          <th><%=t :hero2%></th>
+          <th><%=t :hero3%></th>
+          <th><%=t :hero4%></th>
+        </tr>
+        <tr>
+          <td><%= form.text_field :id,  :readonly => true, :size => 3 %></td>
+          <td><%= form.text_field :zone,  :readonly => true, :size => 3 %></td>
+          <td><%= form.text_field :startTime, :size => 15 %></td>
+          <td><%= form.text_field :endTime, :size => 15 %></td>
+          <td><%= form.text_field :hero1, :hidden => true %>
+            <%=text_field_tag :hero1_name, get_hero_name(@zhaoxian.hero1)%></td>
+          <td><%= form.text_field :hero2, :hidden => true %>
+            <%=text_field_tag :hero2_name, get_hero_name(@zhaoxian.hero2)%></td>
+          <td><%= form.text_field :hero3, :hidden => true %>
+            <%=text_field_tag :hero3_name, get_hero_name(@zhaoxian.hero3)%></td>
+          <td><%= form.text_field :hero4, :hidden => true %>
+            <%=text_field_tag :hero4_name, get_hero_name(@zhaoxian.hero4)%></td>
+        </tr>
+      </table>
+      <%= render 'shared/events_downandup' %>
+    </div>
+    <div id="allSelect" class="selectBlock">
+      <div><span><%=t :search%></span><%= render 'shared/search_items' %></div>
+      <div><span><%=t :hero%></span><%= render 'shared/heroes' %></div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  function getTable(){
+    var data = new Object();
+    data.zhaoxian_startTime = $('#zhaoxian_startTime').val();
+    data.zhaoxian_endTime = $('#zhaoxian_endTime').val();
+    data.zhaoxian_hero1 = $('#zhaoxian_hero1').val();
+    data.zhaoxian_hero2 = $('#zhaoxian_hero2').val();
+    data.zhaoxian_hero3 = $('#zhaoxian_hero3').val();
+    data.zhaoxian_hero4 = $('#zhaoxian_hero4').val();
+    return data;
+  }
+
+  function toText(){
+    $('#json').val(JSON.stringify(getTable(), null));
+  }
+
+  function toDisplay(){
+    var data = JSON.parse($('#json').val())
+    for(var name in data){
+      if(typeof(data[name]) == 'function'){
+        //
+      }else{
+        if($('#'.concat(name)).attr('type') == 'checkbox'){
+          $('#'.concat(name)).prop('checked', data[name]);
+        }else{
+          $('#'.concat(name)).val(data[name]);
+        }
+      }
+    }
+  }
+
+   selectItem($('#zhaoxian_hero1'), $('#hero1_name'), $('#allSelect'));
+   selectItem($('#zhaoxian_hero2'), $('#hero2_name'), $('#allSelect'));
+   selectItem($('#zhaoxian_hero3'), $('#hero3_name'), $('#allSelect'));
+   selectItem($('#zhaoxian_hero4'), $('#hero4_name'), $('#allSelect'));
+
+     $('#zhaoxian_startTime').datetimepicker();
+  $('#zhaoxian_endTime').datetimepicker();
+
+
+  $(document).ready(initDataSource());
+</script>

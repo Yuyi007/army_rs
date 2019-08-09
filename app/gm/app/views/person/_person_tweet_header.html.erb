@@ -1,0 +1,11 @@
+<div class="row">
+  <div class="col-md-2">
+      <% if @tweet %>
+        <span><%=t :tweet_id %>: <%= @tweet.id %></span>
+      <%else%>
+        <span><%=t :person_no_tweet %></span>
+      <% end %>
+  </div>
+</div>
+
+<br/><br/>

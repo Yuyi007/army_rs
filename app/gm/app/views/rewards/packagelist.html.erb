@@ -1,0 +1,56 @@
+<%= form_tag({action: :importPackage}, {multipart: true, class: "form"} ) do %>
+<div class="row">
+  <div class="col-md-1">
+    <a href="#" onclick="toCreate()" class="btn btn-info btn-sm"><%=t :create_package%></a>
+  </div>
+  <div class="col-md-1 col-md-offset-1">
+    <%= submit_tag(t(:import), class: "btn btn-sm btn-danger") %>
+  </div>
+  <div class="col-md-3">
+    <%= file_field_tag('packagefile', class: "form-control") %>
+  </div>
+
+  <% if not @errorMessage.nil? %>
+    <div class="col-md-6">
+      <span class="alert alert-danger"><%= @errorMessage %></span>
+    </div>
+  <% end %>
+  <% if not @successMessage.nil? %>
+    <div class="col-md-6">
+      <span class="alert alert-success"><%= @successMessage %></span>
+    </div>
+  <% end %>
+</div>
+<% end %>
+
+<br/><br/>
+
+<table id='packagestable' class='table table-bordered table-striped table-hover'>
+  <tr>
+    <th><%=t :reward_item_id %></th>
+    <th><%=t :reward_item_tid %></th>
+    <th><%=t :reward_item_name %></th>
+    <th><%=t :reward_item_desc %></th>
+    <th><%=t :actions %></th>
+  </tr>
+
+  <% for package in @packages %>
+  <tr>
+    <td><%= package.id %></td>
+    <td><%= package.tid %></td>
+    <td><%= package.name %></td>
+    <td><%= package.desc %></td>
+    <td>
+    <%= link_to t(:edit), rewards_packageedit_url(:id => package.id) %>
+    <%= link_to t(:delete) , { :action => 'deletePackage', :id => package.id }, { :confirm => t(:confirm_sure), :method => :delete } %>
+    <%= link_to t(:export), { :action => 'exportPackage', :id => package.id }, { :class => 'btn btn-xs btn-success', :target => '_blank'} %>
+    </td>
+  </tr>
+  <% end %>
+</table>
+
+<script type="text/javascript">
+  function toCreate(){
+    window.location.href = "/rewards/packagenew/";
+  }
+</script>

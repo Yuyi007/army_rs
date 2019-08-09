@@ -1,0 +1,7 @@
+<h1><%=t :edit_zonemarket %></h1>
+<%= form_for_hash @zonemarket, 'zonemarket', {:action => "update"}, :method => :post, :class => "form" do |f| %>
+  <%= render :partial => "form", :object => f, :locals => { :zonemarket => @zonemarket } %>
+  <%= f.submit t(:save), :class => "btn btn-info" %>
+<% end %>
+<br />
+<%= link_to t(:zonemarket_list_url), {:action => "list", :zone => @zone}, :class => "btn btn-warning" %>

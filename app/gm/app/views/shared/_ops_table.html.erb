@@ -1,0 +1,4 @@
+var ops_names = {};
+<% RsRails.get_config('ops_task').each_pair do |tid, value| %>
+    ops_names['<%= "#{tid}" %>'] = '<%=t "title_#{tid}" %>';
+<% end %>

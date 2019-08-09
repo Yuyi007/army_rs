@@ -1,0 +1,107 @@
+<% store_id ||= 'id' %>
+<h2><span class="glyphicon glyphicon-shopping-cart"></span><%=t :market%></h2>
+<div>
+  <%= render 'shared/items_top' %>
+  <div>
+    <div id="store">
+      <h2><%=t :store_config%></h2>
+      <div id="store_hint" style="display:none;width:100%;padding:2px 4px 2px 4px;">
+        <span id="store_hint_content" style="color:white;"></span>
+      </div>
+      <form id="data_form" action="/rewards/create_store" method="POST">
+        <table class='gridtable table table-striped table-bordered'>
+          <col width="30px" />
+          <col width="80px" />
+          <col width="80px" />
+          <col width="50px" />
+          <col width="50px" />
+          <col width="50px" />
+          <col width="50px" />
+          <tr>
+            <th><%=t :store_id%></th>
+            <th><%=t :store_tid%></th>
+            <th><%=t :paymentitems_weight%></th>
+            <th><%=t :store_item%></th>
+            <th><%=t :paymentitems_num%></th>
+            <th><%=t :paymentitems_status%></th>
+            <th><%=t :paymentitems_needchief%></th>
+            <th><%=t :paymentitems_price%></th>
+          </tr>
+          <tr>
+            <td><%= text_field_tag :id, nil,  :readonly => true  %></td>
+            <td><%= text_field_tag :tid, store_id,  :readonly => true  %></td>
+            <td><%= text_field_tag :weight, nil %></td>
+            <td>
+              <%= text_field_tag :itemName, nil, :class => 'itemName', :readonly => true %>
+              <%= text_field_tag :itemId, nil, :class => 'item', :readonly => true %>
+            </td>
+            <td><%= number_field_tag :num, nil, :min => 0 %></td>
+            <td>
+              <select id="status" name="status" class="form-control">
+                <option value= 0 >
+                  <%=t :status_non %>
+                </option>
+                <option value= 1 >
+                  <%=t :status_hot %>
+                </option>
+                <option value= 2 >
+                  <%=t :status_new %>
+                </option>
+              </select>
+            </td>
+            <td><%= number_field_tag :needChief, nil, :min => 0 %></td>
+            <td><%= number_field_tag :price, nil, :min => 0 %></td>
+          </tr>
+          <tr>
+            <th><%=t :paymentitems_specialprice%></th>
+            <th><%=t :paymentitems_needvip%></th>
+            <th><%=t :paymentitems_buytimes%></th>
+            <th><%=t :paymentitems_starttime%></th>
+            <th><%=t :paymentitems_endtime%></th>
+            <th><%=t :paymentitems_dailybuy%></th>
+          </tr>
+          <tr>
+            <td><%= number_field_tag :specialPrice, nil, :min => 0 %></td>
+            <td><%= number_field_tag :vipLevel, nil, :min => 0 %></td>
+            <td><%= number_field_tag :buyTimes, nil, :min => 0 %></td>
+            <td><%= text_field_tag :startTime, nil %></td>
+            <td><%= text_field_tag :endTime, nil %></td>
+            <td><input id="dayliBuy" name="dayliBuy" type="checkbox" value="" style="width:50px" /></td>
+          </tr>
+        </table>
+      </form>
+      <div id="itemandpackagegmtSelect" class="selectBlock">
+        <div><span><%=t :search%></span><%= render partial: 'shared/search_items', locals: { eid: "autoCompleteItemAndPackageGmt"}  %></div>
+        <div><span><%=t :package%></span><%= render 'shared/packages_gmt' %></div>
+        <div><span><%=t :item%></span><%= render 'shared/items_without_package' %></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(initDataSource());
+  $('#startTime').datetimepicker();
+  $('#endTime').datetimepicker();
+  selectItem($('#itemId'), $('#itemName'), $('#itemandpackagegmtSelect'));
+
+  function getData()
+  {
+    var data = {
+                "tid": $("#tid").val(),
+                "id": $("#id").val(),
+                "weight": $("#weight").val(),
+                "itemId": $("#itemId").val(),
+                "num": $('#num').val(),
+                "status": $('#status').val(),
+                "needChief": $('#needChief').val(),
+                "price": $("#price").val(),
+                "specialPrice": $("#specialPrice").val(),
+                "vipLevel": $("#vipLevel").val(),
+                "buyTimes": $("#buyTimes").val(),
+                "startTime": $("#startTime").val(),
+                "endTime": $("#endTime").val(),
+                "dayliBuy": $('#dayliBuy').prop('checked'),
+              };
+    return JSON.stringify(data);
+  }
+</script>

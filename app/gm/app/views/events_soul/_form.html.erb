@@ -1,0 +1,150 @@
+<%= render 'shared/grant' %>
+<%= render 'shared/events_top' %>
+<%= render 'shared/items_top' %>
+<div id="soulevent">
+  <h3><span class="label label-default"><%=t :pick_hero_send_soul %></span></h3>
+  <form id="data_form" action="/events_soul/1" method="POST" class="form">
+    <div class="row">
+      <div class="col-md-3">
+        <span><%=t :open %></span>
+        <input id="soulEnabled" name="soulEnabled" type="checkbox" value="" style="width:50px" />
+      </div>
+      <div class="col-md-3">
+        <span><%=t :event_id %></span>
+        <%= text_field_tag :soulId, @id, :class => "form-control" %>
+      </div>
+    </div>
+    <div id="soulEvents">&nbsp;</div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-addon"><%=t :open_date %></span>
+          <%= text_field_tag :startTime, nil, :class => "form-control" %>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-addon"><%=t :close_date %></span>
+          <%= text_field_tag :endTime, nil, :class => "form-control" %>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="input-group">
+          <span class="input-group-addon"><%=t :status %></span>
+          <%= text_field_tag :grant_status_se, nil, :readonly => true, :class => "form-control" %>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <div class = "row">
+      <span><%=t :hero_reward_type %></span>
+      <%= radio_button_tag :hero_reward_type, 'wan', true %>
+      <%=t :hero_pick_wanli %>
+      <%= radio_button_tag :hero_reward_type, 'bai' %>
+      <%=t :hero_pick_baili %>
+    </div>
+    <div class="row">
+      <% 1.upto(4) do |i| %>
+        <div class="col-md-2">
+          <%=t :hero_reward %>
+          <%= i %>
+          <%= text_field_tag "hero_se#{i}", "", :readonly => true, :class => 'item form-control' %>
+          <%= text_field_tag "hero_name#{i}", "", :readonly => true, :class => 'itemName form-control' %>
+          <div><%=t :number1 %>
+            <%= number_field_tag "num_se#{i}", "", :readonly => false, :class => "form-control" %>
+          </div>
+          <div><%=t :weight %>
+            <%= number_field_tag "weight_se#{i}", "", :readonly => false, :class => "form-control" %>
+          </div>
+          <div><%= number_field_tag "pickNum_se#{i}", "", :readonly => false, :class => 'item form-control' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <br/>
+    <%= render 'shared/events_downandup' %>
+  </form>
+  <br/>
+  <div id="heroSelect" class="selectBlock well">
+    <div><span><%=t :search%></span><%= render partial: 'shared/search_items', locals: { eid: "autoCompleteHero"} %></div>
+    <div><span><%=t :hero%></span><%= render 'shared/heroes' %></div>
+  </div>
+</div>
+<script type="text/javascript">
+  for(var i = 1; i <= 4; i++){
+    selectItem($('#hero_se'.concat(i)), $('#hero_name'.concat(i)), $('#heroSelect'));
+  }
+
+  $(document).ready(initDataSource());
+
+  function getTable(){
+    var data = new Object();
+    data.soulEnabled = $('#soulEnabled').prop('checked');
+    data.startTime = $('#startTime').val();
+    data.endTime = $('#endTime').val();
+    for (var i = 1; i <= 4; i++)
+    {
+      data['hero_se'.concat(i)] = $('#hero_se'.concat(i)).val()
+      data['hero_name'.concat(i)] = $('#hero_name'.concat(i)).val()
+      data['pickNum_se'.concat(i)] = $('#pickNum_se'.concat(i)).val()
+      data['num_se'.concat(i)] = $('#num_se'.concat(i)).val()
+      data['weight_se'.concat(i)] = $('#weight_se'.concat(i)).val()
+    }
+    return data;
+  }
+  ////////////////////////////////////////////////
+  // soul
+  //
+
+  ajaxSubmit($('#data_form'));
+  $('#startTime').datetimepicker();
+  $('#endTime').datetimepicker();
+
+  function getSoulEvent(zoneIndex, callback)
+  {
+    $.ajax({
+      type: 'GET',
+      url: '/events_soul/get_soul/' + zoneIndex + '/' + <%= @id || 0 %>
+    }).done(function(jsonData){
+      console.log(jsonData);
+      if (callback) {
+        callback(jsonData);
+      }
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+
+  function getData()
+  {
+    var data = new Array();
+    for (var i = 0; i < 4; i++) {
+      var h = $('#hero_se' + (i + 1)).val();
+      if (h == '')
+        continue;
+
+      var tid = $('#hero_se' + (i + 1)).val();
+      var num = parseInt($('#num_se' + (i + 1)).val());
+      var weight = parseInt($('#weight_se' + (i + 1)).val());
+      var pickNum = parseInt($('#pickNum_se' + (i + 1)).val());
+      data.push({"tid":tid, "num":num, "pickNum":pickNum, "weight":weight});
+    };
+
+    var type = "wan";
+    if( $('#hero_reward_type_bai').prop("checked") )
+    {
+      type = "bai";
+    }
+
+    res = {
+      "startTime":($('#startTime').val()),
+      "endTime":($('#endTime').val()),
+      "data":JSON.parse(JSON.stringify(data)),
+      "type":type,
+      'enabled':$('#soulEnabled').prop('checked'),
+      "id":$("#soulId").val(),
+    };
+
+    return JSON.stringify(res);
+  }
+</script>

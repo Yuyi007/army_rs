@@ -1,0 +1,111 @@
+<noscript>Enable Javascript to continue</noscript>
+
+<div>
+  <p><%=t :zone_settings_desc %></p>
+</div>
+
+<table class="table table-striped table-bordered table-hover">
+  <tr>
+    <th><%=t(:zone_id)%></th>
+    <th><%=t(:name)%></th>
+    <th><%=t(:status)%></th>
+    <th><%=t(:recommend)%></th>
+    <th><%=t(:max_online)%></th>
+    <th><%=t(:running_status)%></th>
+  </tr>
+  <% @zone_settings.settings.each do |zone_id, setting| %>
+    <tr class='zone_settings'>
+      <td class='zone_id'><%= setting.zone_id %></td>
+      <td class='zone_name'><%= setting.name %></td>
+      <td class='zone_status'><%= setting.status %></td>
+      <td>
+        <input type="checkbox" id="recommend" class="recommend" name="recommend" value="" <%= if setting.recommend then 'checked' else '' end %>/>
+      </td>
+      <td>
+        <input id="" name="" type="number" class="max_online" value="<%= setting.max_online %>" placeHolder=""/>
+      </td>
+      <td>
+        <%= if @numOpenZones.to_i >= setting.zone_id then t(:open) else t(:stage_not_activated) end %>
+      </td>
+    </tr>
+  <%end%>
+</table>
+
+<div>
+  <a href="#" class="btn btn-success" onclick="restore_default_settings()"><%=t :restore_default_settings %></a>
+  <a href="#" class="btn btn-success" onclick="save()"><%=t :save %></a>
+  &nbsp;&nbsp;&nbsp;
+  <a href="#" class="btn btn-danger" onclick="delete_zone_settings()"><%=t :delete_zone_settings %></a>
+</div>
+
+<script type="text/javascript">
+  function restore_default_settings() {
+    $.ajax({
+      type: 'POST',
+      url: '/zone_settings/restore_default_settings',
+      data: { },
+      dataType: 'json'
+    }).done(function (json){
+      if (json.success) {
+        showStatus('Save success~', 'success')
+      }
+      else {
+        showStatus('Save failed!', 'fail')
+      }
+    }).fail(function(xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+  function save() {
+    settings = {}
+    $('.zone_settings').each(function (i1, tr) {
+      setting = {}
+      tr = $(tr)
+      setting.zone_id = tr.find('.zone_id').text()
+      setting.name = tr.find('.zone_name').text()
+      setting.status = tr.find('.zone_status').text()
+      setting.recommend = tr.find('.recommend').is(':checked')
+      setting.max_online = tr.find('.max_online').val()
+      setting.zone_group = tr.find('.zone_group').val()
+      setting.divisions = tr.find('.divisions').val()
+      settings[setting.zone_id] = setting
+    });
+    $.ajax({
+      type: 'POST',
+      url: '/zone_settings/save',
+      data: { 'settings': JSON.stringify(settings, null) },
+      dataType: 'json'
+    }).done(function (json){
+      if (json.success) {
+        showStatus('Save success~', 'success')
+      }
+      else {
+        showStatus('Save failed!', 'fail')
+      }
+    }).fail(function(xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+  function delete_zone_settings() {
+    $.ajax({
+      type: 'POST',
+      url: '/zone_settings/delete',
+      data: { },
+      dataType: 'json'
+    }).done(function (json){
+      if (json.success) {
+        showStatus('Delete success~', 'success')
+      }
+      else {
+        showStatus('Delete failed!', 'fail')
+      }
+    }).fail(function(xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+  function withConfirm(func) {
+    if (confirm("确定进行该操作吗?")) {
+      func();
+    }
+  }
+</script>

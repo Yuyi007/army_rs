@@ -1,0 +1,77 @@
+<%= render 'shared/events_top' %>
+<div  class="row">
+  <%= render 'shared/items_top' %>
+  <div>
+    <div id="campaign_exp">
+      <h2><%=t :campaign_exp_event%></h2>
+      <div id="campaign_exp_hint" style="display:none;width:100%;padding:2px 4px 2px 4px;">
+        <span id="campaign_exp_hint_content" style="color:white;"></span>
+      </div>
+      <table class='gridtable table table-striped table-bordered'>
+        <col width="20px" />
+        <col width="30px" />
+        <col width="20px" />
+        <col width="20px" />
+        <col width="1000px" />
+        <tr>
+          <th><%=t :id%></th>
+          <th><%=t :zone%></th>
+          <th><%=t :start_time%></th>
+          <th><%=t :end_time%></th>
+          <th><%=t :campaign_zones%></th>
+        </tr>
+        <tr>
+          <td><%= form.text_field :id,  :readonly => true, :size => 3 %></td>
+          <td><%= form.text_field :zone,  :readonly => true, :size => 3 %></td>
+          <td><%= form.text_field :startTime, :size => 15 %></td>
+          <td><%= form.text_field :endTime, :size => 15 %></td>
+          <td>
+          <% allCampaignZones = get_campaign_zones %>
+          <% selectedList = (@campaign_exp.campaign_zones.clone rescue [])
+          %>
+        <%= select("campaign_exp", "campaign_zones", options_for_select(allCampaignZones.map {|k, v| [v, k]}, @campaign_exp.campaign_zones), {}, {:multiple => true, :size => 10, :class => "form-control"}) %>
+          </td>
+        </tr>
+      </table>
+      <%= render 'shared/events_downandup' %>
+    </div>
+    <div id="allSelect" class="selectBlock">
+      <div><span><%=t :search%></span><%= render 'shared/search_items' %></div>
+      <div><span><%=t :hero%></span><%= render 'shared/heroes' %></div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  function getTable(){
+    var data = new Object();
+    data.campaign_exp_startTime = $('#campaign_exp_startTimze').val();
+    data.campaign_exp_endTime = $('#campaign_exp_endTime').val();
+    data.campaign_exp_campaign_zones = $('#campaign_exp_campaign_zones').val();
+    return data;
+  }
+
+  function toText(){
+    $('#json').val(JSON.stringify(getTable(), null));
+  }
+
+  function toDisplay(){
+    var data = JSON.parse($('#json').val())
+    for(var name in data){
+      if(typeof(data[name]) == 'function'){
+        //
+      }else{
+        if($('#'.concat(name)).attr('type') == 'checkbox'){
+          $('#'.concat(name)).prop('checked', data[name]);
+        }else{
+          $('#'.concat(name)).val(data[name]);
+        }
+      }
+    }
+  }
+
+     $('#campaign_exp_startTime').datetimepicker();
+  $('#campaign_exp_endTime').datetimepicker();
+
+
+  $(document).ready(initDataSource());
+</script>

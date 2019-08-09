@@ -1,0 +1,19 @@
+<div class="well">
+  <span><%=t :current_editor_app_version %></span> <b><%= @editorVersion %></b>
+  <%= link_to t(:edit), "edit?platform=editor&sdk=", :class => "btn btn-danger btn-sm" %>
+</div>
+
+<div class="well">
+  <span><%=t :current_ios_app_version %></span> <b><%= @iosVersion %></b>
+  <%= link_to t(:edit), "edit?platform=ios&sdk=", :class => "btn btn-danger btn-sm" %>
+</div>
+
+<div class="well">
+  <span><%=t :current_android_app_version %></span> <b><%= @androidVersion %></b>
+  <%= link_to t(:edit), "edit?platform=android&sdk=", :class => "btn btn-danger btn-sm" %>
+</div>
+
+<div class="well">
+  <span><%=t :current_wp8_app_version %></span> <b><%= @wp8Version %></b>
+  <%= link_to t(:edit), "edit?platform=wp8&sdk=", :class => "btn btn-danger btn-sm" %>
+</div>

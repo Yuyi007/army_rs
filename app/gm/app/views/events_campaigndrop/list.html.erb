@@ -1,0 +1,167 @@
+<%= render 'shared/grant' %>
+<h3><span class="label label-default"><%=t :choose_zone%></span></h3>
+<%= render 'shared/zones' %>
+
+<br/>
+
+<a href="#" onclick="toCreate()" class="btn btn-info"><%=t :create_dropevent%></a>
+
+<br/><br/>
+
+<table id='eventstable' class='table table-striped table-bordered table-hover'>
+  <tr>
+    <th><%=t :id %></th>
+    <th><%=t :open_date%></th>
+    <th><%=t :close_date%></th>
+    <th><%=t :zone %></th>
+    <th><%=t :status %></th>
+    <th><%=t :actions %></th>
+  </tr>
+</table>
+
+<form id="copyForm" action="'events_campaigndrop/copy_campaign_drop/1/copys'" method="POST" class="form">
+  <div class="alert alert-success">
+    <%=t :copy_current_config_to_zone%>,
+    <%=t :confirm_your_config_saved%>,
+    <%=t :enter_zone_split_with_space_like%>2 3 6
+  </div>
+
+  <%= text_field_tag "copy_zones", nil, :size => 100, :placeholder => "2 3 6", :class => "form-control" %>
+  <br/>
+  <span><%=t :force_copy%></span>
+  <%= check_box_tag 'enable_force_copy' %>
+  <input type="button" onclick="copy()" value="<%=t :copy_current_config_to_zone%>" class="btn btn-success">
+</form>
+
+
+
+
+<script type="text/javascript">
+
+  /////////////////////////////////////////////
+  // common
+  //
+
+  $("#zone").change(onZoneChange);
+  onZoneChange(); // load event configs at zone 1
+
+  function onZoneChange()
+  {
+    var zoneIndex = $("#zone").val();
+    console.log("zone=" + zoneIndex);
+
+    getEvents(zoneIndex, function(json) {
+      $("#eventstable tr:not(:first)").empty();
+      var events = json['events'] || {};
+      for(var i = 0; i < events.length; i++)
+      {
+        var event_drop = events[i];
+        var id = event_drop['id'];
+        var startTime = event_drop['startTime'];
+        var endTime = event_drop['endTime'];
+        var statusStr = getGrantStatusStr(event_drop['grantStatus'])
+
+        $("#eventstable").append("<tr>" + "<td>" + id + "</td>" + "<td>" + startTime + "</td>" + "<td>" + endTime + "</td>" + "<td>" + zoneIndex + "</td>" + "<td>" + statusStr + "</td>" + "<td><a href='/events_campaigndrop/edit/" + zoneIndex + "/" + id + "'><%=t :edit%></a> " + "<a href='#' onclick=deleteCur(" + zoneIndex + "," + id + ")><%=t :delete%></a>" + "</td>");
+      }
+    });
+  }
+
+  function getEvents(zone, callback) {
+    $.ajax({
+      type: 'GET',
+      url: '/events_campaigndrop/getEvents/' + zone
+    }).done(function(json){
+      console.log(json);
+      if (callback) {
+        callback(json);
+      }
+    }).fail(function(xhr, status){
+      showStatus('获取充值活动列表失败!', 'red');
+    });
+  }
+
+  function toCreate(){
+    var zoneIndex = $("#zone").val();
+    window.location.href = "/events_campaigndrop/new/";
+  }
+
+  function copy()
+  {
+    if($("#enable_force_copy").prop('checked'))
+    {
+      if(confirm("<%=t :force_copy_tips%>"))
+      {
+        copyDropEvents();
+      }
+      else
+      {
+        //
+      }
+    }
+    else
+    {
+      copyDropEvents();
+    }
+  }
+
+  function copyDropEvents()
+  {
+    var zoneIndex = $("#zone").val();
+    $.ajax({
+      type: 'POST',
+      url: '/events_campaigndrop/' + zoneIndex + "/copys",
+      data: { 
+              "tozones":$("#copy_zones").val(),
+              "force_copy":$("#enable_force_copy").prop('checked')
+            }
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('copys success~', 'green')
+      }
+      else if(json)
+      {
+        //showStatus('copys error, reason: ' + json['reason'], 'red')
+        showStatus(parseError(json), 'red')
+      }
+      else
+      {
+        showStatus('copys error', 'red')
+      }
+      }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+  }
+
+  function deleteCur(zone, id)
+  {
+    if(confirm("<%=t :confirm_operation%>"))
+    {
+      deleteDropEvents(zone, id);
+    }
+    else
+    {
+      //
+    }
+  }
+
+  function deleteDropEvents(zone, id)
+  {
+    $.ajax({
+      type: 'POST',
+      url: '/events_campaigndrop/delete/' + zone + "/" + id
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('delete success~', 'green')
+        onZoneChange()
+      }
+      else
+      {
+        showStatus('delete error', 'red')
+      }
+      }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+  }
+</script>

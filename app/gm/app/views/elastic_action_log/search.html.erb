@@ -1,0 +1,131 @@
+<style>
+.success { color: green; }
+.fail { color: red; }
+.search { margin-bottom: 20px; }
+.search1 { margin-bottom: 5px; margin-top: 5px;}
+.search-result tbody tr th { font-size: 12px; padding: 4px; max-width: 250px; }
+.search-result tbody tr td { font-size: 12px; padding: 4px; max-width: 250px; }
+.search-result-warn { color: red; }
+</style>
+
+<%= form_tag '/elastic_action_log/search', :method => 'get', :class => "form" do %>
+
+  <div class='row'>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:player_id) %></span>
+        <%= text_field_tag :player_id, params[:player_id], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:zone) %></span>
+        <%= text_field_tag :zone, params[:zone], :class => "form-control" %>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:type) %></span>
+        <%= text_field_tag :type, params[:type], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span id="search_field_params" title='<%=t :search_field_params_help %>' class="input-group-addon"><%= t(:params) %>&nbsp;<span class="glyphicon glyphicon-question-sign"></span></span>
+        <%= text_field_tag :parameters, params[:parameters], :class => "form-control" %>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:time) %></span>
+        <%= text_field_tag :time_s, params[:time_s], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= text_field_tag :time_e, params[:time_e], :class => "form-control" %>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:num_per_page) %></span>
+        <%= text_field_tag :per_page, params[:per_page], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= submit_tag t(:search), :class => "btn btn-info" %>
+      <a href="<%= AppConfig.elasticsearch['host'] %>/_plugin/head" target="_blank" class='btn btn-info'><%=t :manage %></a>
+    </div>
+  </div>
+<% end %>
+
+<br/>
+
+<table class="table table-striped table-bordered table-hover search-result table-layout:fixed">
+
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+
+  <tr>
+    <th><%= sortable "player_id", params %></th>
+    <th><%= sortable "zone", params %></th>
+    <th><%= sortable "type", params %></th>
+    <th><%= unsortable "params", params, "Param1" %></th>
+    <th><%= unsortable "param2", params %></th>
+    <th><%= unsortable "param3", params %></th>
+    <th><%= unsortable "param4", params %></th>
+    <th><%= unsortable "param5", params %></th>
+    <th><%= unsortable "param6", params %></th>
+    <th><%= sortable "time", params %></th>
+  </tr>
+
+  <% for log in @logs %>
+  <tr class='<%= if log.type =~ /^fail/ then "search-result-warn" else "" end %>' >
+    <td>
+      <% if log.respond_to? :player_id and log.player_id and log.player_id.to_s.length %>
+        <%= link_to log.player_id, data_raw_url( :id => log.player_id, :zone => log.zone ) %>
+      <% end %>
+    </td>
+    <td><%= log.zone %></td>
+    <td><%= t(log.type) %></td>
+    <% if log.respond_to? :params %>
+    <td  style="word-wrap:break-word;"><%= log.params.length > 0 and log.params[0] or '' %></td>
+    <td  style="word-wrap:break-word;"><%= log.params.length > 1 and log.params[1] or ''  %></td>
+    <td  style="word-wrap:break-word;"><%= log.params.length > 2 and log.params[2] or ''  %></td>
+    <td  style="word-wrap:break-word;"><%= log.params.length > 3 and log.params[3] or ''  %></td>
+    <td  style="word-wrap:break-word;"><%= log.params.length > 4 and log.params[4] or ''  %></td>
+    <td  style="word-wrap:break-word;"><%= log.params.length > 5 and log.params[5] or ''  %></td>
+    <% elsif %>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <% end %>
+    <td><%= TimeHelper.gen_date_time_sec(log.time) %></td>
+  </tr>
+  <% end %>
+
+</table>
+
+<div>
+<%= will_paginate @logs %>
+</div>
+
+<script type='text/javascript'>
+  $('#time_s').datetimepicker();
+  $('#time_e').datetimepicker();
+  $('#search_field_params').tooltip();
+</script>

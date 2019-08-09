@@ -1,0 +1,34 @@
+
+<table class='table table-striped table-bordered table-hover'>
+
+  <tr>
+    <th><%=t :username %></th>
+    <th><%=t :email %></th>
+    <th><%=t :verified %></th>
+    <th><%=t :active %></th>
+    <th><%=t :permissions %></th>
+    <th><%=t :last_request_at %></th>
+    <th><%=t :last_login_at %></th>
+    <th><%=t :actions %></th>
+  </tr>
+
+  <% for user in @users %>
+  <tr>
+    <td><%= link_to user.username, site_user_url(user.id) %></td>
+    <td><%= user.email %></td>
+    <td><%= user.verified %></td>
+    <td><%= user.active %></td>
+    <td><%= user.role_name %></td>
+    <td><%= TimeHelper.gen_date_time_sec(user.last_request_at) %></td>
+    <td><%= TimeHelper.gen_date_time_sec(user.last_login_at) %></td>
+    <td>
+      <% if user.can_edit_by? current_user %>
+        <%= link_to t(:edit), edit_site_user_super_url(user.id), {:class => "btn btn-success"} %>
+      <% end %>
+      <%= link_to t(:permissions), edit_site_user_role_url(user.id), {:class => "btn btn-warning"} %>
+      <%= link_to t(:suspend), edit_site_user_active_url(user.id), {:class => "btn btn-danger"} %>
+    </td>
+  </tr>
+  <% end %>
+
+</table>

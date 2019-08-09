@@ -1,0 +1,182 @@
+{
+  "elasticsearch": {
+    "host": "http://127.0.0.1:9200",
+    "cluster": null,
+    "log": true
+  },
+  "server": {
+    "suppress_logs": false,
+    "dev_mode": true,
+    "http_api_secret": "a3ce6f7a541cda538f68b7eed7334043",
+    "broadcast_nonce": [
+      86,
+      66,
+      145,
+      187,
+      207,
+      54,
+      54,
+      5,
+      195,
+      105,
+      250,
+      9,
+      112,
+      210,
+      40,
+      216,
+      229,
+      82,
+      135,
+      237,
+      79,
+      167,
+      134,
+      182
+    ],
+    "comm_nonce": [
+      163,
+      68,
+      249,
+      232,
+      74,
+      76,
+      25,
+      143,
+      190,
+      86,
+      17,
+      120,
+      230,
+      158,
+      216,
+      59,
+      254,
+      209,
+      175,
+      34,
+      98,
+      178,
+      31,
+      130
+    ],
+    "comm_key": [
+      203,
+      57,
+      195,
+      43,
+      119,
+      178,
+      85,
+      177,
+      177,
+      210,
+      238,
+      101,
+      112,
+      52,
+      233,
+      43,
+      2,
+      212,
+      234,
+      175,
+      181,
+      163,
+      74,
+      16,
+      83,
+      207,
+      204,
+      203,
+      217,
+      143,
+      65,
+      29
+    ],
+    "rc4_key": [
+      100,
+      51,
+      48,
+      99,
+      50,
+      99,
+      52,
+      49,
+      98,
+      56,
+      48,
+      56,
+      97,
+      98,
+      57,
+      55
+    ],
+    "host": "0.0.0.0",
+    "port": 5081,
+    "auto_load": true,
+    "suppress_logs": false,
+    "pretty_output": true,
+    "enable_performance_metrics": true,
+    "enable_debug_handlers": true,
+    "publish_url": "http://127.0.0.1/~linjianfu/kfs",
+    "disable_publish": false,
+    "transfer_cold_data": false,
+    "cold_data_days": 1
+  },
+  "cluster": null,
+  "default_db": null,
+  "redis": [
+    {
+      "name": "shard_0",
+      "host": "127.0.0.1",
+      "port": 6379
+    },
+    {
+      "name": "shard_1",
+      "host": "127.0.0.1",
+      "port": 6379
+    },
+    {
+      "name": "shard_2",
+      "host": "127.0.0.1",
+      "port": 6379
+    },
+    {
+      "name": "shard_3",
+      "host": "127.0.0.1",
+      "port": 6379
+    },
+    {
+      "name": "shard_4",
+      "host": "127.0.0.1",
+      "port": 6379
+    },
+    {
+      "name": "shard_5",
+      "host": "127.0.0.1",
+      "port": 6379
+    }
+  ],
+  "system_redis": null,
+  "client_version": {
+    "editor": "",
+    "ios": null,
+    "android": null
+  },
+  "bugsnag": {
+    "api_key": "9a9a85ef022beb649cf84bd088167490",
+    "release_stage": "prod",
+    "notify_release_stages": [
+      "prod"
+    ],
+    "use_logger": true
+  },
+  "statsd": {
+    "host": "127.0.0.1",
+    "port": 9125,
+    "namespace": "race"
+  },
+  "mysql": null,
+  "pubsub_redis": null
+}

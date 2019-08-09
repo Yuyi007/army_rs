@@ -1,0 +1,71 @@
+<h1><%= t(:create_raid_event) %></h1>
+<br/>
+<a href='/events_raid/list/'><%=t :list_raid_events%></a>
+<br/>
+<br/>
+
+<%= render :partial => "form", :locals => { } %>
+
+<input type="button" onclick="createRaidEvent()" value="<%=t :create%>">
+  
+<br/>
+
+<script type="text/javascript">
+function onGetCreatedEvts(json)
+{
+  var zones = json['zones']
+  setEventZone(zones)
+}
+
+function getCreatedZones()
+{
+  $.ajax({
+      type: 'GET',
+      url: '/events_raid/getCreatedZones'
+    }).done(function(json){
+      console.log(json);
+      if(json)
+      {
+        onGetCreatedEvts(json);
+      }
+      else
+      {
+        showStatus('Get creted zones failed!', 'red');
+      }
+      
+    }).fail(function(xhr, status){
+      showStatus('Get creted zones failed!', 'red');
+    });
+}
+
+function createRaidEvent()
+{
+  $.ajax({
+      type: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: '/events_raid/create',
+      data: getData()
+    }).done(function(json){
+      console.log(json);
+      if(json && json['success'])
+      {
+        showStatus('create success~', 'green')
+        window.location.href = "/events_raid/list/";
+      }
+      else if(json)
+      {
+        showStatus(json['reason'], 'red')
+      }
+      else
+      {
+        showStatus('create error', 'red')
+      }
+      
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+}
+
+getCreatedZones();
+</script>

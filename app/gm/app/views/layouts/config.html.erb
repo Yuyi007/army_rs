@@ -1,0 +1,27 @@
+<% content_for :content do%>
+
+  <h3><%=t :manage_config %></h3>
+  <div class="btn-group btn-group-sm">
+    <a href="<%= config_edit_index_path %>" class="btn btn-info" id="edit_link">
+      <span class="glyphicon glyphicon-edit"></span>
+      <%= t(:edit_config) %>
+    </a>
+    <a href="<%= config_view_index_path %>" class="btn btn-info" id="view_link">
+      <span class="glyphicon glyphicon-list"></span>
+      <%= t(:view_config) %>
+    </a>
+  </div>
+
+  <hr/>
+
+  <%= yield %>
+
+  <% if @active %>
+    <script>
+    $("#" + "<%= @active %>").removeClass("btn-info")
+    $("#" + "<%= @active %>").addClass("btn-warning")
+    </script>
+  <% end %>
+
+<% end %>
+<%= render template: "layouts/main" %>

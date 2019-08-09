@@ -1,0 +1,13 @@
+<div id="recharge">
+  <select id = "recharge" name="recharge" value = ""  class="form-control">
+  	<% if !GameConfig.chongzhi.nil? %>
+	    <% GameConfig.chongzhi.each do |tid, item_data| %>
+	          <option value = '<%= tid %>'>
+	            <%= "#{item_data['tid']}-#{item_data['name']}" %>
+	          </option>
+	    <% end %>
+    <% end %>
+  </select>
+</div>
+
+

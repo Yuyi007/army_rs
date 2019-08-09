@@ -1,0 +1,11 @@
+The GM Tools has found that your account '<%= @user.username %>' was editing user. If it's not done by yourself, means somebody had stolen your account:
+
+Action: <%= @record.action %>
+Target User: <%= @target_user.username %>
+Time: <%= TimeHelper.gen_date_time_sec @record.created_at %>
+
+For details, click on following link to search your records: 
+
+<%= @detail_url %>
+
+If the above URL does not work, try copying and pasting it into your browser. If you continue to have problems, please feel free to contact us.

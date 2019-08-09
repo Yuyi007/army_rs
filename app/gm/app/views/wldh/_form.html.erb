@@ -1,0 +1,91 @@
+<%= render "shared/error_messages", :target => @wulin %>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="input-group">
+      <span class="input-group-addon"><%= t(:start_time) %></span>
+      <%= form.text_field :start_time, :class => "form-control" %>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="input-group">
+      <span class="input-group-addon"><%= t(:max_players) %></span>
+      <%= form.number_field :maxPlayers, :class => "form-control" %>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="input-group">
+      <span class="input-group-addon"><%= t(:min_players) %></span>
+      <%= form.text_field :minPlayers, :class => "form-control" %>
+    </div>
+  </div>
+</div>
+
+<br/>
+
+<div class="row">
+  <div class="col-md-2">
+    <div class="input-group">
+      <span class="input-group-addon"><%= t(:division) %></span>
+      <%= form.number_field :division, :class => "form-control" %>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="input-group">
+      <span class="input-group-addon"><%= t(:counter) %></span>
+      <%= form.number_field :counter, :class => "form-control" %>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="input-group">
+      <span class="input-group-addon"><%= t(:baseTid) %></span>
+      <%  baseConfigs = {}
+          CocsProxy.instance.getGameConfig('wulin').each do |k,v|
+            baseConfigs[v.name] = k
+          end
+      %>
+      <%= select("wulin_model", "baseTid", options_for_select(baseConfigs, @wulin.baseTid), {}, :class => "form-control") %>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="input-group">
+      <span class="input-group-addon"><%= t(:rewardTid) %></span>
+      <%  rewardConfigs = {}
+          CocsProxy.instance.getGameConfig('wulinRewards').each do |k,v|
+            rewardConfigs[v.name] = k
+          end
+      %>
+      <%= select("wulin_model", "rewardTid", options_for_select(rewardConfigs, @wulin.rewardTid), {}, :class => "form-control") %>
+    </div>
+  </div>
+</div>
+
+<br/>
+
+<!-- 选区 -->
+<%= form.label t(:zones), :class => "label label-success" %>
+<%  allZones = {}
+    proxy = CocsProxy.instance
+    proxy.getGameConfig('zones').each_with_index do |z, i|
+      onlineNum = proxy.numOnline(i + 1)
+      value     = proxy.getArenaRankTotalValue(i + 1, 0, 14)
+      key = sprintf("%03d 区 %s 在线人数:%06d 战斗力:%010d", i+1, z['name'], onlineNum, value)
+      allZones[key] = i + 1
+    end
+
+    selectedZones = []
+	CocsProxy.instance.getAllWulins.each do |w|
+		if w.is_active? and w.id != @wulin.id
+		  w.zones.each {|z| selectedZones << z }
+		end
+	end
+%>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="label label-default"><%= t(:used_zones) %><%= selectedZones %></span>
+<br/><br/>
+<%= select("wulin_model", "zones", options_for_select(allZones, @wulin.zones), {}, {:multiple => true, :size => 10, :class => "form-control"}) %>
+
+<br/>
+
+<script type='text/javascript'>
+  $('#wulin_model_start_time').datetimepicker();
+</script>

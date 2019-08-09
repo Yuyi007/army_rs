@@ -1,0 +1,14 @@
+<% eid ||= 'itemTid' %>
+<select id="<%= eid %>" name="<%= eid %>" class="form-control">
+  <% CocsProxy.instance.getGameConfig('items').keys.sort.each do |tid| %>
+    <% if tid =~ /^I[^EFSJ].+/ %>
+      <option value='<%= tid %>'>
+        <% value = CocsProxy.instance.getGameConfig('items')[tid] %>
+        <% str = GameConfig.strings[value['name']] || value['name'] %>
+        <% str += "(" + t((value['subtype'] + '_').to_sym) + ")"%>
+        <% str = value['tid'] + '-' + str %>
+        <%= "#{str}" %>
+      </option>
+    <% end %>
+  <% end %>
+</select>

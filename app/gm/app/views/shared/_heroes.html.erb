@@ -1,0 +1,12 @@
+<% eid ||= 'heroTid' %>
+<select id="<%= eid %>" name="<%= eid %>" class="form-control">
+  <% RsRails.get_usable_heroes.sort_by{|k, v| k}.each do |tid, value| %>
+     <option value='<%= tid %>'>
+      <%=
+        name = GameConfig.strings[value['name']] || value['name']
+        grade = tid[1]
+        "#{grade}-#{name}"
+      %>
+    </option>
+  <% end %>
+</select>

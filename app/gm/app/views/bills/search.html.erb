@@ -1,0 +1,154 @@
+<style>
+.success { color: green; }
+.fail { color: red; }
+.search { margin-bottom: 20px; }
+.search1 { margin-bottom: 5px; margin-top: 5px;}
+</style>
+
+<%= form_tag bills_search_url, :method => 'get', :class => "form" do %>
+
+  <div class='row'>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:sdk) %></span>
+        <%= text_field_tag :sdk, params[:sdk], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:platform) %></span>
+        <%= text_field_tag :platform, params[:platform], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:player_id) %></span>
+        <%= text_field_tag :playerId, params[:playerId], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:zone) %></span>
+        <%= text_field_tag :zone, params[:zone], :class => "form-control" %>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:goods_id) %></span>
+        <%= text_field_tag :goodsId, params[:goodsId], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:trans_id) %></span>
+        <%= text_field_tag :transId, params[:transId], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:created_at) %></span>
+        <%= text_field_tag :created_at_s, params[:created_at_s], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= text_field_tag :created_at_e, params[:created_at_e], :class => "form-control" %>
+    </div>
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:num_per_page) %></span>
+        <%= text_field_tag :per_page, params[:per_page], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= submit_tag t(:search), :class => "btn btn-info" %>
+    </div>
+  </div>
+<% end %>
+
+<br/>
+
+<table class="table table-striped table-bordered table-hover">
+
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+
+  <tr>
+    <th><%= sortable "sdk", params %></th>
+    <th><%= sortable "platform", params %></th>
+    <th><%= sortable "playerId", params %></th>
+    <th><%= sortable "pid", params %></th>
+    <th><%= sortable "zone", params %></th>
+    <th><%= sortable "goodsId", params %></th>
+    <th><%= sortable "count", params %></th>
+    <th><%= sortable "price", params %></th>
+    <th><%= sortable "transId", params %></th>
+    <th><%= sortable "market", params %></th>
+    <th><%= sortable "detail", params %></th>
+    <th><%= sortable "status", params %></th>
+    <th><%= sortable "created_at", params %></th>
+    <th><%= sortable "action_log", params %></th>
+  </tr>
+
+  <% for bill in @bills %>
+  <tr>
+    <td><%= bill.sdk %></td>
+    <td><%= bill.platform %></td>
+    <td>
+      <% if bill.playerId and bill.playerId.length %>
+        <%= link_to bill.playerId, data_view_url( :id => bill.playerId, :zone => bill.zone ) %>
+      <% end %>
+    </td>
+    <td><%= bill.pid %></td>
+    <td><%= bill.zone %></td>
+    <td><%= bill.goodsId %></td>
+    <td><%= bill.count %></td>
+    <td><%= bill.price %></td>
+    <td><%= bill.transId %></td>
+    <td><%= bill.market %></td>
+    <td><%= bill.detail %></td>
+    <td>
+      <% if bill.status == 0 %>
+        <span class='success'><%=t :success %></span>
+      <% else %>
+        <span class='fail'><%=t :fail %></span>
+      <% end %>
+    </td>
+    <td><%= TimeHelper.gen_date_time_sec(bill.created_at) %></td>
+    <td>
+      <% if bill.playerId and bill.playerId.length %>
+        <%= link_to "View_Action_Log", elastic_action_log_search_url( :player_id => bill.playerId, :zone => bill.zone, :time_s => TimeHelper.gen_date_time_sec(bill.created_at - 600), :time_e => TimeHelper.gen_date_time_sec(bill.created_at + 600) ) %>
+      <% end %>
+    </td>
+  </tr>
+  <% end %>
+
+</table>
+
+<div>
+<%= will_paginate @bills %>
+</div>
+
+<script type='text/javascript'>
+  $('#created_at_s').datetimepicker();
+  $('#created_at_e').datetimepicker();
+</script>

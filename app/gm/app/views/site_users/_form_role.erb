@@ -1,0 +1,24 @@
+<%= render "shared/error_messages", :target => @user %>
+
+<p>
+  <%=t :change_permission, username: @user.username %>
+</p>
+<p>
+  <%= form_role.label :role_id %><br />
+  <% i = 0; roles = RolesHelper.ROLE_DESC.map { |name, desc| i += 1; [name, i] } %>
+  <%= form_role.select :role_id, options_for_select(roles, @user.role_id) %>
+</p>
+<p>
+  <b><%=t :permission_details %>:</b>
+  <ul>
+  <% RolesHelper.ROLE_DESC.map do |name, desc| %>
+    <li>
+    <%=h name %>
+    &nbsp;&nbsp;
+    <span style='color: #888'>
+    <%=h desc %>
+    </span>
+    </li>
+  <% end %>
+  </ul>
+</p>

@@ -1,0 +1,126 @@
+<style>
+.success { color: green; }
+.fail { color: red; }
+.search { margin-bottom: 20px; }
+.search1 { margin-bottom: 5px; margin-top: 5px;}
+.search-result tbody tr th { font-size: 12px; padding: 4px; max-width: 250px; }
+.search-result tbody tr td { font-size: 12px; padding: 4px; max-width: 250px; }
+.search-result-warn { color: red; }
+</style>
+
+
+<div style="margin-bottom: 10px;">
+<p3><%=t :search_cheaters %></p3>&nbsp;&nbsp;
+<span>(<%= link_to t(:manage_cheat_monitor), "search_monitor", :class => "" %>)</span>
+</div>
+
+<%= form_tag '/anti_cheat/add_cheater', :method => 'post', :class => "form" do %>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:pid) %></span>
+        <%= text_field_tag :pid, params[:pid], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= submit_tag t(:add), :class => "btn btn-warning" %>
+    </div>
+  </div>
+
+<% end %>
+
+<br/>
+
+<%= form_tag '/anti_cheat/clear_cheaters', :method => 'post', :class => "form" do %>
+
+  <div class="row">
+    <div class="col-md-3">
+      <%= submit_tag t(:clear_all_cheaters), :class => "btn btn-danger" %>
+    </div>
+  </div>
+
+<% end %>
+
+<br/>
+
+<%= form_tag '/anti_cheat/search_cheater', :method => 'get', :class => "form" do %>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:pid) %></span>
+        <%= text_field_tag :pid, params[:pid], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:time) %></span>
+        <%= text_field_tag :time_s, params[:time_s], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= text_field_tag :time_e, params[:time_e], :class => "form-control" %>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:num_per_page) %></span>
+        <%= text_field_tag :per_page, params[:per_page], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= submit_tag t(:search), :class => "btn btn-info" %>
+    </div>
+  </div>
+
+<% end %>
+
+<br/>
+
+<table class="table table-striped table-bordered table-hover search-result table-layout:fixed">
+
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+
+  <tr>
+    <th><%= unsortable "id", params %></th>
+    <th><%= unsortable "zone", params %></th>
+    <th><%= unsortable "pid", params %></th>
+    <th><%= sortable "time", params %></th>
+    <th><%= unsortable "action_log", params %></th>
+    <th><%= unsortable "action", params %></th>
+  </tr>
+
+  <% for cheater in @cheaters %>
+  <tr class='' >
+    <td><%= cheater['id'] %></td>
+    <td><%= cheater['zone'] %></td>
+    <td><%= cheater['pid'] %></td>
+    <td><%= TimeHelper.gen_date_time_sec(cheater['time']) %></td>
+    <td>
+      <% if cheater['id'] %>
+        <%= link_to "action_log", elastic_action_log_search_url( :player_id => cheater['id'], :zone => cheater['zone'], :time_s => TimeHelper.gen_date_time_sec(cheater['time'] - 600), :time_e => TimeHelper.gen_date_time_sec(cheater['time'] + 600) ) %>
+      <% end %>
+    </td>
+    <td>
+      <% if cheater['id'] %>
+        <%= link_to t(:delete), del_cheater_url(:pid => cheater['id']), {:method => :post} %>
+      <% end %>
+    </td>
+  </tr>
+  <% end %>
+
+</table>
+
+<div>
+<%= will_paginate @cheaters %>
+</div>
+
+<script type='text/javascript'>
+  $('#time_s').datetimepicker();
+  $('#time_e').datetimepicker();
+</script>

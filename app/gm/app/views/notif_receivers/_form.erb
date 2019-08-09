@@ -1,0 +1,14 @@
+<%= render "shared/error_messages", :target => @user %>
+
+<p>
+<%= form.label :name %><br />
+<%= form.text_field :name, :class => "form-control", :placeholder => "Name" %>
+</p>
+<p>
+<%= form.label :mobile %><br />
+<%= form.text_field :mobile, :class => "form-control", :placeholder => "Mobile Phone" %>
+</p>
+<p>
+<%= form.label :email %><br />
+<%= form.text_field :email, :class => "form-control", :placeholder => "Email address" %>
+</p>

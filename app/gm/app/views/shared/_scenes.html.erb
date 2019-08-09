@@ -1,0 +1,6 @@
+<select id="scene" name="scene" class="form-control">
+  <% RsRails.get_config('scenes').each do |k, x| %>
+    <option value='<%= k %>' <%= if params[:scene] == "#{k}" then 'selected' else '' end%>>
+      <%= "#{k}" %></option>
+  <% end %>
+</select>

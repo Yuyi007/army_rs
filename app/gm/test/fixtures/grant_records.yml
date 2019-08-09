@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  site_user_id: 1
+  action: MyString
+  success: false
+  target_id: MyString
+  target_zone: MyString
+  item_id: MyString
+  item_amount: 1
+  reason: MyText
+  status: MyString
+
+two:
+  site_user_id: 1
+  action: MyString
+  success: false
+  target_id: MyString
+  target_zone: MyString
+  item_id: MyString
+  item_amount: 1
+  reason: MyText
+  status: MyString

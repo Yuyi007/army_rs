@@ -1,0 +1,153 @@
+<%= render 'shared/grant' %>
+<h3><span class="label label-default"><%=t :choose_zone%></span></h3>
+<%= render 'shared/zones' %>
+<br/>
+<a href="#" onclick="toCreate()" class="btn btn-info"><%=t :create_credit_event%></a>
+<br/><br/>
+<table id='eventstable' class='table table-striped table-bordered table-hover'>
+  <tr>
+    <th><%=t :id %></th>
+    <th><%=t :zone %></th>
+    <th><%=t :start_time%></th>
+    <th><%=t :end_time%></th>
+    <th><%=t :close_time %></th>
+    <th><%=t :enable_ranking %></th>
+    <th><%=t :event_type %></th>
+    <th><%=t :rewards_preview %></th>
+    <th><%=t :actions %></th>
+  </tr>
+  <% @list.each do |n| %>
+  <tr>
+    <td><%=n.id%></td>
+    <td><%=n.zone%></td>
+    <td><%=n.startTime%></td>
+    <td><%=n.endTime%></td>
+    <td><%=n.closeTime%></td>
+    <td><%=n.ranking%></td>
+    <td><%=t n.type%></td>
+    <td><%=simple_format(getRewardsContent(n.rewards))%></td>
+    <td>
+      <%= link_to(t(:edit), {:action => :edit, :id => n.id, :zone => n.zone}, {:method => :get}) %>
+      <%= link_to(t(:delete), {:action => :delete_credit, :id => n.id, :zone => n.zone}, {:method => :post, :data => {:confirm => t(:are_you_sure_to_delete)}}) %>
+      <%= link_to(t(:ranking), {:action => :ranking, :id => n.id, :zone => n.zone}, {:method => :get}) %>
+    </td>
+  </tr>
+  <% end %>
+
+</table>
+<form id="copyForm" action="'events_credit/copy_credit/1/copy_list'" method="POST" class="form">
+  <div class="alert alert-success">
+    <%=t :copy_current_config_to_zone%>,
+    <%=t :confirm_your_config_saved%>,
+    <%=t :enter_zone_split_with_space_like%>2 3 6
+  </div>
+  <%= text_field_tag "copy_zones", nil, :size => 100, :placeholder => "2 3 6", :class => "form-control" %>
+  <br/>
+  <span><%=t :force_copy%></span>
+  <%= check_box_tag 'enable_force_copy' %>
+  <input type="button" onclick="copy()" value="<%=t :copy_current_config_to_zone%>" class="btn btn-success">
+</form>
+<script type="text/javascript">
+  /////////////////////////////////////////////
+  // common
+  //
+
+  $("#zone").change(onZoneChange);
+
+  function onZoneChange()
+  {
+    var zoneIndex = $("#zone").val();
+    console.log("zone=" + zoneIndex);
+    getEvents(zoneIndex);
+  }
+
+  function getEvents(zone) {
+    var zoneIndex = $("#zone").val();
+    window.location.href = "/events_credit/list?zone=" + zoneIndex;
+  }
+
+  function toCreate(){
+    var zoneIndex = $("#zone").val();
+    window.location.href = "/events_credit/new?zone=" + zoneIndex;
+  }
+
+  function copy()
+  {
+    if($("#enable_force_copy").prop('checked'))
+    {
+      if(confirm("<%=t :force_copy_tips%>"))
+      {
+        copycreditEvents();
+      }
+      else
+      {
+        //
+      }
+    }
+    else
+    {
+      copycreditEvents();
+    }
+  }
+
+  function copycreditEvents()
+  {
+    var zoneIndex = $("#zone").val();
+    $.ajax({
+      type: 'POST',
+      url: '/events_credit/' + zoneIndex + "/copy_list",
+      data: {
+              "tozones":$("#copy_zones").val(),
+              "force_copy":$("#enable_force_copy").prop('checked')
+            }
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('copys success~', 'green')
+      }
+      else if(json)
+      {
+        //showStatus('copys error, reason: ' + json['reason'], 'red')
+        showStatus(parseError(json), 'red')
+      }
+      else
+      {
+        showStatus('copys error', 'red')
+      }
+      }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+  }
+
+  function deleteCur(zone, id)
+  {
+    if(confirm("<%=t :confirm_operation%>"))
+    {
+      deletecreditEvent(zone, id);
+    }
+    else
+    {
+      //
+    }
+  }
+
+  function deletecreditEvent(zone, id)
+  {
+    $.ajax({
+      type: 'POST',
+      url: '/events_credit/delete/' + zone + "/" + id
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('delete success~', 'green')
+        onZoneChange()
+      }
+      else
+      {
+        showStatus('delete error', 'red')
+      }
+      }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+  }
+</script>

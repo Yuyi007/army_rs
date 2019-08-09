@@ -1,0 +1,55 @@
+
+<br/>
+
+<%= link_to t(:create_wushu), wushu_new_url, :class => "btn btn-info" %>
+
+<br/><br/>
+
+<table id='eventstable' class='table table-striped table-bordered table-hover'>
+  <col width="20px" />
+  <col width="20px" />
+  <col width="100px" />
+  <col width="30px" />
+  <col width="20px" />
+  <col width="20px" />
+  <col width="20px" />
+  <col width="20px" />
+  <tr>
+    <th><%=t :id %></th>
+    <th><%=t :state %></th>
+    <th><%=t :name %></th>
+    <th><%=t :types%></th>
+    <th><%=t :prepare_time %></th>
+    <th><%=t :start_time %></th>
+    <th><%=t :end_time %></th>
+    <th><%=t :action %></th>
+  </tr>
+    <%
+    ns = @wushu_list
+    ns.each do |n| %>
+    <tr>
+    <td><%=n.id%></td>
+    <td><%=n.state%></td>
+    <td><%=n.name%></td>
+    <td><%=n.types%></td>
+    <td><%=n.prepare_time%></td>
+    <td><%=n.start_time%></td>
+    <td><%=n.end_time%></td>
+    <td>
+      <%= link_to(:edit, {:action => :edit, :id => n.id}, {:method => :get}) %>
+      <%= link_to(:delete, {:action => :delete, :id => n.id}, {:method => :get, :data => {:confirm => t(:are_you_sure_to_delete)} }) %>
+    </td>
+
+    </tr>
+    <% end %>
+
+</table>
+
+<script type="text/javascript">
+
+  /////////////////////////////////////////////
+  // common
+  //
+
+
+</script>

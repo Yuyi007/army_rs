@@ -1,0 +1,82 @@
+<style>
+  .line_content {margin-left:20px;}
+</style>
+
+<div style='margin-top: 10px;'>
+  <div style='padding: 20px; margin-bottom: 20px; background-color:lightblue; vertical-align:middle'>
+
+    <h4><%=t :hot_patch_client_tools %></h4>
+
+    <div class="row">
+      <div class="col-md-2">
+        <input type="button" value="<%=t :clear_patch_client_code %>" class="btn btn-default" onClick="withConfirm(clear_patch_client_code);"/>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2">
+        <br>
+        <br>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2">
+        <input type="button" value="<%=t :patch_client_code %>" class="btn btn-default" onClick="withConfirm(patch_client_code);"/>
+      </div>
+    </div>
+
+    <textarea id="client_lua_code" name="client_lua_code" type="text" class="form-control" rows=8><%= @lua_code %></textarea>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+function post_request(url, data)
+{
+  $.ajax({
+      type: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: url,
+      data: JSON.stringify(data)
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('alter success~', 'green')
+        window.location.href = "/hot_patch/client_tools/";
+      }
+      else
+      {
+        showStatus('alter error, may this user or sub_type not exist', 'red')
+      }
+
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+}
+
+function patch_client_code()
+{
+  var url = '/hot_patch/patch_client_code';
+  var data = {
+    "client_lua_code" : $("#client_lua_code").val(),
+  };
+  post_request(url, data);
+}
+
+function clear_patch_client_code()
+{
+  var url = '/hot_patch/clear_patch_client_code';
+  var data = {};
+  post_request(url, data);
+}
+
+function withConfirm(func) {
+  if (confirm("<%=t :confirm_operation %>")) {
+    func();
+  }
+}
+
+</script>

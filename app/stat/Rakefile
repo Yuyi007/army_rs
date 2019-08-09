@@ -1,0 +1,125 @@
+#!/usr/bin/env rake
+# Add your own tasks in files placed in lib/tasks ending in .rake,
+# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
+
+require File.expand_path('../config/application', __FILE__)
+
+Stat::Application.load_tasks
+
+env = ENV['STATS_ENV'] || ENV['RAILS_ENV'] || 'development'
+
+namespace :stat do
+
+  desc 'regen all'
+  task :regen do
+    if ENV['FROM']
+      from = DateTime.parse(ENV['FROM']).to_date
+      to = Time.at(Time.now.to_i - 1*24*60*60).to_date
+
+      (0..(to - from)).to_a.each do |n|
+        date = from + n
+        system("bin/stat regen --env=#{env} --date=#{date.strftime('%Y-%m-%d')}")
+      end    
+    else
+      puts "FROM is not specified"
+    end
+  end 
+
+  desc 'gen yesterday'
+  task :gen, [:date] do |t, args|
+    date = args[:date]
+    date =  Time.at(Time.now.to_i - 1*24*60*60).to_date.strftime('%Y-%m-%d') if date.nil?
+    system("bin/stat gen --env=#{env} --date=#{date}")
+  end
+
+  desc 'db flush'
+  task :flush do
+    system("rake db:drop RAILS_EVN=#{env}")
+    system("rake db:create RAILS_EVN=#{env}")
+    system("rake db:migrate RAILS_EVN=#{env}")
+    system("rake stat:gen_test STATS_ENV=#{env}")
+  end
+
+  desc 'db recreate'
+  task :db do
+    system("rake db:drop RAILS_EVN=#{env}")
+    system("rake db:create RAILS_EVN=#{env}")
+    system("rake db:migrate RAILS_EVN=#{env}")
+  end
+
+  desc 'test generate stat'
+  task :gen_test, [:date] do |t, args|
+    now = Time.now.to_date
+    args.with_defaults(:date => now.strftime("%Y-%m-%d"))
+    date = args[:date]
+    system("bin/stat regen --env='test' --date='#{date}'")
+  end
+
+  desc 'dig'
+  task :dig, [:name, :date] do |t, args|
+    now = Time.now.to_date
+    args.with_defaults(:task_name => nil, :data => now.strftime("%Y-%m-%d") )
+    date = args[:date]
+    name = args[:name]
+    cmd = "bin/stat dig --env='test' --date='#{date}' --digger='#{name}'"
+    puts("exec cmd: #{cmd}")
+    system(cmd)
+  end
+
+  desc 'test singlten'
+  task :test, [:kind] do |t, args|
+    args.with_defaults(:kind => 'regen')
+    date = Time.now.strftime("%Y-%m-%d")
+    system("bin/stat #{args[:kind]} --env='test' --date='#{date}'")
+  end
+
+  task :makelog do
+    path = "/data/log/stat"
+    date = Time.now.to_date
+    system("./bin/fmt_time.sh #{path}")
+    puts "...changing time format is ok"
+    system("gzip -c #{path}/tmp.log > #{path}/stat_#{date.strftime('%Y%m%d')}.log.gz")
+    puts "...making stat_#{date.strftime('%Y%m%d')}.log.gz is ok"
+    system("rm -f #{path}/tmp.log")
+  end
+
+  desc 'sync log file of today from nd.kfs.firevale.com'
+  task :sync_log, [:date] do |t, args|
+    now = Time.now.to_date
+    args.with_defaults(:date => now.strftime("%Y%m%d"))
+    date = args[:date]
+    is_today = (date == now)
+    log_file_name = "stat_#{date}.log"
+    log_file_name = "stat_#{date}.log.gz" if !is_today
+    dir = "/data/log/stat/"
+    dir_exist = system("[ -d #{dir} ]")
+    if not dir_exist
+      raise("dir #{dir} is not exist, make the dir")
+      #system("sudo -p mkdir #{dir}")
+    end
+    #system("scp jenkins@192.168.12.16:/data/cocs/log/stat/#{log_file_name}.log #{dir}")
+    system("rsync -vrz jenkins@nd.kfs.firevale.com:/data/kfs/log/stat/#{log_file_name} #{dir} ")
+    if is_today
+      system("gzip -c #{dir}#{log_file_name} > #{dir}#{log_file_name}.gz") 
+      system("rm -f #{dir}#{log_file_name}")
+    end
+  end
+
+  desc 'clean log today'
+  task :clean_log do
+    date = Time.now.strftime("%Y%m%d")
+    log_file_name = "stat_#{date}.log"
+    system("ssh jenkins@nd.kfs.firevale.com 'echo \"\" > /data/kfs/log/stat/#{log_file_name}'")
+  end
+
+  desc 'view log detail'
+  task :view_log do
+    date = Time.now.strftime("%Y%m%d")
+    dir = "/data/cogs/log/stat/"
+    log_file_name = "stat_#{date}.log"
+
+    zcat = 'zcat'
+    zcat = 'gzcat' if system('which gzcat')
+    system("#{zcat} #{dir}#{log_file_name}.gz")
+  end
+end

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>武侠Q传支付中心</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript">
+      (function() {
+        if ("-ms-user-select" in document.documentElement.style && navigator.userAgent.match(/IEMobile\/10\.0/)) {
+          var msViewportStyle = document.createElement("style");
+          msViewportStyle.appendChild(
+            document.createTextNode("@-ms-viewport{width:auto!important}")
+          );
+          document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row" style='background-color: #428bca;'>
+        <div class="col-xs-3 col-sm-4 col-md-4"></div>
+        <div class="col-xs-8 col-sm-4 col-md-4"><h4 style='color: white;'>武侠Q传支付中心</h4></div>
+        <div class="col-xs-3 col-sm-4 col-md-4"></div>
+      </div>
+
+      <form role="form" id='payform' action='/' method='post'>
+        <div class="row">
+          <div class="col-xs-4 col-sm-2 col-md-2">游戏ID: </div>
+          <div class="col-xs-4 col-sm-2 col-md-2" id='playerId'></div>
+        </div>
+        <div class="row">
+          <div class="col-xs-4 col-sm-2 col-md-2">区服: </div>
+          <div class="col-xs-4 col-sm-2 col-md-2" id='zone'></div>
+        </div>
+        <div class="row">
+          <div class="col-xs-4 col-sm-2 col-md-2">购买数量: </div>
+          <div class="col-xs-4 col-sm-2 col-md-2" id='goods'></div>
+        </div>
+        <div class="row">
+          <div class="col-xs-4 col-sm-2 col-md-2">支付金额: </div>
+          <div class="col-xs-4 col-sm-2 col-md-2" id='amount'></div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-6 col-md-8">请选择充值方式: </div>
+        </div>
+        <!--<div class="row">
+          <div class="col-xs-12 col-sm-6 col-md-8"><button type="submit" class="btn btn-default">支付宝</button></div>
+          <div class="col-xs-12 col-sm-6 col-md-4"></div>
+        </div>-->
+        <div class="row">
+          <div class="col-xs-12 col-sm-6 col-md-4"></div>
+          <div class="col-xs-12 col-sm-6 col-md-4"><a id='alipay' href='#'><img src="img/alipay.gif" class="img-responsive" alt="支付宝"></a></div>
+          <div class="col-xs-12 col-sm-6 col-md-4"></div>
+        </div>
+      </form>
+
+      <hr />
+
+      <div style='color: #999;'>
+        <div class="row">
+          <div class="col-xs-8 col-sm-6 col-md-8"></div>
+          <div class="col-xs-4 col-sm-4 col-md-4"></div>
+        </div>
+        <div class="row">
+          <div class="col-xs-8 col-sm-6 col-md-8">充值中遇到问题请联系我们</div>
+          <div class="col-xs-4 col-sm-4 col-md-4"><a href='#' class="btn btn-default" style='display:none;'>查询历史记录</a></div>
+        </div>
+        <div class="row">
+          <div class="col-xs-4 col-sm-4 col-md-4">邮件: </div>
+          <div class="col-xs-8 col-sm-6 col-md-8"><a href='mailto:service@firevale.com'>service@firevale.com</a></div>
+        </div>
+        <div class="row">
+          <div class="col-xs-4 col-sm-4 col-md-4">QQ群: </div>
+          <div class="col-xs-8 col-sm-6 col-md-8">1234</div>
+        </div>
+        <div class="row" style='display:none;'>
+          <div class="col-xs-4 col-sm-4 col-md-4">论坛: </div>
+          <div class="col-xs-8 col-sm-6 col-md-8"><a href='http://bbs.wxqz.firevale.com'>http://bbs.wxqz.firevale.com</a></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <!-- Our client scripts -->
+    <script type='text/javascript'>
+      $.urlParam = function(name){
+        var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        return results ? results[1] || 0 : 0;
+      };
+      function get_root_url() {
+        return window.location.protocol + '//' + window.location.host;
+      }
+      $(function () {
+        $.each([ 'playerId', 'zone', 'goods', 'amount' ], function (index, param) {
+          $('#' + param).html(decodeURIComponent($.urlParam(param)));
+        });
+        $('#alipay').click(function () {
+          $('#payform').attr('action', decodeURIComponent($.urlParam('baseUrl')) +
+            '/pay/alipay_redirect?orderId=' + $.urlParam('orderId') + 
+            '&playerId=' + $.urlParam('playerId') +
+            '&zone=' + $.urlParam('zone') +
+            '&goodsId=' + $.urlParam('goodsId') +
+            '&goods=' + $.urlParam('goods') +
+            '&count=' + $.urlParam('count') +
+            '&sdk=' + $.urlParam('sdk') +
+            '&market=' + $.urlParam('market') +
+            '&platform=' + $.urlParam('platform') +
+            '&notifyUrl=' + encodeURIComponent($.urlParam('notifyUrl')) +
+            '&proxyUrl=' + encodeURIComponent(get_root_url())).submit();
+        });
+      });
+    </script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>

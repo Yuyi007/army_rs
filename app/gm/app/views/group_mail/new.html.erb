@@ -1,0 +1,160 @@
+<h1><%= t(:create) %></h1>
+
+<br/>
+<a href='/group_mail/list/'><%=t :back_to_list%></a>
+
+<%= render :partial => "form", :locals => { :id => 0 } %>
+<div class="row">
+  <div class="col-md-2">
+     <input id="create" onclick="create()" value='<%=t(:create)%>' class="btn btn-warning" />
+  </div>
+</div>
+
+
+<script type="text/javascript">
+/*
+function checkMail()
+  {
+    if ($("#title").val() == "")
+    {
+      alert("标题不能为空！")
+      return false;
+    }
+    else if($("#senderName").val() == "")
+    {
+      alert("发送人姓名不能为空！")
+      return false;
+    }
+    else if($("#content").val() == "")
+    {
+      alert("邮件内容不能为空！")
+      return false;
+    }
+    else if($("#start_time").val() == "" && $("#send_type").val() != 'permanent_mail')
+    {
+      alert("开始时间不能为空！")
+      return false;
+    }
+    else if($("#end_time").val() == "" && $("#send_type").val() != 'permanent_mail')
+    {
+      alert("结束时间不能为空！")
+      return false;
+    }
+    else if($("#min_lv").val() == "")
+    {
+      alert("最高等级不能为空！")
+      return false;
+    }
+    else if($("#max_lv").val() == "")
+    {
+      alert("最低等级不能为空！")
+      return false;
+    }
+    return true;
+  }
+  */
+
+  initDefault();
+
+  function initDefault()
+  {
+    $("#start_time").val('01/01/2018 00:00');
+    $("#end_time").val('01/01/2030 00:00');
+    $("#min_lv").val(1);
+    $("#max_lv").val(70);
+    $("#need_activity").val(0);
+  }
+
+  function checkMail()
+  {
+    // if($("#senderName").val().length > 5)
+    // {
+    //   alert("<%=t(:mail_sender_name_too_long)%>")
+    //   return false;
+    // }
+    if($("#senderName").val() == "")
+    {
+      alert("<%=t(:mail_senderName_no_empty)%>")
+      return false;
+    }    
+    // if($("#kind").val().length > 5)
+    // {
+    //   alert("<%=t(:mail_kind_too_long)%>")
+    //   return false;
+    // }
+    // else if($("#kind").val() == "")
+    // {
+    //   alert("<%=t(:mail_kind_no_empty)%>")
+    //   return false;
+    // }
+    else if($("#content_text").val().length > 300)
+    {
+      alert("<%=t(:mail_content_too_long)%>")
+      return false;
+    }
+    else if($("#content_text").val() == "")
+    {
+      alert("<%=t(:mail_content_no_empty)%>")
+      return false;
+    }
+    else if($("#title_one").val() == "")
+    {
+      alert("<%=t(:title_one_no_empty)%>")
+      return false;
+    }
+    // else if($("#title_two").val() == "")
+    // {
+    //   alert("<%=t(:title_two_no_empty)%>")
+    //   return false;
+    // }
+    else if($("#zones").val() == "")
+    {
+      alert("<%=t(:zones_cannot_empty)%>")
+      return false;
+    }
+    else if($("#pids").val() == "")
+    {
+      alert("<%=t(:pids_cannot_empty)%>")
+      return false;
+    }
+    else if($("#pids").val().length > 14000)
+    {
+      alert("<%=t(:pids_too_long)%>")
+      return false;
+    }
+    else if($("#need_activity").val() == "")
+    {
+      alert("<%=t(:activity_cannot_empty)%>")
+      return false;
+    }
+    return true;
+  }
+
+
+function create()
+  {
+    if(checkMail())
+    {
+      $.ajax({
+        type: 'post',
+        contentType: 'application/json',
+        dataType: 'json',
+        url: '/group_mail/create/',
+        data: getData()
+      }).done(function(json){
+        if(json && json['success'])
+        {
+          showStatus('create success~', 'green')
+          window.location.href = "/group_mail/list/";
+        }
+        else
+        {
+          showStatus('create error', 'red')
+        }
+        
+      }).fail(function(xhr, status){
+        showStatus('Something wrong!', 'red');
+      });
+    }
+  }
+</script>

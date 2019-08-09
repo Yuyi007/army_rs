@@ -1,0 +1,41 @@
+<h1><%= t(:create_dropevent) %></h1>
+<br/>
+<a href='/events_soujl/list/'><%=t :list_dropevent%></a>
+<div>
+  <span><%=t :choose_zone%></span>
+  <%= render 'shared/zones' %>
+</div>
+<%= render :partial => "form", :locals => { :id => 0 } %>
+<input type="button" onclick="create()" value="<%=t :create%>">
+<script type="text/javascript">
+  function create()
+    {
+      var zoneIndex = $("#zone").val();
+      $.ajax({
+        type: 'post',
+        contentType: 'application/json',
+        dataType: 'json',
+        url: '/events_soul/create/' + zoneIndex,
+        data: getData()
+      }).done(function(json){
+        console.log(json);
+        if(json && json['success'])
+        {
+          showStatus('create success~', 'green')
+          window.location.href = "/events_soul/list/";
+        }
+        else if(json)
+        {
+          //showStatus('create error, reason: ' + json['reason'], 'red')
+          showStatus(parseError(json), 'red')
+        }
+        else
+        {
+          showStatus('create error', 'red')
+        }
+
+      }).fail(function(xhr, status){
+        showStatus('Something wrong!', 'red');
+      });
+  }
+</script>

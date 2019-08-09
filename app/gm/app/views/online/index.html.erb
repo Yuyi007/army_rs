@@ -1,0 +1,37 @@
+<noscript>Enable Javascript to continue</noscript>
+
+<form id="withGate" action="/online/index" method="GET" class="form-horizontal">
+
+  <br/>
+  <input type="hidden" name="with_gate" value="true" />
+  <span><input type="submit" value="<%=t :see_gate_online %>" class="btn btn-success" /></span>
+</form>
+
+<form id="fixOnlineForm" action="/online/fix" method="POST" class="form-horizontal">
+
+  <br/>
+  <span><input type="submit" value="<%=t :fix_num_onlines %>" class="btn btn-warning" /></span>
+</form>
+
+<form id="clearOnlineForm" action="/online/clear" method="POST" class="form-horizontal">
+
+  <br/>
+  <span><input type="submit" value="<%=t :clear_num_onlines %>" class="btn btn-danger" /></span>
+</form>
+
+<br/>
+
+<table class="table table-striped table-bordered table-hover">
+  <tr>
+    <th><%=t(:zone_id)%></th>
+    <th><%=t(:online_clients)%></th>
+    <th><%=t(:gate_online_clients)%></th>
+  </tr>
+  <% @onlines.each do |zone_id, numOnline| %>
+    <tr>
+      <td><%= zone_id %></td>
+      <td><%= numOnline %></td>
+      <td><%= @gate_onlines[zone_id] %></td>
+    </tr>
+  <%end%>
+</table>

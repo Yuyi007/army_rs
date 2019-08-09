@@ -1,0 +1,34 @@
+root 				= "./../.."
+approot 		= root .. "/watch"
+libroot 		= root .. "/lib/skynet"
+thread 			= 4
+
+address 		= "10.0.2.15:4026"
+master			= "10.0.2.15:4013"
+standalone 	= "0.0.0.0:4013"
+
+udpaddr			= "10.0.2.15"
+udpport			= 5001
+udppid			= 53789
+
+start 			= "main"
+bootstrap 	= "snlua bootstrap"
+
+baseservice = libroot.."/service/?.lua;"
+rootservice = approot.."/?.lua;"
+winnieservice = libroot.."/lualib/winnie/?.lua"
+luaservice 	= baseservice..rootservice..winnieservice
+
+cpath 			= libroot.."/cservice/?.so"
+lualoader 	= libroot.."/lualib/loader.lua"
+
+
+
+--debug
+debug = true
+debug_console = true
+script_root 	= "/home/duwenjie/Race/rs/watch"
+
+
+
+

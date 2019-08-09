@@ -1,0 +1,12 @@
+<h1><%= t(:create_wulin) %></h1>
+
+<%= form_for @wulin, :url => { :action => "create" }, :class => "form" do |f| %>
+<%= render :partial => "form", :object => f, :locals => { :wulin => @wulin } %>
+<%= f.submit t(:create), :class => "btn btn-success" %>
+<% end %>
+
+<br/>
+
+<div>
+<%= link_to t(:list_wulin), wldh_list_url, :class => "btn btn-info" %>
+</div>

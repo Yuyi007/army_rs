@@ -1,0 +1,14 @@
+<select id="skillTid" name="skillTid" class="form-control">
+  <% CocsProxy.instance.getGameConfig('skills').each do |tid, value| %>
+    <% if tid !~ /SA9/ %>
+      <option value='<%= tid %>'>
+        <%=
+          name = GameConfig.strings[value['name']] || value['name']
+          grade = tid[1]
+          type = GameConfig.strings[value['type']] || value['type']
+          "#{value['tid']} #{grade}-#{type}-#{name}"
+        %>
+      </option>
+    <% end %>
+  <% end %>
+</select>

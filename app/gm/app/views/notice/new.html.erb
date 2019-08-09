@@ -1,0 +1,7 @@
+<h1><%=t :create_notice %></h1>
+<%= form_for_hash @notice, 'notice', {:action => "create"}, :method => :post, :class => "form" do |f| %>
+  <%= render :partial => "form", :object => f, :locals => { :notice => @notice } %>
+  <%= f.submit t(:save), :class => "btn btn-info" %>
+<% end %>
+<br />
+<%= link_to t(:notice_list_url), notice_list_url, :class => "btn btn-warning" %>

@@ -1,0 +1,25 @@
+<br/>
+<br/><br/>
+<table id='eventstable' class='table table-striped table-bordered table-hover'>
+  <tr>
+    <th><%=t :id %></th>
+    <th><%=t :ranking %></th>
+    <th><%=t :player_id %></th>
+    <th><%=t :zone %></th>
+    <th><%=t :credits%></th>
+    <th><%=t :time%></th>
+  </tr>
+  <% @list.each_with_index do |n, index| %>
+  <tr>
+    <td><%=n.id%></td>
+    <td><%=index + 1%></td>
+    <td><%= link_to n.uid, data_view_url(:id => n.uid, :zone => n.zone) %></td>
+    <td><%=n.zone%></td>
+    <td><%=n.credits%></td>
+    <td><%= Time.at(n.time).to_s %></td>
+  </tr>
+  <% end %>
+
+</table>
+
+<%= link_to_function (t :back), "history.back()", :class => "btn btn-warning" %>

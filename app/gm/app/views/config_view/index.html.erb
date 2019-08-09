@@ -1,0 +1,82 @@
+<noscript>Enable Javascript to continue</noscript>
+
+<div id="json-div">
+
+  <div id="jsoneditor"></div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-2 col-md-offset-3">
+      <a href="#" onclick="toText()" class="btn btn-success">
+        <span class="glyphicon glyphicon-arrow-down"></span>
+        Down
+      </a>
+    </div>
+    <div class="col-md-2">
+      <a href="#" onclick="toJson()" class="btn btn-warning">
+        <span class="glyphicon glyphicon-arrow-up"></span>
+        Up
+      </a>
+    </div>
+  </div>
+
+  <br/>
+
+  <textarea id="json" rows="4" class="form-control"></textarea>
+
+</div>
+
+<br/>
+
+<div class="row">
+  <div class="col-md-2 col-md-offset-3">
+    <a href="#" onclick="load()" class="btn btn-info"><%=t :load_config %></a>
+  </div>
+
+  <div class="col-md-2">
+    <a href="#" onclick="load_raw()" class="btn btn-info"><%=t :load_raw_config %></a>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var editor = new JSONEditor($("#jsoneditor")[0]);
+  window.onload = function() {
+    load();
+  };
+  function load() {
+    $('#json-div').mask('<%=t :loading %>');
+    $.ajax({
+      type: 'GET', 
+      url: 'load'
+    }).done(function (json){
+      editor.set(json);
+      showStatus('Load success~', 'success');
+      $('#json-div').unmask();
+    }).fail(function (xhr, status) {
+      showStatus('Something wrong!', 'fail');
+      $('#json-div').unmask();
+    });
+  }
+  function load_raw() {
+    $('#json-div').mask('<%=t :loading %>');
+    $.ajax({
+      type: 'GET', 
+      url: 'load_raw'
+    }).done(function (json){
+      editor.set(json);
+      showStatus('Load success~', 'success');
+      $('#json-div').unmask();
+    }).fail(function (xhr, status) {
+      showStatus('Something wrong!', 'fail');
+      $('#json-div').unmask();
+    });
+  }
+  function toText() {
+    $('#json').val(JSON.stringify(editor.get(), null))
+  }
+  function toJson() {
+    editor.set(JSON.parse($('#json').val()))
+  }
+</script>
+

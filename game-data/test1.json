@@ -1,0 +1,23 @@
+{
+  "record": { "nextPickTimes": [ 0, 0, 0 ], "remainPicks": [5, 1, 1] },
+  "slots": [ "HA001","HA002" ],
+  "chief": {
+    "id": "test1",
+    "name": "华山岳不群",
+    "level": 1,
+    "exp": 0,
+    "coins": 1000000,
+    "credits": 1000000,
+    "tili": 100,
+    "yuanqi": 100,
+    "vipLevel": 1
+  },
+  "heroes": {},
+  "souls": {},
+  "equips": {},
+  "scrolls": {},
+  "items": {},
+  "formations":{},
+  "currentFid":"f1",
+  "skills": {}
+}

@@ -1,0 +1,122 @@
+{
+  "1": {
+    "level": 1,
+    "need_exp": 100
+  },
+  "2": {
+    "level": 2,
+    "need_exp": 300
+  },
+  "3": {
+    "level": 3,
+    "need_exp": 500
+  },
+  "4": {
+    "level": 4,
+    "need_exp": 700
+  },
+  "5": {
+    "level": 5,
+    "need_exp": 1000
+  },
+  "6": {
+    "level": 6,
+    "need_exp": 1500
+  },
+  "7": {
+    "level": 7,
+    "need_exp": 2000
+  },
+  "8": {
+    "level": 8,
+    "need_exp": 2500
+  },
+  "9": {
+    "level": 9,
+    "need_exp": 3000
+  },
+  "10": {
+    "level": 10,
+    "need_exp": 3500
+  },
+  "11": {
+    "level": 11,
+    "need_exp": 4000
+  },
+  "12": {
+    "level": 12,
+    "need_exp": 4500
+  },
+  "13": {
+    "level": 13,
+    "need_exp": 5000
+  },
+  "14": {
+    "level": 14,
+    "need_exp": 6000
+  },
+  "15": {
+    "level": 15,
+    "need_exp": 7000
+  },
+  "16": {
+    "level": 16,
+    "need_exp": 8000
+  },
+  "17": {
+    "level": 17,
+    "need_exp": 9000
+  },
+  "18": {
+    "level": 18,
+    "need_exp": 10000
+  },
+  "19": {
+    "level": 19,
+    "need_exp": 11000
+  },
+  "20": {
+    "level": 20,
+    "need_exp": 12000
+  },
+  "21": {
+    "level": 21,
+    "need_exp": 14000
+  },
+  "22": {
+    "level": 22,
+    "need_exp": 16000
+  },
+  "23": {
+    "level": 23,
+    "need_exp": 18000
+  },
+  "24": {
+    "level": 24,
+    "need_exp": 20000
+  },
+  "25": {
+    "level": 25,
+    "need_exp": 25000
+  },
+  "26": {
+    "level": 26,
+    "need_exp": 30000
+  },
+  "27": {
+    "level": 27,
+    "need_exp": 35000
+  },
+  "28": {
+    "level": 28,
+    "need_exp": 40000
+  },
+  "29": {
+    "level": 29,
+    "need_exp": 45000
+  },
+  "30": {
+    "level": 30,
+    "need_exp": 999999
+  }
+}

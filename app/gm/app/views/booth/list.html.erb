@@ -1,0 +1,268 @@
+<div class="row">
+  <div class="col-md-2">
+    <div class="input-group">
+      <select width=200 id="booth" name="booth" class="form-control">
+        <% @groups.each do |g| %>
+          <option value='<%= "#{g[:booth_id]}:#{g[:cid]}"%>' <%= if g[:booth_id] == "#{@cur_booth_id}" then 'selected' else '' end%>>
+            <%= "#{g[:booth_id]} (#{g[:zones].join(',')})" %></option>
+        <% end %>
+      </select>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="input-group">
+      <span class="input-group-addon">ID:</span>
+      <input id="txt_gid" name="txt_gid" type="text" class="form-control" value="<%= @cur_gid %>"/>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="input-group">
+      <span class="input-group-addon">PID:</span>
+      <input id="txt_pid" name="txt_pid" type="text" class="form-control" value="<%= @cur_pid %>"/>
+    </div>
+  </div>
+  <div class="col-md-1">
+    <div class="input-group">
+      <label for="check_frozen"><%=t :booth_frozen_goods %>:</label>
+      <% if @cur_frozen == 1
+        checked = "checked='checked'" 
+       else
+        checked = "" 
+       end
+      %>&nbsp;
+      <input id="check_frozen" name="check_frozen"  type="checkbox" <%= checked %> />
+    </div>
+  </div>
+
+  <div class="col-md-1">
+    <input type="button" onclick="doSearchBooth()" value="<%=t :search%>" class="btn btn-success"></input>
+  </div>
+</div>
+
+<br/><br/>
+
+<table class="table table-striped table-bordered table-hover">
+  <tr>
+    <th><%=t 'ID' %></th>
+    <th><%=t :zone %></th>
+    <th><%=t :booth_goods_name %></th>
+    <th><%=t :booth_goods_seller_id %></th>
+    <th><%=t :booth_goods_timeout %></th>
+    <th><%=t :booth_goods_price %></th>
+    <th><%=t :booth_goods_count %></th>
+    <th><%=t :booth_goods_sold %></th>
+    <th><%=t :booth_goods_category %></th>
+    <th><%=t :booth_marks_num %></th>
+    <th><%=t :operations %></th>
+  </tr>
+
+  <% if @page && @page.data %>
+    <% @page.data.each_with_index do |goods, i| %>
+      <tr>
+        <th><%= goods.id %></th>
+        <th><%= goods.zone %></th>
+        <th><%= goods.name %></th>
+        <th><%= goods.player_id %></th>
+        <th><%= Time.at(goods.timeout).strftime('%Y-%m-%d %H:%M') %></th>
+        <th><%= goods.price %></th>
+        <th><%= goods['count'] %></th>
+        <th><%= goods.sold %></th>
+        <th><%= goods.category %></th>
+        <th><%= goods.mark_num %></th>
+        <th>
+          <% if goods.status == GoodsStatus::FROZEN %>
+            <input type="button" onclick="doUnfrozenGoods(<%= "#{goods.zone}, '#{goods.player_id}', '#{goods.id}'" %>);" value="<%=t :booth_unfrozen_goods %>" class="btn btn-success"></input>
+          <% else %>
+            <input type="button" onclick="doFrozenGoods(<%= "#{goods.zone}, '#{goods.player_id}', '#{goods.id}'" %>);" value="<%=t :booth_frozen_goods %>" class="btn btn-warning"></input>
+          <% end %>
+          <% if goods.category == 'equip' %>
+            <input type="button" onclick="doShowDetail(<%= JSON.pretty_generate(goods).to_s.strip %>);" value="<%=t :view %>" class="btn btn-success"></input>
+          <% end %>
+           <input type="button" onclick="doRemoveGoods(<%= "#{goods.zone}, '#{goods.player_id}', '#{goods.id}', '#{goods.label_tid}'" %>);" value="<%=t :delete %>" class="btn btn-warning"></input>
+        </th>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
+<%= render 'paging' %>
+<div id='WinBuffer'></div>
+<script type="text/javascript">
+  var x0=0,y0=0,x1=0,y1=0;
+  var bWinMove=false;
+  var iZId=1000;
+  var xx;
+
+  function Id (sId)
+  {
+    return document.getElementById(sId);
+  };
+
+  function WinClose(oObj)
+  {
+    $(oObj.parentNode.parentNode).fadeOut("fast");
+    $(oObj.parentNode.parentNode.nextSibling).fadeOut("normal");
+    setTimeout(" Id('WinBuffer').innerHTML='' ",500);  
+  }
+
+  function Win(sWinId,sCaption,iWidth,iTop,sContent)
+  { var sWinHtml;
+    var iWinWidth=iWidth+17;
+    var iLeft=(document.body.clientWidth-iWidth)/2;
+    var iBgHeight=document.body.scrollHeight;
+    //alert(document.body.scrollHeight);
+    //alert(document.body.clientHeight);
+    if(document.body.clientHeight > document.body.scrollHeight)
+      iBgHeight=document.body.clientHeight;
+    sWinHtml='<div id="'+sWinId+'" style="font-size:12px; z-index:9900; position:absolute; width:'+iWinWidth+'px; left:'+iLeft+'px; top:'+iTop+'px;'
+      +'background-color:slategray; padding:1px;">'
+      +'<div style="width: '+iWidth+'px; height:25px; cursor:default; color:white;" >'
+      +'<span  id="'+sWinId+'_Caption" style="padding-left:4px; width:'+iWidth+'px;">'
+      +sCaption
+      +'</span><span id="'+sWinId+'_Close" style="width:14px; font-family:webdings; float: right;" onclick="WinClose(this)">r</span>'
+      +'</div>'
+      +'<div  id="'+sWinId+'_Content" style="width:100%; background-color:#fbfafc; line-height:14px; word-break:break-all; padding:8px;">'
+      +sContent
+      +'</div>'
+      +'</div>'
+      +'<div style="position:absolute; z-index:9000; filter:alpha(opacity=50);opacity:0.5; -moz-opacity:0.5; width:'
+      +document.body.scrollWidth+'px; height:'
+      +iBgHeight+'px;top:0px;left:0px; background-color:#aaaaaa;"></div>';
+    Id('WinBuffer').innerHTML=sWinHtml;
+
+  }
+
+  function doSearchBooth()
+  {
+    var v = $("#booth").val();
+    var arr = v.split(':');
+    var bid = arr[0];
+    var cid = arr[1];
+    var pid = $("#txt_pid").val();
+    var gid = $("#txt_gid").val();
+    var frozen = document.getElementById("check_frozen").checked ? 1 : 0;
+    window.location.href = "/booth/list?bid=" + bid + "&cid=" + cid + "&gid="+ gid +"&pid="+pid+"&frozen="+frozen+"&page=1";
+  };
+
+  function doUnfrozenGoods(zone_id, player_id, goods_id)
+  {
+    $.ajax({
+      type: 'POST',
+      url: 'unfrozen_goods',
+      data: {'zone_id' : zone_id, 'player_id' : player_id, 'goods_id' : goods_id}
+    }).done(function(jsonData){
+      console.log(jsonData);
+      window.location.href = "/booth/list?bid=<%= @cur_booth_id %>&cid=<%= @cur_cid %>&pid=<%= @cur_pid %>&gid=<%= @cur_gid %>&froze=<%= @cur_frozen%>&page=<%= @cur_page %>";
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  };
+
+  function doFrozenGoods(zone_id, player_id, goods_id)
+  {
+    $.ajax({
+      type: 'POST',
+      url: 'frozen_goods',
+      data: {'zone_id' : zone_id, 'player_id' : player_id, 'goods_id' : goods_id}
+    }).done(function(jsonData){
+      console.log(jsonData);
+      window.location.href = "/booth/list?bid=<%= @cur_booth_id %>&cid=<%= @cur_cid %>&pid=<%= @cur_pid %>&gid=<%= @cur_gid %>&froze=<%= @cur_frozen%>&page=<%= @cur_page %>";
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  };
+
+  function doRemoveGoods(zone_id, player_id, goods_id, label_tid)
+  {
+    if (confirm("确认要删除？")) {
+      $.ajax({
+        type: 'POST',
+        url: 'remove_goods',
+        data: {'zone_id' : zone_id, 'player_id' : player_id, 'goods_id' : goods_id, 'label_tid': label_tid}
+      }).done(function(jsonData){
+        console.log(jsonData);
+        window.location.href = "/booth/list?bid=<%= @cur_booth_id %>&cid=<%= @cur_cid %>&pid=<%= @cur_pid %>&gid=<%= @cur_gid %>&froze=<%= @cur_frozen%>&page=<%= @cur_page %>";
+      }).fail(function(xhr, status){
+        showStatus('Something wrong!', 'fail');
+      });
+    }
+  }
+
+  function doShowDetail(goods)
+  {
+    if(goods.equip)
+    { 
+      var e = goods.equip;
+      var scare = e.is_scarce ? "Y" : "N";
+      var content = "<div>金星："+ scare +"</div><br/>";
+
+      var score = 0;
+      content += "<div>评分："+ score +"</div><br/>";
+
+      var level = e.cur_level;
+      content += "<div>等级："+ level +"</div><br/>";
+
+      for(var k in e.base.base_attrs)
+      {
+        for(var k1 in e.base.base_attrs[k])
+        {
+          content += "<div>主属性："+ k1+"("+k+")+"+ e.attrs[k][k1] +"</div><br/>";
+        }
+      };
+
+      var grow_name = '';
+      var grow_val = 0;
+      for(var k in e.base.upgrade_factor)
+      {
+        grow_name = k;
+        grow_val = e.base.upgrade_factor[k];
+        break;
+      };
+      content += "<div>成长："+ grow_name +"+"+ grow_val +"</div><br/>";
+
+      var tids = '';
+      for(var tid in e.skills)
+      {
+        tids += tid + " ";
+      };
+      content += "<div>穿戴特效："+ tids +"</div><br/>";
+      
+      var encs = e.enchantment.encs;
+      var basic = encs.basic === undefined ? '' : encs.basic;
+      var advance = encs.advance === undefined ? '' : encs.advance;
+      content += "<div>初级篆刻："+ basic +"</div><br/>";
+      content += "<div>进阶篆刻："+ advance +"</div><br/>";
+      
+      var slots = e.four_therion.slots;
+      for(var type in slots)
+      {
+        var slot = slots[type];
+        var k = 'value';
+        console.log(slot.attrs[k]);
+        for(var k1 in slot.attrs[k])
+        {
+          content += "<div>四象["+type+"]："+ k1 + "("+k+")+" + slot.attrs[k][k1] +"</div><br/>";
+        }
+
+        k = 'ratio';
+        console.log(slot.attrs[k]);
+        for(var k1 in slot.attrs[k])
+        {
+          content += "<div>四象["+type+"]："+ k1 + "("+k+")+" + slot.attrs[k][k1] +"</div><br/>";
+        }
+      }
+
+      var sockets = e.gem_sockets.socket_slots;
+      for(var i=0; i<sockets.length; i++)
+      {
+        var socket = sockets[i];
+        if(socket.status != 'dead')
+        {
+          content += "<div>宝石："+ socket.color +"</div><br/>";
+        };
+      };
+
+      var title = goods.name+"("+goods.equip.tid+")";
+      Win('win1', title, 300, 200, content);
+    };
+  };
+</script>

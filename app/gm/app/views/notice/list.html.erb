@@ -1,0 +1,55 @@
+
+<br/>
+
+<%= link_to t(:create_notice), notice_new_url, :class => "btn btn-info" %>
+<%= link_to t(:delete_all), {:action => :deleteAll}, {:method => :post, :data => {:confirm => t(:are_you_sure_to_delete)}}, :class => "btn btn-info"%>
+<br/><br/>
+
+<table id='eventstable' class='table table-striped table-bordered table-hover'>
+  <col width="20px" />
+  <col width="20px" />
+  <col width="100px" />
+  <col width="30px" />
+  <col width="20px" />
+  <col width="20px" />
+  <tr>
+    <th><%=t :id %></th>
+    <th><%=t :index %></th>
+    <th><%=t :type%></th>
+    <th><%=t :month %></th>
+    <th><%=t :day %></th>
+    <th><%=t :new %></th>
+    <th><%=t :title%></th>
+    <th><%=t :content%></th>
+    <th><%=t :actions %></th>
+  </tr>
+    <%
+    ns = @notices.sort{ |a, b| b.tid <=> a.tid }
+    ns.each do |n| %>
+    <tr>
+    <td><%=n.id%></td>
+    <td><%=n.tid%></td>
+    <td><%if n.type ==1 then%><%=t :noticeGame %><%else%> <%=t :noticeActive%> <%end%></td>
+    <td><%=n.month%></td>
+    <td><%=n.day%></td>
+    <td><% if n.isNew then%><%=t :str_yes%> <%else%> <%=t :str_no%> <%end%></td>
+    <td><%=n.title%></td>
+    <td><%=n.content.html_safe %></td>
+    <td>
+      <%= link_to(:edit, {:action => :edit, :id => n.id}, {:method => :get}) %>
+      <%= link_to(:delete, {:action => :delete, :id => n.id}, {:method => :get, :data => {:confirm => t(:are_you_sure_to_delete)} }) %>
+    </td>
+
+    </tr>
+    <% end %>
+
+</table>
+
+<script type="text/javascript">
+
+  /////////////////////////////////////////////
+  // common
+  //
+
+
+</script>

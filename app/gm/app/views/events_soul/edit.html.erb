@@ -1,0 +1,144 @@
+<h1><%= t(:edit_xuezhan_event) %></h1>
+
+<br/>
+<a href='/events_soul/list/'><%=t :list_xuezhan_event%></a>
+
+<%= render :partial => "form", :locals => { :soul_id => @id, :soul_zone => @zone } %>
+
+<input type="button" onclick="saveSoulEvent()" value="<%=t :save%>" class="btn btn-success"></input>
+<form id="copyForm">
+    <div><%=t :copy_current_config_to_zone%>，<%=t :confirm_your_config_saved%></div>
+    <span><%=t :enter_zone_split_with_space_like%>2 3 6 </span>
+    <%= text_field_tag "copy_zones", nil, :size => 100, :placeholder => "2 3 6" %>
+    <input type="button" onclick="copySoulEvent()" value="<%=t :copy_current_config_to_zone%>">
+</form>
+
+<script type="text/javascript">
+startLoad();
+
+ajaxSubmit($('#copyForm'));
+
+function startLoad()
+  {
+    var zoneIndex = <%= @zone %>;
+    var id = <%= @id %>
+    console.log("zone=" + zoneIndex);
+
+    console.log("id=" + id);
+
+    $('#soulevent').mask('读取中...');
+
+    getSoulEvent(zoneIndex, function(data) {
+      $('#soulevent').unmask();
+      updateSoulEvents(data);
+    });
+  }
+
+  function getSoulEvent(zoneIndex, callback)
+  {
+    $.ajax({
+      type: 'GET',
+      url: '/events_soul/get/' + zoneIndex + '/' + <%= @id %>
+    }).done(function(jsonData){
+      console.log(jsonData);
+      if (callback) {
+        callback(jsonData);
+      }
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+
+  function updateSoulEvents(jsonData)
+  {
+    if (!jsonData) {
+      $('#startTime').val(0);
+      $('#endTime').val(0);
+      for (var i = 1; i <= 4; i++) {
+        $('#hero_se'+i).val("");
+        $('#hero_name' + i).val('');
+        $('#num_se'+i).val(0);
+        $('#weight_se' + i).val(0);
+        $('#pickNum_se' + i).val(0);
+      };
+      $('#soulEnabled').prop('checked', false)
+    }
+    else {
+      $('#startTime').val(jsonData["startTime"]);
+      $('#endTime').val(jsonData["endTime"]);
+      var statusStr = getGrantStatusStr(jsonData["grantStatus"])
+      $('#grant_status_se').val(statusStr)
+      for (var i = 1; i <= 4; i++) {
+        var data = jsonData['data'][i - 1]
+        if (data) {
+           $('#hero_se' + i).val(data['tid']);
+           updateItemName(data['tid'], $('#hero_name' + i))
+           $('#num_se' + i).val(data['num']);
+           $('#weight_se' + i).val(data['weight']);
+           $('#pickNum_se' + i).val(data['pickNum']);
+         }
+      }
+      $('#hero_reward_type_bai').prop('checked', jsonData['type'] == 'bai');
+      $('#hero_reward_type_wan').prop('checked', jsonData['type'] == 'wan');
+      $('#soulEnabled').prop('checked', jsonData['enabled'])
+    }
+  }
+
+  function saveSoulEvent()
+  {
+    var zoneIndex = <%= @zone %>;
+    var id = <%= @id %>
+    $.ajax({
+      type: 'POST',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: '/events_soul/save/' + zoneIndex + "/" + id,
+      data: getData()
+    }).done(function(json){
+      console.log(json);
+      if(json && json['success'])
+      {
+        showStatus('save success~', 'green')
+      }
+      else if(json)
+      {
+        //showStatus('save error, reason: ' + json['reason'], 'red')
+        showStatus(parseError(json), 'red')
+      }
+      else
+      {
+        showStatus('save error', 'red')
+      }
+
+    }).fail(function(xhr, status){
+      showStatus('somthing wrong!', 'red');
+    });
+  }
+
+  function copySoulEvent()
+  {
+    $.ajax({
+      type: 'POST',
+      url: '/events_soul/copy/' + <%= @zone %> + '/' + <%= @id %> ,
+      data: {
+              "tozones":$("#copy_zones").val(),
+            }
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('copy success~', 'green')
+      }
+      else if(json)
+      {
+        //showStatus('copy error, reason: ' + json['reason'], 'red')
+        showStatus(parseError(json), 'red')
+      }
+      else
+      {
+        showStatus('copy error', 'red')
+      }
+      }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+  }
+</script>

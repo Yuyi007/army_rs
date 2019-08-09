@@ -1,0 +1,575 @@
+{
+  "ski1001": {
+    "tid": "ski1001",
+    "name": "测试飞行弹道",
+    "desc": "测试飞行弹道，命中后有伤害",
+    "icon": "ski00101",
+    "cancelable": 0,
+    "cast_type": "button",
+    "cd": 3,
+    "target_type": "enemy",
+    "eff_offset": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "bullets": [
+      {
+        "tid": "proj0001",
+        "count": 3,
+        "dir_y": [
+          "0"
+        ],
+        "pos": {
+          "x": 3.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "interval": 0.1
+      }
+    ],
+    "eff_loop": false
+  },
+  "ski1002": {
+    "tid": "ski1002",
+    "name": "测试指示器固定位置弹道",
+    "desc": "测试飞行弹道，命中后有伤害",
+    "icon": "ski00102",
+    "cancelable": 0,
+    "cast_type": "indicate",
+    "cd": 3,
+    "target_type": "enemy",
+    "eff_offset": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "rgn_sel": {
+      "kind": "rgn",
+      "angle_rgn": "all",
+      "rgn_shape": "circle",
+      "radius": 30,
+      "radius_sel": 10
+    },
+    "bullets": [
+      {
+        "tid": "proj0002",
+        "count": 1,
+        "pos": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        }
+      }
+    ],
+    "eff_loop": false
+  },
+  "ski1003": {
+    "tid": "ski1003",
+    "name": "测试飞行弹道",
+    "desc": "测试飞行弹道，命中后有伤害",
+    "icon": "ski00103",
+    "cancelable": 0,
+    "cast_type": "button",
+    "cd": 3,
+    "consume_type": "en",
+    "cost": 10,
+    "target_type": "enemy",
+    "eff_offset": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "bullets": [
+      {
+        "tid": "proj0003",
+        "count": 1,
+        "dir_y": [
+          "0"
+        ],
+        "pos": {
+          "x": 3.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "interval": 0.1
+      }
+    ],
+    "eff_loop": false
+  },
+  "ski2000": {
+    "tid": "ski2000",
+    "name": "重生技能",
+    "desc": "在预警出现后一定时间重生落下来砸到目标造成一定伤害",
+    "alerm_effect_com": "competitive",
+    "alerm_effect": "reborn_range",
+    "alerm_eff_offset": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "alerm_during": 1.2,
+    "efx_delay": 0.7,
+    "effect_com": "competitive",
+    "effect": "reborn",
+    "eff_offset": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "rgn_sel": {
+      "kind": "rgn",
+      "angle_rgn": "all",
+      "rgn_shape": "circle",
+      "radius": -1,
+      "radius_sel": 10
+    },
+    "bullets": [
+      {
+        "tid": "proj2000",
+        "count": 1,
+        "pos": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "delay": 1
+      }
+    ],
+    "eff_loop": false
+  },
+  "ski00101": {
+    "tid": "ski00101",
+    "name": "冲击音波",
+    "desc": "领航者向前方发射3颗冲击音波，每颗音波球均会对命中敌人造成伤害",
+    "icon": "ski00101",
+    "cancelable": 0,
+    "cast_type": "button",
+    "cd": 2,
+    "effect": "skill_01_a",
+    "eff_offset": {
+      "x": -3.5,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "eff_loop": false,
+    "sound": "c001s101",
+    "bullets": [
+      {
+        "tid": "proj0010101",
+        "count": 1,
+        "dir_y": [
+          "0"
+        ],
+        "pos": {
+          "x": -1.5,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "delay": 0.1
+      },
+      {
+        "tid": "proj0010102",
+        "count": 1,
+        "dir_y": [
+          "-12"
+        ],
+        "pos": {
+          "x": -1.5,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "delay": 0.1
+      },
+      {
+        "tid": "proj0010103",
+        "count": 1,
+        "dir_y": [
+          "12"
+        ],
+        "pos": {
+          "x": -1.5,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "delay": 0.1
+      }
+    ]
+  },
+  "ski00102": {
+    "tid": "ski00102",
+    "name": "刺耳尖啸",
+    "desc": "领航者向四周放出一道锐利的尖啸声，对范围内的所有敌人造成伤害",
+    "icon": "ski00102",
+    "cancelable": 0,
+    "cast_type": "button",
+    "cd": 6,
+    "eff_offset": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "bullets": [
+      {
+        "tid": "proj0010201",
+        "count": 1,
+        "pos": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        }
+      }
+    ],
+    "eff_loop": false
+  },
+  "ski00103": {
+    "tid": "ski00103",
+    "name": "治愈之音",
+    "desc": "领航者播放治愈之音，治疗范围内的友军。每秒回复9%的最大生命值，持续5秒",
+    "icon": "ski00103",
+    "cancelable": 0,
+    "cast_type": "button",
+    "cd": 7,
+    "consume_type": "en",
+    "cost": 100,
+    "target_type": "self",
+    "add_buffs": [
+      "buf0010301"
+    ],
+    "eff_offset": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "eff_loop": false
+  },
+  "ski00201": {
+    "tid": "ski00201",
+    "name": "高能镭射",
+    "desc": "极光战车向前方发射一道镭射光，对命中敌人造成伤害，并降低其20%的物防5秒",
+    "icon": "ski00201",
+    "cancelable": 0,
+    "cast_type": "button",
+    "cd": 2,
+    "eff_offset": {
+      "x": -5.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "eff_loop": false,
+    "sound": "c002s101",
+    "bullets": [
+      {
+        "tid": "proj0020101",
+        "count": 1,
+        "dir_y": [
+          "0"
+        ],
+        "pos": {
+          "x": -19.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "delay": 0.15
+      }
+    ]
+  },
+  "ski00202": {
+    "tid": "ski00202",
+    "name": "弧光冲击",
+    "desc": "极光战车向正前方发射一道弧型光刃，对路径上所有敌人造成伤害",
+    "icon": "ski00202",
+    "cancelable": 0,
+    "cast_type": "button",
+    "cd": 7,
+    "bullets": [
+      {
+        "tid": "proj0020201",
+        "count": 1,
+        "dir_y": [
+          "0"
+        ],
+        "pos": {
+          "x": -4.0,
+          "y": 0.0,
+          "z": 0.0
+        }
+      }
+    ],
+    "eff_loop": false
+  },
+  "ski00203": {
+    "tid": "ski00203",
+    "name": "聚能光束",
+    "desc": "极光战车在短暂蓄能后，向正前方发射一道聚能光束，对命中的敌人造成大量伤害",
+    "icon": "ski00203",
+    "cancelable": 0,
+    "cast_type": "button",
+    "cd": 3,
+    "consume_type": "en",
+    "cost": 100,
+    "effect": "skill_03_a",
+    "eff_offset": {
+      "x": -5.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "eff_loop": false,
+    "sound": "c002s301",
+    "bullets": [
+      {
+        "tid": "proj0020301",
+        "count": 1,
+        "dir_y": [
+          "0"
+        ],
+        "pos": {
+          "x": -27.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "delay": 1
+      }
+    ]
+  },
+  "ski00301": {
+    "tid": "ski00301",
+    "name": "震爆弹",
+    "desc": "荒野先驱向前方固定区域发射火箭弹，对命中敌人造成少量伤害并眩晕1秒",
+    "icon": "ski00301",
+    "cancelable": 0,
+    "cast_type": "indicate",
+    "cd": 3,
+    "alerm_effect": "skill_01_c",
+    "alerm_eff_offset": {
+      "x": 0.0,
+      "y": 0.4,
+      "z": 0.0
+    },
+    "alerm_during": 4.5,
+    "rgn_sel": {
+      "kind": "rgn",
+      "angle_rgn": "all",
+      "rgn_shape": "circle",
+      "radius": 25,
+      "radius_sel": 8,
+      "rgn_efx": "skill_02_e",
+      "tar_efx": "skill_02_d"
+    },
+    "bullets": [
+      {
+        "tid": "proj0030101",
+        "count": 1,
+        "dir_y": [
+          "0"
+        ],
+        "pos": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        }
+      }
+    ],
+    "eff_loop": false
+  },
+  "ski00302": {
+    "tid": "ski00302",
+    "name": "撼地雷",
+    "desc": "向指定区域投掷一枚撼地雷，短暂延迟后爆炸对范围内所有敌人造成伤害",
+    "icon": "ski00302",
+    "cancelable": 0,
+    "cast_type": "indicate",
+    "cd": 3,
+    "alerm_effect": "skill_02_b",
+    "alerm_eff_offset": {
+      "x": 0.0,
+      "y": 0.4,
+      "z": 0.0
+    },
+    "alerm_during": 0.5,
+    "efx_delay": 0.5,
+    "effect": "skill_02_c",
+    "eff_offset": {
+      "x": 0.0,
+      "y": 0.4,
+      "z": 0.0
+    },
+    "eff_loop": false,
+    "sound": "c003s201",
+    "rgn_sel": {
+      "kind": "rgn",
+      "angle_rgn": "all",
+      "rgn_shape": "circle",
+      "radius": 25,
+      "radius_sel": 10,
+      "rgn_efx": "skill_02_e",
+      "tar_efx": "skill_02_d"
+    },
+    "bullets": [
+      {
+        "tid": "proj0030201",
+        "count": 1,
+        "pos": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "delay": 0.5
+      }
+    ]
+  },
+  "ski00303": {
+    "tid": "ski00303",
+    "name": "荒野幸存",
+    "desc": "提高荒野先驱25%的防御力，同时大幅提高生命回复速度，效果持续10秒",
+    "icon": "ski00303",
+    "cancelable": 0,
+    "cast_type": "button",
+    "cd": 12,
+    "consume_type": "en",
+    "cost": 100,
+    "target_type": "self",
+    "add_buffs": [
+      "buf0030301",
+      "buf0030302"
+    ],
+    "eff_loop": false
+  },
+  "ski00401": {
+    "tid": "ski00401",
+    "name": "烈风卷",
+    "desc": "向车辆前方发射一道微型火焰龙卷风，对路径上所有敌人造成伤害",
+    "icon": "ski00301",
+    "cancelable": 0,
+    "cast_type": "button",
+    "cd": 2,
+    "bullets": [
+      {
+        "tid": "proj0040101",
+        "count": 1,
+        "dir_y": [
+          "0"
+        ],
+        "pos": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        }
+      }
+    ],
+    "eff_loop": false
+  },
+  "ski00402": {
+    "tid": "ski00402",
+    "name": "烈火球",
+    "desc": "火烈鸟在身后留下一个火焰路径，对路径上的敌人造成持续伤害，路径会存在3秒",
+    "icon": "ski00302",
+    "cancelable": 0,
+    "cast_type": "button",
+    "cd": 12,
+    "bullets": [
+      {
+        "tid": "proj0040201",
+        "count": 3,
+        "dir_y": [
+          "0",
+          "120",
+          "240"
+        ],
+        "pos": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "interval": 0
+      }
+    ],
+    "eff_loop": false
+  },
+  "ski00403": {
+    "tid": "ski00403",
+    "name": "火焰旋涡",
+    "desc": "以自身为中心创造一个火焰旋涡，旋涡会跟随火烈鸟移动，并对身处旋涡中的敌方造成持续伤害",
+    "icon": "ski00303",
+    "cancelable": 0,
+    "cast_type": "button",
+    "cd": 8,
+    "consume_type": "en",
+    "cost": 100,
+    "target_type": "self",
+    "add_buffs": [
+      "buf0040301"
+    ],
+    "eff_loop": false
+  },
+  "ski00501": {
+    "tid": "ski00501",
+    "name": "机枪扫射",
+    "desc": "路霸使用机枪扫射前方扇形区域",
+    "icon": "ski00201",
+    "cancelable": 0,
+    "cast_type": "button",
+    "cd": 4,
+    "target_type": "self",
+    "add_buffs": [
+      "buf0050101"
+    ],
+    "eff_loop": false
+  },
+  "ski00502": {
+    "tid": "ski00502",
+    "name": "恶毒钉刺",
+    "desc": "路霸向车辆后方放置一个钉刺带，使过往的敌方车辆大幅降速并造成轻微损伤",
+    "icon": "ski00202",
+    "cancelable": 0,
+    "cast_type": "button",
+    "cd": 5,
+    "bullets": [
+      {
+        "tid": "proj0050201",
+        "count": 3,
+        "dir_y": [
+          "0",
+          "70",
+          "35",
+          "-80",
+          "-40"
+        ],
+        "dir_xz": 20,
+        "pos": {
+          "x": 3.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "interval": 0.1
+      }
+    ],
+    "eff_loop": false
+  },
+  "ski00503": {
+    "tid": "ski00503",
+    "name": "势不可挡",
+    "desc": "路霸向正前方发出一道冲击波，冲击波会伤害路径上的所有敌方车辆，并向两侧推开并眩晕1秒",
+    "icon": "ski00203",
+    "cancelable": 0,
+    "cast_type": "button",
+    "cd": 8,
+    "consume_type": "en",
+    "cost": 100,
+    "bullets": [
+      {
+        "tid": "proj0050301",
+        "count": 1,
+        "dir_y": [
+          "0"
+        ],
+        "pos": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        }
+      }
+    ],
+    "eff_loop": false
+  }
+}

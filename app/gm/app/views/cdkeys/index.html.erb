@@ -1,0 +1,70 @@
+
+<noscript>Enable Javascript to continue</noscript>
+
+<div id="query">
+  <form id="cdkey" class="form-horizontal">
+    <div class="form-group">
+      <label>cdkey</label>
+      <%= text_field_tag :key, nil, :class => "form-control" %>
+    </div>
+    <div>
+      <%= label_tag t(:package_id) %>
+      <%= text_field_tag :itemId, nil, :readonly => "true" %>
+    </div>
+    <div>
+      <%= label_tag t(:sdk) %>
+      <%= text_field_tag :sdk, nil, :readonly => "true" %>
+    </div>
+    <div>
+      <%= label_tag t(:player_id) %>
+      <%= text_field_tag :userId, nil, :readonly => "true" %>
+    </div>
+    <div>
+      <%= label_tag t(:redeem_time) %>
+      <%= text_field_tag :datetime, nil, :readonly => "true" %>
+    </div>
+    <div>
+      <%= label_tag t(:zone) %>
+      <%= text_field_tag :zone, nil, :readonly => "true" %>
+    </div>
+    <a href="#" class="btn btn-success" onclick="checkCdKey()"><%= label_tag t(:query) %> </a>
+  </form>
+
+</div>
+
+<script type="text/javascript">
+  function checkCdKey() {
+    var key = $('#key').val()
+
+    $.ajax({
+      type: 'GET',
+      url: '/cdkey/queryKey/' + key,
+    }).done(function (json){
+      $('#itemId').val('')
+      $('#datetime').val('')
+      $('#zone').val('')
+      $('#userId').val('')
+      if (json["reason"] )
+      {
+        showStatus(json["reason"], "fail")
+      }
+      else
+      {
+        $('#itemId').val(json["itemId"])
+        if(json["userId"])
+        {
+          $('#datetime').val(json["datetime"])
+          $('#zone').val(json["zone"])
+          $('#userId').val(json["userId"])
+        }
+
+        showStatus('Load success~', 'success')
+      }
+
+    }).fail(function (xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+
+</script>
+

@@ -1,0 +1,8 @@
+<% page ||= 1 %>
+<% if @page.pageUrl == 'view_timeline' %>
+        <%= link_to txt, person_view_timeline_url(@person.pid, page) %>
+<% elsif @page.pageUrl == 'view_tweets' %>
+        <%= link_to txt, person_view_tweets_url(@person.pid, page) %>
+<% elsif @page.pageUrl == 'view_news_tweets' %>
+        <%= link_to txt, person_view_news_tweets_url(@person.pid, page) %>
+<% end %>

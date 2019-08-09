@@ -1,0 +1,177 @@
+<div class="alert alert-danger"><%=t :modify_notice%></div>
+
+
+<br/>
+<a href="/events_raid/history/" class="btn btn-info btn-sm"><%=t :raid_cfg_history%></a>
+<br/>
+<br/>
+<a href="/events_raid/new/" class="btn btn-info btn-sm"><%=t :create_raid_event%></a>
+<br/>
+<br/>
+
+<table id='grids' class='table table-bordered table-striped table-hover'>
+  <tr>
+    <th><input type="checkbox" id="cbSelectAll" onclick="onSelectAll();" value="select all"/></th>
+    <th><%=t :zone %></th>
+    <th><%=t :explore_start_date %></th>
+    <th><%=t :explore_end_date %></th>
+    <th><%=t :raid_bonus_multiple %></th>
+    <th><%=t :raid_bonus_special %></th>
+    <th><%=t :raid_open_npc %></th>
+    <th><%=t :raid_open_miniboss %></th>
+    <th><%=t :raid_open_bigboss %></th>
+    <th><%=t :raid_open_welfare %></th>
+    <th><%=t :actions %></th>
+  </tr>
+</table>
+<a href="#" onclick="onBtnDeleteBatchClick();" class="btn btn-info btn-sm"><%=t :delete_batch%></a>
+
+<script type="text/javascript">
+
+  function onGetEventList(json)
+  {
+    $("#grids tr:not(:first)").empty();
+    var events = json['events'] || {};
+    for (var i = 0; i < events.length; i++) 
+    {
+      evt = events[i];
+       var row = "";
+      row += "<tr>";
+      row += "<td>"+"<input name='zoneCheckbox' id='"+evt['zone']+"' type='checkbox' value=''/></td>"
+      row += "<td>"+evt['zone']+"</td>"
+      row += "<td>"+evt['startTime']+"</td>"
+      row += "<td>"+evt['endTime']+"</td>"
+      row += "<td>"+evt['multiple']+"</td>"
+      row += "<td>"+(evt['bSpecial']?"Y":"N")+"</td>"
+      row += "<td>"+(evt['bOpenNpc']?"Y":"N")+"</td>"
+      row += "<td>"+(evt['bOpenMiniBoss']?"Y":"N")+"</td>"
+      row += "<td>"+(evt['bOpenBigBoss']?"Y":"N")+"</td>"
+      row += "<td>"+(evt['bOpenWelfare']?"Y":"N")+"</td>"
+      row += "<td><a href='/events_raid/edit/"+evt['zone']+"'><%=t :edit%></a>&nbsp&nbsp;<a href='#' onclick=deleteEvent("+evt['zone']+")><%=t :delete%></a>&nbsp&nbsp;<a href='#' onclick=accelerate("+evt['zone']+")><%=t :accelerate%></a></td>"
+      row += "</tr>";
+      $("#grids").append(row);
+    }
+  }
+
+  function getEvents(callback)
+  {
+    $.ajax({
+      type: 'GET',
+      url: '/events_raid/getEvents'
+    }).done(function(json){
+      console.log(json);
+      if (callback) {
+        callback(json);
+      }
+    }).fail(function(xhr, status){
+      showStatus('Get raid event failed!', 'red');
+    });
+  }
+  getEvents(onGetEventList);
+
+
+  function doDeleteEvent(zone)
+  {
+    $.ajax({
+      type: 'POST',
+      url: '/events_raid/delete/' + zone
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('delete success~', 'green')
+        getEvents(onGetEventList);
+      }
+      else
+      {
+        showStatus('delete error', 'red')
+      }
+      }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+  }
+
+  function deleteEvent(zone)
+  {
+    if(confirm("<%=t :confirm_operation%>"))
+    {
+      doDeleteEvent(zone);
+    }
+    else
+    {
+      //
+    }
+  }
+
+  function onSelectAll()
+  {
+    var bChecked = document.getElementById("cbSelectAll").checked
+    var cbs = document.getElementsByName("zoneCheckbox");
+    for (var i = 0; i < cbs.length; i++) 
+    {
+      cbs[i].checked = bChecked
+    };
+  }
+
+  function onBtnDeleteBatchClick()
+  {
+    var zones = new Array();
+    var cbs = document.getElementsByName("zoneCheckbox");
+    for (var i = 0; i < cbs.length; i++) 
+    {
+      if(cbs[i].checked)
+      {
+        zones.push(cbs[i].id);
+      }
+    }
+
+    if(zones.length==0)
+    {
+      return;
+    }
+
+    if(confirm("<%=t :confirm_operation%>"))
+    {
+      $.ajax({
+        type: 'POST',
+        url: '/events_raid/deleteBatch/',
+        data: {'zones': zones}
+      }).done(function(json){
+        if(json && json['success'])
+        {
+          showStatus('delete success~', 'green')
+          getEvents(onGetEventList);
+        }
+        else
+        {
+          showStatus('delete error', 'red')
+        }
+        }).fail(function(xhr, status){
+        showStatus('Something wrong!', 'red');
+      });
+    }
+  }
+
+  function accelerate(zone)
+  {
+    $.ajax({
+      type: 'GET',
+      url: '/events_raid/accelerate/'+zone
+    }).done(function(json){
+      console.log(json);
+      if(json)
+      {
+        if(json['success'])
+        {
+          showStatus('accelerate success~', 'green');
+          location.reload();
+        }
+        else
+        {
+          showStatus(json['reason'], 'red');
+        }
+      }
+    }).fail(function(xhr, status){
+      showStatus('accelerate failed!', 'red');
+    });
+  }
+</script>

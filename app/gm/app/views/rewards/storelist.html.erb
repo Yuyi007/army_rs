@@ -1,0 +1,83 @@
+<%= form_tag({action: :importStoreItem}, {multipart: true, class: "form"} ) do %>
+<div class="row">
+  <div class="col-md-1">
+    <a href="#" onclick="toCreate()" class="btn btn-info btn-sm"><%=t :create_store%></a>
+  </div>
+  <div class="col-md-1 col-md-offset-1">
+    <%= submit_tag(t(:import), class: "btn btn-sm btn-danger") %>
+  </div>
+  <div class="col-md-3">
+    <%= file_field_tag('packagefile', class: "form-control") %>
+  </div>
+
+  <% if not @errorMessage.nil? %>
+    <div class="col-md-6">
+      <span class="alert alert-danger"><%= @errorMessage %></span>
+    </div>
+  <% end %>
+  <% if not @successMessage.nil? %>
+    <div class="col-md-6">
+      <span class="alert alert-success"><%= @successMessage %></span>
+    </div>
+  <% end %>
+</div>
+<% end %>
+
+<br/><br/>
+
+<table id='storestable' class='table table-bordered table-striped table-hover'>
+  <tr>
+    <th><%=t :store_id %></th>
+    <th><%=t :store_item %></th>
+    <th><%=t :paymentitems_weight %></th>
+    <th><%=t :paymentitems_starttime %></th>
+    <th><%=t :paymentitems_endtime %></th>
+    <th><%=t :status %></th>
+    <th><%=t :actions %></th>
+  </tr>
+
+  <% for store in @stores %>
+    <% if store %>
+      <tr>
+        <td><%= store.tid %></td>
+        <% if itemsInfo = CocsProxy.instance.getGameConfig('items')[store.itemId] %>
+          <td><%= GameConfig.strings[itemsInfo['name']] || itemsInfo['name'] %></td>
+        <% else %>
+          <td>
+            <% item = CocsProxy.instance.get_package_config_by_tid(store.itemId) %>
+            <% if item %>
+              <%= link_to item['name'], rewards_packageedit_url(:id => item['id']) %>
+            <% end %>
+          </td>
+        <% end %>
+        <td><%= store.weight %></td>
+        <td><%= store.startTime %></td>
+        <td><%= store.endTime %></td>
+        <% if store.grantStatus.nil? or store.grantStatus == 1 %>
+          <td><%=t :granted%></td>
+        <% elsif store.grantStatus == 0 %>
+          <td><%=t :need_grant%></td>
+        <% elsif store.grantStatus == 2 %>
+          <td><%=t :rejected%></td>
+        <% else %>
+          <td><%=t :unknown%></td>
+        <% end %>
+        <td>
+        <%= link_to t(:edit), rewards_storeedit_url(:tid => store.tid) %>
+        <% if store.grantStatus == 0 and @auth == 1 %>
+          <%= link_to t(:accept) , { :action => 'grantStore', :tid => store.tid }, { :confirm => t(:confirm_sure), :method => :post } %>
+          <%= link_to t(:reject) , { :action => 'rejectStore', :tid => store.tid }, { :confirm => t(:confirm_sure), :method => :post } %>
+        <% end %>
+        <%= link_to t(:delete) , { :action => 'deleteStore', :tid => store.tid }, { :confirm => t(:confirm_sure), :method => :delete } %>
+        <%= link_to t(:export), { :action => 'exportStoreItem', :tid => store.tid }, { :class => 'btn btn-xs btn-success', :target => '_blank'} %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
+
+<script type="text/javascript">
+  function toCreate(){
+    window.location.href = "/rewards/storenew/";
+  }
+</script>

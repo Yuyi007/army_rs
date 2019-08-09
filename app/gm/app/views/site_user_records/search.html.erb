@@ -1,0 +1,139 @@
+<style>
+.success { color: green; }
+.fail { color: red; }
+</style>
+
+<%= form_tag site_user_records_search_url, :method => 'get' do %>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:username) %></span>
+        <%= text_field_tag :site_user_name, params[:site_user_name], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:record_type) %></span>
+        <%= text_field_tag :a, params[:a], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:target_player_id) %></span>
+        <%= text_field_tag :target, params[:target], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:zone) %></span>
+        <%= text_field_tag :zone, params[:zone], :class => "form-control" %>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:goods_type_id) %></span>
+        <%= text_field_tag :tid, params[:tid], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:created_at) %></span>
+        <%= text_field_tag :created_at_s, params[:created_at_s], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= text_field_tag :created_at_e, params[:created_at_e], :class => "form-control" %>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:num_per_page) %></span>
+        <%= text_field_tag :per_page, params[:per_page], :class => "form-control" %>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-2">
+      <%= submit_tag t(:search), :class => "btn btn-info" %>
+    </div>
+  </div>
+<% end %>
+
+<br/>
+
+<table class='table table-striped table-bordered table-hover'>
+
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+
+  <tr>
+    <th><%= sortable "site_user_id", params %></th>
+    <th><%= sortable "action", params %></th>
+    <th><%= sortable "success", params %></th>
+    <th><%= sortable "target", params %></th>
+    <th><%= sortable "zone", params %></th>
+    <th><%= sortable "type", params %></th>
+    <th><%= sortable "count", params %></th>
+    <th><%= sortable "param1", params %></th>
+    <th><%= sortable "param2", params %></th>
+    <th><%= sortable "param3", params %></th>
+    <th><%= sortable "created_at", params %></th>
+  </tr>
+
+  <% for record in @records %>
+  <tr>
+    <% user = SiteUser.find(record.site_user_id) %>
+    <td><%= link_to user.username, site_user_url(record.site_user_id) %></td>
+    <td><%= record.action %></td>
+    <td>
+      <% if record.success == true %>
+        <span class='success'><%= t(:success) %></span>
+      <% else %>
+        <span class='fail'><%= t(:fail) %></span>
+      <% end %>
+    </td>
+    <td>
+      <% if record.target and record.target.length %>
+        <%= link_to record.target, data_raw_url( :id => record.target, :zone => record.zone ) %></td>
+      <% end %>
+    <td>
+      <% if record.zone %>
+        <%= "#{record.zone}" %>
+      <% else %>
+      <% end %>
+    </td>
+    <td><%= record.tid %></td>
+    <td><%= record.count %></td>
+    <td><%= record.param1 %></td>
+    <td><%= record.param2 %></td>
+    <td><%= record.param3 %></td>
+    <td><%= TimeHelper.gen_date_time_sec(record.created_at) %></td>
+  </tr>
+  <% end %>
+
+</table>
+
+<div>
+<%= will_paginate @records %>
+</div>
+
+<script type='text/javascript'>
+  $('#created_at_s').datetimepicker();
+  $('#created_at_e').datetimepicker();
+</script>

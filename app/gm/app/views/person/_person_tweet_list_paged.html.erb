@@ -1,0 +1,64 @@
+<table class="table table-striped table-bordered table-hover">
+  <tr>
+    <th><%=t :tweet_id %></th>
+    <th><%=t :person_id %></th>
+    <th><%=t :tweet_pid %></th>
+    <th><%=t :tweet_text %></th>
+    <th><%=t :tweet_time %></th>
+    <th><%=t :tweet_images %></th>
+    <th><%=t :tweet_top_images %></th>
+    <th><%=t :tweet_content %></th>
+    <th><%=t :tweet_self_bonus_tid %></th>
+    <th><%=t :tweet_bonus %></th>
+    <th><%=t :tweet_bonus_commenters %></th>
+    <th><%=t :tweet_bonus_liked %></th>
+    <th><%=t :tweet_comments %></th>
+  </tr>
+  <% if @page && @page.data %>
+    <% @page.data.each_with_index do|tweet, i| %>
+      <tr>
+        <th><%= tweet.id %></th>
+        <th><%= tweet.person_id %></th>
+        <th><%= tweet.pid %></th>
+        <th><%= tweet.text %></th>
+        <th><%= Time.at(tweet.time).strftime('%Y-%m-%d %H:%M') %></th>
+        <th><%= tweet.images %></th>
+        <th><%= tweet.top_images %></th>
+        <th><%= tweet.content %></th>
+        <th><%= tweet.self_bonus_tid %></th>
+        <th><%= link_to t(:view_details), tweet_view_bonus_url(tweet.pid, tweet.id, 1) %></th>
+        <th><%= link_to t(:view_details), tweet_view_bonus_commenters_url(tweet.pid, tweet.id, 1) %></th>
+        <th><%= link_to t(:view_details), tweet_view_bonus_liked_url(tweet.pid, tweet.id, 1) %></th>
+        <th><%= link_to t(:view_details), tweet_view_comments_url(tweet.pid, tweet.id, 1) %></th>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
+
+<div class='pager'>
+  <div class="pagination">
+    <% if not @page.nil? %>
+      <%= render partial: 'person_tweet_choose_page', locals: { txt: t(:first_page), page: 1} %>
+      <% if @page.curPage.to_i > 1 %>
+        <%= render partial: 'person_tweet_choose_page', locals: { txt: t(:previous_page), page: @page.curPage.to_i - 1} %>
+      <% else %>
+        <span class="previous_page disabled"><%=t :previous_page %></span>
+      <% end %>
+      <% @page.pages.each do |p| %>
+        <% if p.to_i <= @page.curPage.to_i + 4 or p.to_i >= @page.curPage.to_i - 4 %>
+          <% if p.to_i == @page.curPage.to_i %>
+            <em class="current"><%= p %></em>
+          <% else %>
+            <%= render partial: 'person_tweet_choose_page', locals: { txt: p.to_s, page: p} %>
+          <% end %>
+        <% end %>
+      <% end %>
+      <% if @page.curPage.to_i < @page.pageNum.to_i %>
+        <%= render partial: 'person_tweet_choose_page', locals: { txt: t(:next_page), page: @page.curPage.to_i + 1} %>
+      <% else %>
+        <span class="next_page disabled"><%=t :next_page %></span>
+      <% end %>
+      <%= render partial: 'person_tweet_choose_page', locals: { txt: t(:last_page), page: @page.pageNum.to_i} %>
+    <% end %>
+  </div>
+</div>

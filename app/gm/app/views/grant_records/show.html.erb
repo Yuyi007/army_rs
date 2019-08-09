@@ -1,0 +1,48 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Site user:</b>
+  <%= @grant_record.site_user_id %>
+</p>
+
+<p>
+  <b>Action:</b>
+  <%= @grant_record.action %>
+</p>
+
+<p>
+  <b>Success:</b>
+  <%= @grant_record.success %>
+</p>
+
+<p>
+  <b>Target:</b>
+  <%= @grant_record.target_id %>
+</p>
+
+<p>
+  <b>Target zone:</b>
+  <%= @grant_record.target_zone %>
+</p>
+
+<p>
+  <b>Item:</b>
+  <%= @grant_record.item_id %>
+</p>
+
+<p>
+  <b>Item amount:</b>
+  <%= @grant_record.item_amount %>
+</p>
+
+<p>
+  <b>Reason:</b>
+  <%= @grant_record.reason %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%= @grant_record.status %>
+</p>
+
+<%= link_to 'Back', grant_records_path %>

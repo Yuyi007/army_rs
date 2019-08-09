@@ -1,0 +1,9 @@
+<div id="share_branch_quest">
+  <select id = "branch_quest_select" name="branch_quest_select" value = ""  >
+    <% GameConfig.branch_quests.quests.each do |tid, branch_quest_data| %>
+          <option value = '<%= tid %>'>
+            <%= "#{branch_quest_data['tid']}-#{branch_quest_data['name']}" %>
+          </option>
+    <% end %>
+  </select>
+</div>

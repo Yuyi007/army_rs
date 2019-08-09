@@ -1,0 +1,105 @@
+
+
+<div style="margin-bottom: 10px;">
+<p3><%=t :manage_cheat_monitor %></p3>&nbsp;&nbsp;
+<span><%= link_to t(:search_cheaters), "search_cheater", :class => "" %></span>
+</div>
+
+<%= form_tag '/anti_cheat/add_monitor', :method => 'post', :class => "form" do %>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:pid) %></span>
+        <%= text_field_tag :pid, params[:pid], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= submit_tag t(:add), :class => "btn btn-warning" %>
+    </div>
+  </div>
+
+<% end %>
+
+<br/>
+
+<%= form_tag '/anti_cheat/clear_monitors', :method => 'post', :class => "form" do %>
+
+  <div class="row">
+    <div class="col-md-3">
+      <%= submit_tag t(:clear_all_monitors), :class => "btn btn-danger" %>
+    </div>
+  </div>
+
+<% end %>
+
+<br/>
+
+<%= form_tag '/anti_cheat/search_monitor', :method => 'get', :class => "form" do %>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:pid) %></span>
+        <%= text_field_tag :pid, params[:pid], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:time) %></span>
+        <%= text_field_tag :time_s, params[:time_s], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= text_field_tag :time_e, params[:time_e], :class => "form-control" %>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:num_per_page) %></span>
+        <%= text_field_tag :per_page, params[:per_page], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= submit_tag t(:search), :class => "btn btn-info" %>
+    </div>
+  </div>
+
+<% end %>
+
+<br/>
+
+<table class="table table-striped table-bordered table-hover search-result table-layout:fixed">
+
+  <col />
+  <col />
+  <col />
+
+  <tr>
+    <th><%= unsortable "id", params %></th>
+    <th><%= sortable "time", params %></th>
+    <th><%= unsortable "action", params %></th>
+  </tr>
+
+  <% for monitor in @monitors %>
+  <tr class='' >
+    <td><%= monitor['id'] %></td>
+    <td><%= TimeHelper.gen_date_time_sec(monitor['time']) %></td>
+    <td>
+      <% if monitor['id'] %>
+        <%= link_to t(:delete), del_monitor_url(:pid => monitor['id']), {:method => :post} %>
+      <% end %>
+    </td>
+  </tr>
+  <% end %>
+
+</table>
+
+<div>
+<%= will_paginate @monitors %>
+</div>
+
+
+<script type='text/javascript'>
+  $('#time_s').datetimepicker();
+  $('#time_e').datetimepicker();
+</script>

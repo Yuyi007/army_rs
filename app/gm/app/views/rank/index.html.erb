@@ -1,0 +1,147 @@
+<%= render 'shared/zones' %>
+<br/>
+<div class="row">
+  <div class="col-md-2">
+    <a href="#" onclick="loadData()" class="btn btn-success"><%=t :view_mojiao_rank%></a>
+  </div>
+  <div class="col-md-4">
+    <div class="row">
+      <div class="col-md-5">
+        <h4>select board</h4>
+      </div>
+      <div class="col-md-7"> 
+        <select id="board" name="board" class="form-control">
+          <% 4.upto(7) do |i| %>
+            <option value='<%= i %>' <%= if params[:board] == "#{i}" then 'selected' else '' end%>>
+              <%= "#{i}人阵" %></option>
+          <% end %>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="input-group">
+      <span class="input-group-addon">select time</span>
+      <%= text_field_tag :startDate, params[:startDate], :class => "form-control" %>
+    </div>
+  </div>  
+</div>
+<div id='rankData'></div>
+
+<hr/>
+
+<div class="row">
+  <div class="col-md-2">
+    <a href="#" onclick="loadCreditData()" class="btn btn-danger"><%=t :view_credit_rank%></a>
+  </div>
+  <div class="col-md-4">
+    <div class="row">
+      <div class="col-md-5">
+        <h4>Select Type</h4>
+      </div>
+      <div class="col-md-7">
+        <select id="creditType" name="creditType" class="form-control"> 
+          <option value='single_credit' 'selected'>single credit</option>
+          <option value='total_credit'>total credit</option>
+          <option value='total_credit_paid'>total used credit</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="input-group">
+      <span class="input-group-addon">select end time</span>
+      <%= text_field_tag :endDate, params[:endDate], :class => "form-control" %>
+    </div>
+  </div>
+</div>
+<div id='creditRankData'></div>
+
+<script type="text/javascript">
+  $('#startDate').datetimepicker();
+  $('#endDate').datetimepicker();
+  function loadData(){
+    if (! $('#startDate').datetimepicker('getDate') )
+    {
+      alert("error date");
+      return ;
+    }  
+    time = ($('#startDate').val())
+    board = $('#board').val()
+    zone = $('#zone').val()
+    // alert(time+" "+board+" "+zone)
+    $.ajax({
+      type: 'GET', 
+      url: 'xuezhanRank' ,
+      data: { 'time': time,'board':board,'zone':zone }
+    }).done(function (res){
+      showStatus('Load success~', 'success')
+      str_html = "<table class='table table-striped table-bordered table-hover'><tr>"+
+       "<td width=80>rank</td>"+
+        "<td width=80>id</td>"+
+        "<td width=200 >name</td>"+
+        "<td width=50>level</td>"+
+        "<td width=50>viplevel</td></tr>"
+    
+      for( var i=0 ;i<res.length;i++)
+      {
+       
+        str_html += ("<tr><td>"+ (i+1)
+           +"</td><td>"+res[i]['id'] 
+          +"</td><td>"+res[i]['name']
+          +"</td><td>"+res[i]['level']
+          +"</td><td>"+res[i]['vipLevel']
+          +"</td></tr>")
+      }
+      str_html += "</table>"
+      document.getElementById("rankData").innerHTML = (str_html)
+
+    }).fail(function (xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+
+  function loadCreditData(){
+    if (! $('#endDate').datetimepicker('getDate') )
+    {
+      alert("error date");
+      return ;
+    }  
+
+    time = ($('#endDate').val());
+    zone = $('#zone').val()
+    type = $('#creditType').val()
+    // alert(time+" "+board+" "+zone)
+    $.ajax({
+      type: 'GET', 
+      url: 'creditRank' ,
+      data: { 'time': time,'type':type,'zone':zone }
+    }).done(function (res){
+      showStatus('Load success~', 'success')
+      str_html = "<table class='table table-striped table-bordered table-hover'><tr>"+
+       "<td width=80>rank</td>"+
+        "<td width=80>id</td>"+
+        "<td width=200 >name</td>"+
+        "<td width=200 >value</td>"+
+        "<td width=50>level</td>"+
+        "<td width=50>viplevel</td></tr>"
+    
+      for( var i=0 ;i<res.length;i++)
+      {
+       
+        str_html += ("<tr><td>"+ (i+1)
+           +"</td><td>"+res[i]['id'] 
+          +"</td><td>"+res[i]['player']['name']
+          +"</td><td>"+res[i]['value']
+          +"</td><td>"+res[i]['player']['level']
+          +"</td><td>"+res[i]['player']['vipLevel']
+          +"</td></tr>")
+      }
+      str_html += "</table>"
+      document.getElementById("creditRankData").innerHTML = (str_html)
+
+    }).fail(function (xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+</script>

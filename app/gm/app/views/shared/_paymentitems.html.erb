@@ -1,0 +1,10 @@
+<% eid ||= 'paymentItem' %>
+<select id="<%= eid %>" name="<%= eid %>" class="form-control">
+  <% CocsProxy.instance.getPaymentItemsInfo.sort_by{|k,v| v['_startTime']}.reverse.each do |sid, value|%>
+    <% if sid =~ /^Store.+/ %>
+      <option value='<%= sid %>'>
+        <%= "#{sid} : #{value['name']}" %>
+      </option>
+    <% end %>
+  <% end %>
+</select>

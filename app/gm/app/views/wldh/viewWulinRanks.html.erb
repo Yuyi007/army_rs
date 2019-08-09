@@ -1,0 +1,135 @@
+<h3><span class="label label-default"><%= t :view_wulin_ranks %></span></h3>
+
+<table class="table table-striped table-bordered table-hover">
+
+  <tr>
+    <th><%=t :id %></th>
+    <th><%=t :counter %></th>
+    <th><%=t :division %></th>
+    <th><%=t :start_time %></th>
+    <th><%=t :zones %></th>
+    <th><%=t :status %></th>
+    <th><%=t :champions %></th>
+  </tr>
+
+  <% @wulins.each_with_index do |wulin, i| %>
+    <tr id='<%= wulin.id %>'>
+      <td><%= link_to wulin.id, wldh_url(wulin.id) %></td>
+      <td><%= wulin.counter %></td>
+      <td><%= wulin.division %></td>
+      <td><%= wulin.start_time %></td>
+      <td><%= wulin.zones.collect {|z| z } if wulin.zones %></td>
+      <td><%= if wulin.is_history? then t(:closed) elsif wulin.is_active? then t(:activated) else t(:stage_not_activated) end %></td>
+      <td>
+        <%
+          infos = []
+          0.upto(2).each do |i|
+            line = {}
+            line['rank'] = i + 1
+            line['id'] = wulin.details["newbie"].championsModels[i].chief.id
+            line['zone'] = wulin.details["newbie"].championsModels[i].chief.zone
+            line['name'] = wulin.details["newbie"].championsModels[i].chief.name
+            infos << line
+          end
+
+          #for rival info
+          infos[0]['rival_id'] = wulin.details["newbie"].championsModels[1].chief.id
+          infos[0]['rival_zone'] = wulin.details["newbie"].championsModels[1].chief.zone
+          infos[0]['rival_name'] = wulin.details["newbie"].championsModels[1].chief.name
+          infos[0]['result'] = t :win
+
+          infos[1]['rival_id'] = wulin.details["newbie"].championsModels[0].chief.id
+          infos[1]['rival_zone'] = wulin.details["newbie"].championsModels[0].chief.zone
+          infos[1]['rival_name'] = wulin.details["newbie"].championsModels[0].chief.name
+          infos[1]['result'] = t :lose
+
+          infos[2]['rival_id'] = t :unkonwn
+          infos[2]['rival_zone'] = t :unkonwn
+          infos[2]['rival_name'] = wulin.details["newbie"].championsCombats[2].enemyName
+          infos[2]['result'] = t :win
+        %>
+        <span class="label label-default"><%= t :newbie %></span>
+        <table class="table table-striped table-hover">
+          <tr>
+            <th><%=t :rank %></th>
+            <th><%=t :id %></th>
+            <th><%=t :zone %></th>
+            <th><%=t :name %></th>
+            <th><%=t :rival_id %></th>
+            <th><%=t :rival_zone %></th>
+            <th><%=t :rival_name %></th>
+            <th><%=t :result %></th>
+          </tr>
+          <% infos.each do |line| %>
+            <tr>
+              <td><%= line['rank'] %></td>
+              <td><%= line['id'] %></td>
+              <td><%= line['zone'] %></td>
+              <td><%= line['name'] %></td>
+              <td><%= line['rival_id'] %></td>
+              <td><%= line['rival_zone'] %></td>
+              <td><%= line['rival_name'] %></td>
+              <td><%= line['result'] %></td>
+            </tr>    
+          <% end %>
+        </table>
+
+
+        <%
+          infos = []
+          0.upto(2).each do |i|
+            line = {}
+            line['rank'] = i + 1
+            line['id'] = wulin.details["master"].championsModels[i].chief.id
+            line['zone'] = wulin.details["master"].championsModels[i].chief.zone
+            line['name'] = wulin.details["master"].championsModels[i].chief.name
+            infos << line
+          end
+
+          #for rival info
+          infos[0]['rival_id'] = wulin.details["master"].championsModels[1].chief.id
+          infos[0]['rival_zone'] = wulin.details["master"].championsModels[1].chief.zone
+          infos[0]['rival_name'] = wulin.details["master"].championsModels[1].chief.name
+          infos[0]['result'] = t :win
+
+          infos[1]['rival_id'] = wulin.details["master"].championsModels[0].chief.id
+          infos[1]['rival_zone'] = wulin.details["master"].championsModels[0].chief.zone
+          infos[1]['rival_name'] = wulin.details["master"].championsModels[0].chief.name
+          infos[1]['result'] = t :lose
+
+          infos[2]['rival_id'] = t :unkonwn
+          infos[2]['rival_zone'] = t :unkonwn
+          infos[2]['rival_name'] = wulin.details["master"].championsCombats[2].enemyName
+          infos[2]['result'] = t :win
+        %>
+
+        <span class="label label-default"><%= t :master %></span>
+        <table class="table table-striped table-hover">
+          <tr>
+            <th><%=t :rank %></th>
+            <th><%=t :id %></th>
+            <th><%=t :zone %></th>
+            <th><%=t :name %></th>
+            <th><%=t :rival_id %></th>
+            <th><%=t :rival_zone %></th>
+            <th><%=t :rival_name %></th>
+            <th><%=t :result %></th>
+          </tr>
+          <% infos.each do |line| %>
+            <tr>
+              <td><%= line['rank'] %></td>
+              <td><%= line['id'] %></td>
+              <td><%= line['zone'] %></td>
+              <td><%= line['name'] %></td>
+              <td><%= line['rival_id'] %></td>
+              <td><%= line['rival_zone'] %></td>
+              <td><%= line['rival_name'] %></td>
+              <td><%= line['result'] %></td>
+            </tr>    
+          <% end %>
+        </table>
+      </td>
+    </tr>
+  <% end %>
+
+</table>

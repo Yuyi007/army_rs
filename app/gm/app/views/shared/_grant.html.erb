@@ -1,0 +1,149 @@
+<% eid ||= 'grant_status' %>
+<% if @grantInfo and @grantInfo.grantStatus and @grantInfo.grantStatus == 0 and @auth == 1 %>
+<div class="alert alert-info"><%=t :grant_tips, time: @grantInfo.lastAlertTime, user: @grantInfo.userName %><a href="#" onclick="grant('<%= @eventType %>')" class="btn btn-success btn-sm"><%=t :accept%></a>  <a href="#" onclick="reject('<%= @eventType %>')" class="btn btn-danger btn-sm"><%=t :reject%></a></div>
+<% end %>
+
+<script type="text/javascript">
+function grant(eventType)
+{
+	var name = getEventName(eventType)
+	if(name == null)
+	{
+		alert("event type is wrong!")
+		return
+	}
+	$.ajax({
+      type: 'POST',
+      url: '/' + name + '/grant/' + eventType
+    }).done(function(json){
+      console.log(json);
+      if (json['success']) {
+        showStatus('accept success!', 'green');
+        redirect(eventType)
+      }
+    }).fail(function(xhr, status){
+      showStatus('something error!', 'red');
+    });
+}
+
+function reject(eventType)
+{
+	var name = getEventName(eventType)
+	if(name == null)
+	{
+		alert("event type is wrong!")
+		return
+	}
+	$.ajax({
+      type: 'POST',
+      url: '/' + name + '/reject/' + eventType
+    }).done(function(json){
+      console.log(json);
+      if (json['success']) {
+        showStatus('reject success!', 'green');
+        redirect(eventType)
+      }
+    }).fail(function(xhr, status){
+      showStatus('something error!', 'red');
+    });
+}
+
+function getGrantStatusStr(status)
+{
+	var realStatus = 0
+    if(status == null)
+    {
+      realStatus = 1
+    }
+    else
+    {
+      realStatus = status
+    }
+	if(realStatus == 0)
+	{
+		return "<%=t :need_grant%>"
+	}
+	else if(realStatus == 1)
+	{
+		return "<%=t :granted%>"
+	}
+	else if (realStatus == 2)
+	{
+		return "<%=t :rejected%>"
+	}
+	else
+	{
+		return "<%=t :unknown%>"
+	}
+}
+
+function getEventName(eventType)
+{
+	var name = null
+	switch(eventType)
+	{
+		case 'CampaignDrop':
+			name = "events_campaigndrop";
+		break
+		case 'Credit':
+			name = "events_credit";
+		break
+		case 'Chicken':
+			name = "events_chicken";
+		break
+		case 'Dshop':
+			name = "events_dshop";
+		break
+		case 'Firevale':
+			name = "events_firevale";
+		break
+		case 'Soul':
+			name = "events_soul";
+		break
+		case 'Zhaoxian':
+			name = "events_zhaoxian";
+		break
+		case 'Zhenlong':
+			name = "events_zhenlong";
+		break
+		case 'ZoneMarket':
+			name = "events_zonemarket";
+		break
+		case 'Jubao':
+			name = "events_jubao";
+		break
+		default:
+		break
+	}
+	return name
+}
+
+function redirect(eventType)
+{
+	var name = getEventName(eventType)
+	if(name == null)
+	{
+		alert("event type is wrong!")
+		return
+	}
+	switch(eventType)
+	{
+		case 'CampaignDrop':
+		case 'Credit':
+		case 'Jubao':
+			window.location.href = "/"+ name +"/list/";
+		break
+		case 'Chicken':
+		case 'Dshop':
+		case 'Firevale':
+		case 'Soul':
+		case 'Zhaoxian':
+		case 'Zhenlong':
+		case 'ZoneMarket':
+			window.location.href = "/" + name + "/index/";
+		break
+		default:
+		break
+	}
+}
+</script>

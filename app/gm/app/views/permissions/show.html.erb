@@ -1,0 +1,79 @@
+<%= render 'shared/data_top' %>
+
+<div style='margin-top: 10px;'>
+
+  <div style='margin-bottom: 20px;'>
+    <p><%=t :list_of_current_denies %> (<%=t :list_item_draggable %>)</p>
+
+    <% if @denies and @denies.length > 0 %>
+
+    <ol id="denies">
+      <% @denies.each_with_index do |deny, index| %>
+      <li class="ui-state-default" id="item<%= index %>">
+        <table style="margin:0;">
+          <tr>
+            <td>
+              <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+            </td>
+            <td>
+              <%= form_for deny, :url => permissions_update_url + "?id=#{@id}&index=#{index}", :html => { :class => "form-inline", :role => "form" } do |f| %>
+                <%= render :partial => "form_deny", :object => f, :locals => { :deny => deny } %>
+                <%= f.submit t(:update), :class => "btn btn-default btn-sm" %>
+              <% end %>
+            </td>
+            <td>
+              <%= form_for deny, :url => permissions_delete_url + "?id=#{@id}&index=#{index}", :html => { :class => "form-inline", :role => "form", :style => "margin-left: 10px;" } do |f| %>
+                <%= f.submit t(:delete), :class => "btn btn-default btn-sm" %>
+              <% end %>
+            </td>
+          </tr>
+        </table>
+      </li>
+      <% end %>
+    </ol>
+
+    <form id="sort-form" action='<%= permissions_sort_url + "?id=#{@id}" %>' method="POST">
+      <input type="hidden" id="sort-form-indexes" name="indexes" value="<%= (0...@denies.length).to_a.join('_') %>"/>
+      <input type="submit" class="btn btn-default btn-sm" value="<%=t :sort %>"/>
+    </form>
+
+    <% else %>
+
+    <p><%=t :no_data %></p>
+
+    <% end %>
+  </div>
+
+  <div>
+    <p><%=t :create_deny %></p>
+    <%= form_for @new_deny, :url => permissions_create_url + "?id=#{@id}", :html => { :class => "", :role => "form" } do |f| %>
+    <%= render :partial => "form_deny", :object => f, :locals => { :deny => @new_deny } %>
+    <%= f.submit t(:create), :class => "btn btn-default btn-sm" %>
+    <% end %>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    // $('#zone').hide();
+  });
+  $('#denies').sortable({
+    update: function (event, ui) {
+      var indexes = "";
+      $(".ui-sortable li").each(function(){
+          indexes = indexes + $(this).attr("id").substring(4) + "_" ;
+      });
+      $("#sort-form-indexes").attr("value", indexes);
+      $('#denies').effect('highlight');
+      // $.ajax({
+      //   type: 'post',
+      //   data: "indexes=" + indexes,
+      //   complete: function(request){
+      //     $('#denies').effect('highlight');
+      //   },
+      //   url: '/permissions/sort'
+      // });
+    }
+  });
+</script>

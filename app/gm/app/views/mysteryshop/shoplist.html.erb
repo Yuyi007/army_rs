@@ -1,0 +1,131 @@
+<div class="row">
+  <div class="col-md-1">
+    <span><%=t :choose_zone %>: </span>
+  </div>
+  <div class="col-md-3">
+  <%= render 'shared/zones' %>
+  </div>
+
+  <a href="#" onclick="toCreate()" class="btn btn-info"><%=t :create_mystery_shop%></a>
+
+</div>
+
+
+
+<br/><br/>
+
+<table id='shopstable' class='table table-striped table-bordered table-hover'>
+</table>
+
+<script type="text/javascript">
+  $("#zone").change(onZoneChange);
+  onZoneChange();
+
+   function onZoneChange()
+   {
+      var zoneIndex = $("#zone").val();
+      console.log("zone=" + zoneIndex);
+      getShops(zoneIndex, function(json){
+        var shops = json["shops"] || {};
+        renderShops(shops);
+      })
+   }
+
+   function getLocalTime(nS) {     
+     return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');     
+  }
+
+   function renderShops(shops)
+   {
+      var strList = "";
+      for(var i=0; i< shops.length; i++)
+      {
+        var shop = shops[i]
+        strList += "<tr><th>";
+        strList += shop.scene;
+        strList += "</th><th>";
+        strList += shop.pos.x + "," + shop.pos.y + "," + shop.pos.z;
+        strList += "</th><th>";
+        strList += shop.npc
+        strList += "</th><th>";
+        strList += shop.dir;
+        strList += "</th><th>";
+        strList += getLocalTime(shop.start_time);
+        strList += "</th><th>";
+        strList += shop.duration>3600 ? (shop.duration/3600 + "h") : (shop.duration/60 + "min");
+        strList += "</th><th>";
+        strList += shop.started ? "running" : "waiting";
+        strList += "</th><th>";
+        strList += shop.started? "" : ("<a href='#' onclick='toEdit(\""+shop.npc+"\");' class='btn btn-info'>edit</a>");
+        strList += "</th><th>";
+        strList += "<a href='#' onclick='toDelete(\""+shop.npc+"\");' class='btn btn-danger'>delete</a>";
+        strList += "</th><th>";
+        strList += shop.started? "" : ("<a href='#' onclick='toStart(\""+shop.npc+"\");' class='btn btn-danger'>start</a>");
+        strList += "</th></tr>";
+      }
+      var shopsTable = document.getElementById("shopstable")
+      var head = "<tr> \
+                    <th><%=t :scene %></th> \
+                    <th><%=t :position %></th> \
+                    <th><%=t :npc %></th> \
+                    <th><%=t :direction %></th> \
+                    <th><%=t :start_time %></th> \
+                    <th><%=t :duration %></th> \
+                    <th><%=t :status %></th> \
+                    <th><%=t :edit %></th> \
+                    <th><%=t :delete %></th> \
+                    <th><%=t :start %></th> \
+                  </tr>"
+      shopsTable.innerHTML = head + strList;   
+   }
+
+   function getShops(zone, callback)
+   {
+    $.ajax({
+      type: 'GET',
+      url: '/mysteryshop/getshoplist/' + zone
+    }).done(function(json){
+      console.log(json);
+      if (callback) {
+        callback(json);
+      }
+    }).fail(function(xhr, status){
+      showStatus('获取神秘商店失败!', 'red');
+    });
+   }
+
+  function toCreate(){
+    window.location.href = "/mysteryshop/edit";
+  }
+
+  function toDelete(npc){
+    var zoneIndex = $("#zone").val();
+    $.ajax({
+      type: 'GET',
+      url: '/mysteryshop/remove/' + zoneIndex + "/" + npc
+    }).done(function(json){
+      showStatus('成功删除!', 'green');
+      window.location.href = "/mysteryshop/shoplist";
+    }).fail(function(xhr, status){
+      showStatus('删除神秘商店失败!', 'red');
+    });
+  }
+
+  function toEdit(npc){
+    var zoneIndex = $("#zone").val();
+    window.location.href = "/mysteryshop/edit/"+zoneIndex+"/"+npc;
+  }
+
+  function toStart(npc){
+    var zoneIndex = $("#zone").val();
+    $.ajax({
+      type: 'GET',
+      url: '/mysteryshop/start/' + zoneIndex + "/" + npc
+    }).done(function(json){
+      showStatus('成功启动!', 'green');
+      window.location.href = "/mysteryshop/shoplist";
+    }).fail(function(xhr, status){
+      showStatus('启动神秘商店失败!', 'red');
+    });
+  }
+</script>

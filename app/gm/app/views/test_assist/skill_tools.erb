@@ -1,0 +1,70 @@
+<style>
+  .line_content {margin-left:20px;}
+</style>
+
+<div style='margin-top: 10px;'>
+  <div style='margin-bottom: 20px;background-color:lightblue;vertical-align:middle'>
+    <li><h4><%=t :skill_tools %></h4></li>
+      <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <span class='input-group-addon'><%=t :ID %></span>
+            <input type='text' name='uid' id='uid' value="" class="form-control"/>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <%= render 'shared/zones' %>
+          </div>
+        </div>
+      </div>
+      <br/>
+
+      <div class="row">
+          <div class="col-md-2"><span class='line_content'><%=t :unlock_all_skills %></span></div>
+          <div class="col-md-1"><input type="button" value="<%=t :unlock_all_skills %>" class="btn btn-default" onClick="unlock_all_skills();"/></div>
+      </div>
+
+      <br/>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+function post_reqest(url, data)
+{
+  $.ajax({
+      type: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: url,
+      data: JSON.stringify(data)
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('alter success~', 'green')
+        window.location.href = "/test_assist/skill_tools/";
+      }
+      else
+      {
+        showStatus('alter error, may this user or sub_type not exist', 'red')
+      }
+
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+}
+
+function unlock_all_skills()
+{
+  var url = '/test_assist/unlock_all_skills';
+  var data = {
+    "uid" : $("#uid") .val(),
+    "zone": $("#zone") .val()
+  };
+  post_reqest(url, data);
+}
+
+</script>

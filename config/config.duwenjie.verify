@@ -1,0 +1,52 @@
+root 				= "./../.."
+approot 		= root .. "/app/verify"
+libroot 		= root .. "/lib/skynet"
+thread 			= 4
+logger 			= root .. "/verify.log"
+logpath 		= ""
+harbor 			= 0
+--address 		= "10.0.2.15:8526"
+--master			= "10.0.2.15:8013"
+--standalone 	= "10.0.2.15:8013"
+
+tcpaddr			= "0.0.0.0"
+tcpport			= 7668
+tcppid			= 52889
+
+combat_host	= "127.0.0.1"
+combat_port	= 6668
+combat_pid  = 42789
+
+groupcount 	= 10
+
+start 			= "vmain"
+bootstrap 	= "snlua bootstrap"
+
+baseservice = libroot.."/service/?.lua;"
+rootservice = approot.."/?.lua;"
+dataservice	= approot..'/datacenter/?.lua;'
+verifyservice	= approot..'/verification/?.lua;'
+winnieservice = libroot.."/lualib/winnie/?.lua"
+luaservice 	= baseservice..rootservice..dataservice..verifyservice..winnieservice
+
+cpath 			= libroot.."/cservice/?.so"
+lualoader 	= libroot.."/lualib/loader.lua"
+
+--db
+connect_pool = 5
+redis_host = "127.0.0.1"
+redis_port = 7000
+redis_db = 0
+
+--net host ip binding
+server_ip = "127.0.0.1"
+server_port = 7668
+
+--debug
+debug = true
+debug_console = true
+script_root 	= "/home/duwenjie/Race/rs/verify"
+
+
+
+

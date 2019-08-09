@@ -1,0 +1,48 @@
+{
+  "bundles_android": {
+    "prefabs": true,
+    "sounds": true,
+    "images": true,
+    "texture2Ds": true,
+    "scenes": true,
+    "materials": true
+  },
+  "bundles_ios": {
+    "prefabs": true,
+    "sounds": true,
+    "images": true,
+    "texture2Ds": true,
+    "scenes": true,
+    "materials": true
+  },
+  "bundles_osx": {
+    "prefabs": true,
+    "sounds": true,
+    "images": true,
+    "texture2Ds": true,
+    "scenes": true,
+    "materials": true
+  },
+  "collision_matrix": {
+    "enum_entity": true,
+    "entity_father_hash": true,
+    "main_ignore": true,
+    "sub_ignore": true,
+    "sub_test": true
+  },
+  "heroes": {
+    "car001": true,
+    "car002": true,
+    "car003": true,
+    "car004": true,
+    "car005": true
+  },
+  "physics_scene": {
+    "practice_scene": true,
+    "competitive_scene": true,
+    "football_scene": true
+  },
+  "uimapper": {
+    "prefab": true
+  }
+}

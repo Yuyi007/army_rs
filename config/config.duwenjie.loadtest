@@ -1,0 +1,52 @@
+root 				= "./../.."
+approot 		= root .. "/loadtest"
+libroot 		= root .. "/lib/skynet"
+thread 			= 4
+logger 			= root .. "/loadtest.log"
+logpath 		= ""
+harbor 			= 1
+address 		= "127.0.0.1:5526"
+master			= "127.0.0.1:5013"
+standalone 	= "127.0.0.1:5013"
+
+udpaddr			= "127.0.0.1"
+--udpport			= 6668
+udppid			= 52789
+
+combat_host	= "127.0.0.1"
+combat_port	= 6668
+combat_pid  = 42789
+conncount		=	1000
+groupcount 	= 100
+beginuid		= 10000141
+test_type		=	1
+
+start 			= "main"
+bootstrap 	= "snlua bootstrap"
+
+baseservice = libroot.."/service/?.lua;"
+rootservice = approot.."/?.lua;"
+winnieservice = libroot.."/lualib/winnie/?.lua"
+luaservice 	= baseservice..rootservice..winnieservice
+
+cpath 			= libroot.."/cservice/?.so"
+lualoader 	= libroot.."/lualib/loader.lua"
+
+--db
+connect_pool = 5
+redis_host = "127.0.0.1"
+redis_port = 7000
+redis_db = 0
+
+--net host ip binding
+server_ip = "127.0.0.1"
+server_port = 7668
+
+--debug
+debug = true
+debug_console = true
+script_root 	= "/home/duwenjie/Race/rs/loadtest"
+
+
+
+

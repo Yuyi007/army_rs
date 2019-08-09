@@ -1,0 +1,21 @@
+<% content_for :rewards do %>
+  <div class="btn-group btn-group-sm">
+    <a href="<%= rewards_packagelist_path %>" class="btn btn-info" id="package_link">
+      <span class="glyphicon glyphicon-gift"></span>
+      <%= t(:package_config) %>
+    </a>
+    <a href="<%= rewards_storelist_path %>" class="btn btn-info" id="store_link">
+      <span class="glyphicon glyphicon-shopping-cart"></span>
+      <%= t(:store_config) %>
+    </a>
+  </div>
+  <hr/>
+  <%= yield %>
+  <% if @active %>
+    <script>
+      $("#" + "<%= @active %>").removeClass("btn-info")
+      $("#" + "<%= @active %>").addClass("btn-warning")
+    </script>
+  <% end %>
+<% end %>
+<%= render template: "layouts/main" %>

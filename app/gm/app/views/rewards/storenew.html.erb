@@ -1,0 +1,47 @@
+<h1><%= t(:create_store) %></h1>
+
+<br/>
+<a href='/rewards/storelist/'><%=t :list_store%></a>
+
+<%= render :partial => "formstore", :locals => { :store_id => 0 } %>
+<input type="button" onclick="createStore()" value="<%=t :create%>">
+
+
+<script type="text/javascript">
+initForm()
+function createStore()
+  {
+    console.log("createStore enter")
+    var zoneIndex = $("#zone").val();
+    $.ajax({
+      type: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: '/rewards/createStore/',
+      data: getData()
+    }).done(function(json){
+      console.log(json);
+  	  if(json && json['success'])
+      {
+        showStatus('create success~', 'green')
+        window.location.href = "/rewards/storelist/";
+      }
+      else if(json)
+      {
+        showStatus(parseError(json), 'red')
+      }
+      else
+      {
+        showStatus('create error', 'red')
+      }
+      
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+  }
+
+function initForm()
+{
+  $("#tid").val("<%=t :need_not_fill%>")
+}
+</script>

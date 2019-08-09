@@ -1,0 +1,18 @@
+<% page ||= 1 %>
+<% if @page.pageUrl == 'view_followers' %>
+        <%= link_to txt, person_view_followers_url(@person.pid, page) %>
+<% elsif @page.pageUrl == 'view_following' %>
+        <%= link_to txt, person_view_following_url(@person.pid, page) %>
+<% elsif @page.pageUrl == 'view_blocklist' %>
+        <%= link_to txt, person_view_blocklist_url(@person.pid, page) %>
+<% elsif @page.pageUrl == 'view_followed' %>
+        <%= link_to txt, person_view_followed_url(@person.pid, page) %>
+<% elsif @page.pageUrl == 'view_npcs' %>
+        <%= link_to txt, person_view_npcs_url(@person.pid, page) %>
+<% elsif @page.pageUrl == 'view_recent_contacts' %>
+        <%= link_to txt, person_view_recent_contacts_url(@person.pid, page) %>
+<% elsif @page.pageUrl == 'view_tweet_bonus_commenters' %>
+        <%= link_to txt, tweet_view_bonus_commenters_url(@tweet.pid, @tweet.id, page) %>
+<% elsif @page.pageUrl == 'view_tweet_bonus_liked' %>
+        <%= link_to txt, tweet_view_bonus_liked_url(@tweet.pid, @tweet.id, page) %>
+<% end %>

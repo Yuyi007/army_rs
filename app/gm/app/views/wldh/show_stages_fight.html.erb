@@ -1,0 +1,15 @@
+<p>
+<b><%=t :id %>:</b>
+<%=h @id %>
+<b><%=t :stage %>:</b>
+<%=h @stage %>
+<b><%=t :fight_id %></b>
+<%=h @fight_id %>
+</p>
+
+<div>
+  <span><%= @fight.to_s %></span>
+<div>
+
+<%= link_to t(@stage), stages_wldh_url(@id, @stage), :class => "btn btn-info" %>
+</div>

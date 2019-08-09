@@ -1,0 +1,121 @@
+
+<noscript>Enable Javascript to continue</noscript>
+
+
+<%= form_tag '/player/set_permission', :method => 'post', :class => "form" do %>
+
+<div class="row">
+  <div class="col-md-2">
+    <select id="permission_type" name="permission_type" class="form-control">
+      <option value='dlogin'><%= t(:deny_login) %></option>
+      <option value='dtalk'><%= t(:deny_talk) %></option>
+      <option value='normal'><%= t(:normal) %></option>
+    </select>
+  </div> 
+  <div class="col-md-8">
+    <div class="input-group">
+      <span class="input-group-addon"><%= t(:user_ids) %></span>
+      <%= text_field_tag :user_ids, nil, :class => "form-control" %>
+    </div>
+  </div>
+  <div class="col-md-4">
+      <span class="input-group-addon"><%= t(:user_ids_desc) %></span>
+  </div>
+ 
+  <div class="col-md-2">
+    <%= submit_tag t(:set_user_ids_permission), :class => "btn btn-success" %>
+  </div>
+
+  <input type="button" onclick="doGetPlayerBlock()" value="<%=t :search_block%>" class="btn btn-success"></input>
+</div>
+<% end %>
+
+<div class="row">
+  <div class="col-md-2">
+    <a href="#" onclick="loadData()" class="btn btn-success"><%=t :view_player_list%></a><br>
+  </div>
+</div>
+  
+<br>
+<div id="userList">&nbsp;</div>
+<div id="blockDetail">&nbsp;</div>
+
+<script type="text/javascript">
+  function loadData()
+  {
+     $.ajax({
+      type: 'POST',
+      url: 'permission_list'
+    }).done(function(jsonData){
+      console.log(jsonData);
+      updateUserList(jsonData)
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+
+  function updateUserList(data)
+  {
+    var str_table = ("<table class='table table-striped table-bordered table-hover'>"
+                    +"<tr><td>user_id</td><td>permission</td></tr>");
+    $.each(data,function(user_id,permission) {
+        str_table += "<tr><td>"+user_id+"</td>";
+        str_table += "<td>"+permission+"</td></tr>";
+      });
+    // for(var i= 0; i < data.length;  i++)
+    // {
+
+    // }
+    str_table += "</table>"
+    document.getElementById("userList").innerHTML = (str_table)
+  }
+
+
+  function doGetPlayerBlock()
+  {
+     $.ajax({
+        type: 'POST',
+        url: 'get_block_detail',
+        data: {'id' : $('#user_ids').val()}
+      }).done(function(jsonData){
+        console.log(jsonData);
+        updateBlockDetail(jsonData)
+      }).fail(function(xhr, status){
+        showStatus('Something wrong!', 'fail');
+      });
+  };
+
+  function updateBlockDetail(data)
+  {
+    var str_table = ("<table class='table table-striped table-bordered table-hover'>"
+                    +"<tr><td>id</td><td>text</td><td>to_pid</td></tr>");
+    $.each(data.detail,function(index, message_id) {
+        console.log("detail data:" + message_id);
+        message_ids = message_id.split(",")
+        str_table += "<tr><td>"+index+"</td>";
+        str_table += "<td>"+message_ids[0]+"</td>";
+        str_table += "<td>"+message_ids[1]+"</td></tr>";
+      });
+    str_table += "</table>"
+    if(data.detail.length > 0)
+    {
+      str_table += "<input type='button' onclick='doUnlockPlayerBlock()' value='<%=t :unlock_block%>' class='btn btn-success'></input>"
+    }
+    document.getElementById("blockDetail").innerHTML = (str_table)
+  }
+
+
+  function doUnlockPlayerBlock()
+  {
+     $.ajax({
+        type: 'POST',
+        url: 'unlock_block',
+        data: {'id' : $('#user_ids').val()}
+      }).done(function(jsonData){
+        console.log(jsonData);
+        document.getElementById("blockDetail").innerHTML = ("")
+      }).fail(function(xhr, status){
+        showStatus('Something wrong!', 'fail');
+      });
+  };
+</script>

@@ -1,0 +1,25 @@
+
+<form id="numOpenZonesForm" action="/zone/saveNumOpenZones" method="POST" class="form-inline">
+  <div class="row">
+    <div class="col-md-4">
+      <%=t :open_zone_to %>:
+      <select id="numOpenZones" name="numOpenZones" class="form-control">
+        <% RsRails.get_config('zones').each_with_index do |z, i| %>
+          <option value='<%= i+1 %>' <%= if @numOpenZones == i + 1 then 'selected' else '' end%>>
+            <%= "#{i+1} #{z['name']}" %></option>
+        <% end %>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <input type="submit" value="<%=t :save %>" class="btn btn-success" />
+    </div>
+  </div>
+</form>
+
+<br/>
+
+<br/>
+
+<script type="text/javascript">
+  ajaxSubmitWithConfirm($('#numOpenZonesForm'), '<%=t :confirm_save_zone_settings %>？');
+</script>

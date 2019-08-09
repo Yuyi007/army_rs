@@ -1,0 +1,153 @@
+<%= render 'shared/grant' %>
+<%= render 'shared/events_top' %>
+
+<div id="zonemarket">
+  <h3><span class="label label-default"><%=t :zone_market %></span></h3>
+  <form id="data_form" action="/events_zonemarket/1" method="POST" class="form">
+    <div class="row">
+      <div class="col-md-2">
+        <span>开启: </span>
+        <%= check_box_tag 'zonemarket_enabled' %>
+      </div>
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-addon"><%= t :start_time %></span>
+          <%= text_field_tag :start_time_zm, nil, :class => "form-control" %>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-addon"><%= t :end_time %></span>
+          <%= text_field_tag :end_time_zm, nil, :class => "form-control" %>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="input-group">
+          <span class="input-group-addon"><%= t :status %></span>
+          <%= text_field_tag :grant_status_zm, nil, :readonly => true, :class => "form-control" %>
+        </div>
+      </div>
+    </div>
+
+    <%= render 'shared/events_downandup' %>
+    <input class="btn btn-info" type="button" onclick="updateZoneMarket()" value="<%= t :save %>"></input>
+  </form>
+
+  <br/>
+
+  <form id="zonemarketCopyForm" action="/events_zonemarket/1/copy" method="POST">
+    <div class="alert alert-success">
+      <%=t :copy_current_config_to_zone%>,
+      <%=t :confirm_your_config_saved%>,
+      <%=t :enter_zone_split_with_space_like%>2 3 6
+    </div>
+
+    <%= text_field_tag "zonemarket_copy_zones", nil, :size => 100, :placeholder => "2 3 6", :class => "form-control" %>
+    <input class="btn btn-success" type="button" onclick="copyZone('/events_zonemarket/','zonemarket_copy_zones')" value="<%=t :copy_current_config_to_zone%>">
+  </form>
+</div>
+
+
+<script type="text/javascript">
+
+  /////////////////////////////////////////////
+  // common
+  //
+
+  $("#zone").change(onZoneChange);
+  onZoneChange(); // load event configs at zone 1
+
+  function onZoneChange()
+  {
+    var zoneIndex = $("#zone").val();
+    console.log("zone=" + zoneIndex);
+
+    $('#data_form').attr('action', '/events_zonemarket/' + zoneIndex);
+
+    $('#zonemarket').mask('读取中...');
+
+    getZoneMarket(zoneIndex, function(data)
+    {
+      $('#zonemarket').unmask()
+      if(data['data'])
+      {
+        $("#zonemarket_enabled").prop('checked', data['data']['enabled']);
+        $('#start_time_zm').val(data['data']['startTime']);
+        $('#end_time_zm').val(data['data']['endTime']);
+        var statusStr = getGrantStatusStr(data['data']['grantStatus'])
+        $('#grant_status_zm').val(statusStr)
+      }
+      else
+      {
+        $("#zonemarket_enabled").prop('checked', false);
+        $('#start_time_zm').val("");
+        $('#end_time_zm').val("");
+      }
+      //
+    });
+  }
+
+  function getTable(){
+    var data = new Object();
+    data.zonemarket_enabled = $('#zonemarket_enabled').prop('checked');
+    data.start_time_zm = $('#start_time_zm').val();
+    data.end_time_zm = $('#end_time_zm').val();
+    return data;
+  }
+
+
+  ////////////////////////////////////////////////////////
+  //
+  //////////////////////////////////////////////////////////
+
+  ajaxSubmit($('#zonemarketCopyForm'));
+  $('#start_time_zm').datetimepicker();
+  $('#end_time_zm').datetimepicker();
+
+
+  function getZoneMarket(zoneIndex, callback)
+  {
+    $.ajax({
+      type: 'GET',
+      url: '/events_zonemarket/' + zoneIndex
+    }).done(function(jsonData){
+      // console.log(jsonData);
+      if (callback) {
+        callback(jsonData);
+      }
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+
+  function updateZoneMarket()
+  {
+    $.ajax({
+      type: 'POST',
+      url: '/events_zonemarket/' +  $("#zone").val(),
+      data: {
+              "enabled":$("#zonemarket_enabled").prop('checked'),
+              "startTime":$("#start_time_zm").val(),
+              "endTime":$('#end_time_zm').val(),
+            }
+    }).done(function(json){
+      // console.log(jsonData);
+       if(json && json['success'])
+       {
+         showStatus('save success~', 'green')
+       }
+       else if(json)
+       {
+         //showStatus('copy error, reason: ' + json['reason'], 'red')
+         showStatus(parseError(json), 'red')
+       }
+       else
+       {
+         showStatus('save error', 'red')
+       }
+      }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+
+</script>

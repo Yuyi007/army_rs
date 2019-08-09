@@ -1,0 +1,61 @@
+<form id="maintainanceForm" action="/maintainance/update" method="POST" class="form">
+  <div class="alert alert-danger"><%=t :notice_maintainance %></div>
+
+  <div>
+    <p><%=t :maintainance_desc %></p>
+  </div>
+
+  <div class="checkbox">
+    <label>
+      <input id="maintainance_on" name="maintainance_on" type="checkbox" <%= "checked" if @maintainance_on %> class="checkbox" />
+      <%=t :maintainance_on %>:
+    </label>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2">
+      <span><%=t :maintainance_time %></span>
+    </div>
+    <div class="col-md-2">
+      <%= text_field_tag :maintainance_start_at, @maintainance_start_at %>
+    </div>
+    <div class="col-md-1">
+      <span class="glyphicon glyphicon-arrow-right"></span>
+      <span class="glyphicon glyphicon-arrow-right"></span>
+      <span class="glyphicon glyphicon-arrow-right"></span>
+    </div>
+    <div class="col-md-2">
+      <%= text_field_tag :maintainance_end_at, @maintainance_end_at %>
+    </div>
+  </div>
+
+  <div>
+    <h3><span class="label label-success"><%=t :id_whitelist %></span></h3>
+    <textarea id="id_whitelist" name="id_whitelist" class="form-control" rows="10" maxlength="255"><%= @id_whitelist %></textarea>
+  </div>
+
+  <div>
+    <h3><span class="label label-success"><%=t :sdk_white_list %></span></h3>
+    <textarea id="sdk_whitelist" name="sdk_whitelist" class="form-control" rows="10" maxlength="255"><%= @sdk_whitelist %></textarea>
+  </div>
+
+  <div class="checkbox">
+    <label>
+      <input id="enable_loadtest" name="enable_loadtest" type="checkbox" <%= "checked" if @enable_loadtest %> class="checkbox" />
+      <%=t :enable_loadtest %>:
+    </label>
+  </div>
+
+
+  <br/>
+  <input type="submit" value="<%=t :save %>" class="btn btn-info" />
+</form>
+
+<script type="text/javascript">
+
+  $('#maintainance_start_at').datetimepicker();
+  $('#maintainance_end_at').datetimepicker();
+
+  ajaxSubmitWithConfirm($('#maintainanceForm'), '<%=t :confirm_save_maintainance %>');
+
+</script>

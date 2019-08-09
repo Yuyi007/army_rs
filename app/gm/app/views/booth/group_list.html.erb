@@ -1,0 +1,56 @@
+<div class="alert alert-danger"><%=t :notice_booth_group_delete %></div>
+<div class="row">
+  <input type="button" onclick="addBoothGroup()" value="<%=t :add%>" class="btn btn-success"></input>
+</div>
+
+<br/><br/>
+
+<table class="table table-striped table-bordered table-hover">
+  <tr>
+    <th>ID</th>
+    <th><%=t :booth_group %></th>
+    <th><%=t :add %></th>
+    <th><%=t :delete %></th>
+  </tr>
+
+  <% if @groups %>
+    <% @groups.each do |group| booth_id = group[:booth_id]; zones = group[:zones]%>
+      <tr>
+        <th><%= booth_id %></th>
+        <th><%= zones.join(',') %></th>
+        <th>
+          <input type="button" onclick="modifyBoothGroup('<%= booth_id %>', '<%= zones.join(',') %>');" value="<%=t :add%>" class="btn btn-success"></input>
+        </th>
+        <th>
+          <input type="button" onclick="deleteBoothGroup('<%= booth_id %>', '<%= zones.join(',') %>');" value="<%=t :delete%>" class="btn btn-success"></input>
+        </th>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
+
+<script type="text/javascript">
+  function addBoothGroup()
+  {
+    window.location.href = "/booth/edit_group";
+  };
+
+  function modifyBoothGroup(id, zones)
+  {
+    window.location.href = "/booth/edit_group?zones=" + zones + "&id="+id;
+  };
+
+  function deleteBoothGroup(id, zones)
+  {
+     $.ajax({
+      type: 'POST',
+      url: 'delete_group',
+      data: {'id' : id, 'zones' : zones}
+    }).done(function(jsonData){
+      console.log(jsonData);
+      window.location.reload();
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  };
+</script>

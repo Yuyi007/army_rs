@@ -1,0 +1,2 @@
+module GrantRecordsHelper
+end

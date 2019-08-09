@@ -1,0 +1,9 @@
+<div id="share_story_quest">
+  <select id = "story_quest_select" name="story_quest_select" value = ""  >
+    <% GameConfig.story_quests.quests.each do |tid, story_quest_data| %>
+          <option value = '<%= tid %>'>
+            <%= "#{story_quest_data['tid']}-#{story_quest_data['name']}" %>
+          </option>
+    <% end %>
+  </select>
+</div>

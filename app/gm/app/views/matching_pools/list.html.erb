@@ -1,0 +1,64 @@
+<div class="row">
+<div class="col-md-2">
+  <input type="button" onclick="doNewPool()" value="<%=t :matching_new_pool%>" class="btn btn-success"></input>
+</div>
+
+<br/><br/>
+
+<% @pools.each do |mt, mapts| %>
+  <% mapts.each do |ct, pools| %>
+  
+  <label> <%=  "#{t pools[0].map_name}-#{t pools[0].comabt_name}" %> </label>
+    <table class="table table-striped table-bordered table-hover">
+      <tr>
+        <th><%=t 'ID' %></th>
+        <th><%=t :matching_pool_score_min %></th>
+        <th><%=t :matching_pool_score_max %></th>
+        <th><%=t :operations %></th>
+      </tr>
+      <% pools.each do |pool| %>
+        <tr>
+          <th><%= pool.id %></th>
+          <th><%= pool.score_min %></th>
+          <th><%= pool.score_max %></th>
+          <th>
+            <input type="button" onclick="doEditPool(<%= pool.id %>);" value="<%=t :edit %>" class="btn btn-warning"></input>
+            <input type="button" onclick="doDeletePool(<%= pool.id %>);" value="<%=t :delete %>" class="btn btn-warning"></input>
+          </th>
+        </tr>
+      <% end %>
+  </table>
+  <br/><br/>
+  <% end %>
+<% end %>
+
+</div>
+
+<script type="text/javascript">
+  function doNewPool()
+  {
+    window.location.href = "/matching_pools/new";
+  };
+
+  function doEditPool(id)
+  {
+    window.location.href = "/matching_pools/edit?id="+id;
+  };
+
+  function doDeletePool(id)
+  {
+     if (confirm("确认要删除？")){
+      $.ajax({
+        type: 'POST',
+        url: 'delete',
+        data: {'id' : id}
+      }).done(function(jsonData){
+        console.log(jsonData);
+        window.location.href = "/matching_pools/list";
+      }).fail(function(xhr, status){
+        showStatus('Something wrong!', 'fail');
+      });
+    };
+  }
+
+</script>

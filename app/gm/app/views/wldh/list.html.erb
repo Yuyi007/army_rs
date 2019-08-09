@@ -1,0 +1,91 @@
+<%= link_to t(:create_wulin), new_wldh_url, :class => "btn btn-info" %>
+<%= link_to t(:view_wulin_ranks), {:action => "viewWulinRanks"}, :class => "btn btn-warning" %>
+
+<br/><br/>
+
+<table class="table table-striped table-bordered table-hover">
+
+  <tr>
+    <th><%=t :id %></th>
+    <th><%=t :counter %></th>
+    <th><%=t :division %></th>
+    <th><%=t :start_time %></th>
+    <th><%=t :max_players %></th>
+    <th><%=t :min_players %></th>
+    <th><%=t :stage %></th>
+    <th><%=t :running %></th>
+    <th><%=t :baseTid %></th>
+    <th><%=t :rewardTid %></th>
+    <th><%=t :zones %></th>
+    <th><%=t :status %></th>
+    <th><%=t :grant_status %></th>
+    <th><%=t :num_enroll %></th>
+    <th><%=t :actions %></th>
+    <th><%=t :grant_actions %></th>
+  </tr>
+
+  <% if @page and @page.data %>
+    <% @page.data.each_with_index do |wulin, i| %>
+      <tr id='<%= wulin.id %>'>
+        <td><%= link_to wulin.id, wldh_url(wulin.id) %></td>
+        <td><%= wulin.counter %></td>
+        <td><%= wulin.division %></td>
+        <td><%= wulin.start_time %></td>
+        <td><%= wulin.maxPlayers %></td>
+        <td><%= wulin.minPlayers %></td>
+        <td><%= wulin.stage_name %></td>
+        <td><%= wulin.running %></td>
+        <td><%= wulin.baseConfig.name if wulin.baseConfig %></td>
+        <td><%= wulin.rewardConfig.name if wulin.rewardConfig %></td>
+        <td><%= wulin.zones.collect {|z| z } if wulin.zones %></td>
+        <td><%= if wulin.is_history? then t(:closed) elsif wulin.is_active? then t(:activated) else t(:stage_not_activated) end %></td>
+        <td>
+          <% if wulin.grantStatus.nil? %>
+            <%=t :granted%>
+          <% elsif wulin.grantStatus == 0 %>
+            <%=t :need_grant%>
+          <% elsif wulin.grantStatus == 1 %>
+            <%=t :granted%>
+          <% elsif wulin.grantStatus == 2 %>
+            <%=t :rejected%>
+          <% else %>
+            <%=t :unknown%>
+          <% end %>
+        </td>
+        <td><%= wulin.num_enroll(:newbie) %>, <%= wulin.num_enroll(:master) %></td>
+        <td>
+          <% if wulin.stageSymbol == :enroll %>
+            <% if wulin.is_enrolling? %>
+            <%=t :is_enrolling %>
+            <% else %>
+            <div>
+              <form id="enroll" action="<%= enroll_wldh_url(wulin.id) %>" method="post">
+                <span><%=t :enroll_num %>: </span>
+                <input type="number" name="num" value="1000"/>
+                <input type="submit" value="<%=t :auto_enroll %>" />
+              </form>
+            </div>
+            <% end %>
+          <% end %>
+
+          <%= link_to t(:boost_to_next_stage), boost_wldh_url(wulin.id), 
+              :confirm => t(:boost_to_next_stage_confirm), :method => :post %>
+          <%= link_to t(:edit), edit_wldh_url(wulin.id) %>
+          <%= link_to t(:delete),
+            { :action => 'destroy', :id => wulin.id },
+            { :confirm => t(:confirm_sure), :method => :delete } %>
+          <%= link_to t(:reset_all_stages), reset_wldh_stages_url(wulin.id), 
+              :confirm => t(:confirm_sure), :method => :post %>
+        </td>
+        <td>
+          <% if @auth == 1 and wulin.grantStatus == 0 %>
+            <%= link_to t(:accept), grant_wldh_url(wulin.id, 1), :method => :post %>
+            <%= link_to t(:reject), grant_wldh_url(wulin.id, 2), :method => :post %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
+
+<%= render 'shared/paging' %>

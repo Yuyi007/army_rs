@@ -1,0 +1,31 @@
+<%= render 'shared/data_top' %>
+
+<style>
+.a { background-color: #FFF; }
+.b { background-color: #EEE; }
+.title {
+  margin: 0 0 0 14px;
+  font-weight: bold;
+}
+.content {
+  margin: 0 14px 0 0;
+}
+</style>
+
+<br/>
+
+<% if @model %>
+
+<p id='chief' class='a'>
+  <span class='title'><%=t :id %>: </span><span class='content'><%= @model.chief.id %></span>
+  <span class='title'><%=t :zone %>: </span><span class='content'><%= @model.chief.zone %></span>
+</p>
+
+<p id='record' class='b'>
+</p>
+
+<% else %>
+
+<p><%=t :no_data %></p>
+
+<% end %>

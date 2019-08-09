@@ -1,0 +1,182 @@
+<div class="row">
+  <div class="col-md-4">
+    <div class="row">
+      <div class="col-md-5">
+        <h4>Select Time</h4>
+      </div>
+      <div class="col-md-7">
+        <select id="board" name="board" class="form-control">
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="row">
+      <div class="col-md-4">
+        <h4>Zones</h4>
+      </div>
+      <div class="col-md-8">
+        <%= render 'shared/zones' %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="input-group">
+      <span class="input-group-addon">select date</span>
+      <%= text_field_tag :startDate, params[:startDate], :class => "form-control" %>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <a href="#" onclick="loadData()" class="btn btn-danger"><%=t :view_cantloss_rank%></a>
+  </div>
+</div>
+<div id='rankData'></div>
+
+<script type="text/javascript">
+  $('#startDate').datepicker();
+
+  $('#startDate').removeClass('hasDatepicker');
+  $('#startDate').datepicker({
+    onSelect: function(dateText, inst) {
+      zone = $('#zone').val();
+      time = ($('#startDate').datepicker('getDate').getTime())/1000;
+      var timeSelect = $('#board');
+      refreshTimes(zone, time, timeSelect)
+    }
+  });
+
+  $("#zone").change(onZoneChange);
+  onZoneChange(); // load event configs at zone 1
+
+  function onZoneChange()
+  {
+    zone = $('#zone').val();
+    if ($('#startDate').datepicker('getDate')) {
+      time = ($('#startDate').datepicker('getDate').getTime())/1000;
+      var timeSelect = $('#board');
+      refreshTimes(zone, time, timeSelect)
+    }
+  }
+
+  function refreshTimes(zone, time, timeSelect)
+  {
+    $.ajax({
+      type: 'GET', 
+      url: 'cantlossRank' ,
+      data: { 'time': time, 'zone':zone }
+    }).done(function (res) {
+      console.log(res);
+      var timeSelect = $('#board');
+      timeSelect.find('option').remove();
+      for (var i = 0; i < res.length; i++) {
+        var value = res[i];
+        timeSelect.append(
+          $('<option></option>').val(value).html(value+':00')
+        );
+      }
+    });
+  }
+
+  function loadData(){
+    if (!$('#startDate').datepicker('getDate')) {
+      showStatus('Please select a date!', 'fail');
+      return;
+    }
+
+    time = ($('#startDate').datepicker('getDate').getTime())/1000;
+    board = $('#board').val()
+    zone = $('#zone').val()
+
+    if (!board) {
+      showStatus('Please select a time!', 'fail');
+      return;
+    }
+
+    $.ajax({
+      type: 'GET', 
+      url: 'cantlossResult' ,
+      data: { 'time': time,'board':board,'zone':zone }
+    }).done(function (res){
+      showStatus('Load success~', 'success')
+
+      str_html = "<table class='table table-striped table-bordered table-hover'>"+
+        "<tr><td width=100><b>boss info</b></td></tr>"+
+        "<tr><td width=100><b>boss name</b></td>"+
+        "<td width=100>"+ res['bossName'] +"</td>"+
+        "<td width=100><b>boss killed</b></td>"+
+        "<td width=100>"+ res['bossKilled'] +"</td>"+
+        "<td width=100><b>boss maxhp</b></td>"+
+        "<td width=100>"+ res['bossMaxHp'] +"</td>"+
+        "<td width=100><b>total players</b></td>"+
+        "<td width=100>"+ res['totalPlayers'] +"</td>"+
+        "<td width=100><b>boss active time(in seconds)</b></td>"+
+        "<td width=100>"+ res['bossTime'] +"</td></tr>";
+
+      console.log(res);
+
+      if (res['bossKilled']) {
+        str_html += "<tr><td width=100><b>boss killer</b></td></tr>";
+        str_html = processDisplayPlayer(str_html, res['bossKiller'])
+      }
+
+      if (res['topPlayers'].length > 0) {
+        str_html += "<tr><td width=100><b>top players</b></td></tr>";
+        str_html = processDisplayPlayer(str_html, res['topPlayers'])
+      }
+
+      
+      str_html += "</table>"
+      document.getElementById("rankData").innerHTML = (str_html)
+
+    }).fail(function (xhr, status) {
+      showStatus('Something wrong!', 'fail')
+    });
+  }
+
+  function processDisplayPlayer(str_html, playerData) {
+    str_html += "<tr>"+
+      "<td width=100><b>rank</b></td>"+
+      "<td width=100><b>id</b></td>"+
+      "<td width=100><b>name</b></td>"+
+      "<td width=100><b>level</b></td>"+
+      "<td width=100><b>viplevel</b></td>"+
+      "<td width=100><b>combat times</b></td>"+
+      "<td width=100><b>damage</b></td>"+
+      "<td width=100><b>bonus yuanshen</b></td>"+
+      "<td width=100><b>bonus shengwang</b></td></tr>";
+
+    console.log(playerData);
+
+    for( var i=0 ;i<playerData.length;i++)
+    {
+      res = playerData[i]
+      str_html += ("<tr><td>"+ (i+1)
+        +"</td><td>"+res['playerId']
+        +"</td><td>"+res['playerName']
+        +"</td><td>"+res['level']
+        +"</td><td>"+res['vipLevel']
+        +"</td><td>"+res['combatTimes']
+        +"</td><td>"+res['damage']
+        +"</td><td>"+res['bonus']
+        +"</td><td>"+res['swBonus']
+        +"</td></tr>")
+    }
+    return str_html
+  }
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,11 @@
+<% tid ||= 'campaignTid' %>
+<select id="<%= tid %>" name="<%= tid %>" class="form-control">
+  <% CocsProxy.instance.getGameConfig('campaigns').each do |tid, value| %>
+    <option value='<%= tid %>'>
+      <%= 
+        name = GameConfig.strings[value['name']] || value['name'] 
+        "#{name}"
+      %>
+    </option>
+  <% end %>
+</select>

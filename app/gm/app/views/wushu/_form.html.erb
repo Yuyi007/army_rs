@@ -1,0 +1,47 @@
+<div>
+  <div>
+    <div id="wushu">
+      <h2><%=t :wushu%></h2>
+      <div id="wushu_hint" style="display:none;">
+        <span id="wushu_hint_content" style="color:white;"></span>
+      </div>
+      <table class='gridtable table table-striped table-bordered'>
+        <col width="3px" />
+        <col width="5px" />
+        <col width="5px" />
+        <col width="5px" />
+        <col width="5px" />
+        <col width="5px" />
+        <col width="5px" />
+        <tr>
+          <th><%=t :id%></th>
+          <th><%=t :name%></th>
+          <th><%=t :prepare_time%></th>
+          <th><%=t :start_time%></th>
+          <th><%=t :end_time%></th>
+          <th><%=t :single%></th>
+          <th><%=t :double%></th>
+        </tr>
+        <tr>
+          <td><%= form.text_field :id, :readonly => true, :size => '5'%></td>
+          <td><%= form.text_field :name %></td>
+          <td><%= form.text_field :prepare_time, :as => :datetime_picker %></td>
+          <td><%= form.text_field :start_time, :as => :datetime_picker %></td>
+          <td><%= form.text_field :end_time, :as => :datetime_picker %></td>
+          <td><%= form.check_box :single %></td>
+          <td><%= form.check_box :double %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+
+
+  $('#wushu_prepare_time').datetimepicker();
+  $('#wushu_start_time').datetimepicker();
+  $('#wushu_end_time').datetimepicker();
+
+  $(document).ready(initDataSource());
+</script>
+

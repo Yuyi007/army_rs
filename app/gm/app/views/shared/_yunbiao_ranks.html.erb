@@ -1,0 +1,8 @@
+<select id="yunbiao_ranks" name="yunbiao_ranks" class="form-control">
+  <option value='0' <%= 'selected' %>>
+      <%= t :yunbiao_bonus_rank %></option>
+  <% CocsProxy.instance.getGameConfig('yunbiao')['lobby'].each_pair do |lobbyId, data| %>
+    <option value='<%= lobbyId.to_i %>' <%= if params[:zone] == "#{lobbyId}" then 'selected' else '' end%>>
+      <%= "#{t :yunbiao_lobby_name}: #{lobbyId} #{CocsProxy.instance.getGameConfig('strings')[data['name1']].to_s}" %></option>
+  <% end %>
+</select>

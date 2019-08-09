@@ -1,0 +1,12 @@
+The GM Tools has found that your account '<%= @user.username %>' was giving valuable items to players. If it's not done by yourself, means somebody had stolen your account:
+
+Target Player: <%= @record.target %> zone <%= @record.zone %>
+Action: <%= @record.action %>
+Type and count: <%= @record.tid %>, <%= @record.count %>, <%= @record.param1 %>, <%= @record.param2 %>, <%= @record.param3 %>
+Time: <%= TimeHelper.gen_date_time_sec @record.created_at %>
+
+For details, click on following link to search your records: 
+
+<%= @detail_url %>
+
+If the above URL does not work, try copying and pasting it into your browser. If you continue to have problems, please feel free to contact us.

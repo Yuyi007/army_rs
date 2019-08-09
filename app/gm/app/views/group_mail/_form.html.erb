@@ -1,0 +1,680 @@
+<% id ||= 'id' %>
+<noscript>Enable Javascript to continue</noscript>
+
+<style>
+#tabs {margin: 24px 0 12px 0; font-size: 12px;}
+#give_param_div1 {display:none;}
+#give_param_div2 {display:none;}
+#give_param_div3 {display:none;}
+#give_submit {display:none;}
+
+#param_div11 {display:none;}
+#param_div12 {display:none;}
+#param_div13 {display:none;}
+
+#param_div21 {display:none;}
+#param_div22 {display:none;}
+#param_div23 {display:none;}
+
+#param_div31 {display:none;}
+#param_div32 {display:none;}
+#param_div33 {display:none;}
+
+#param_div41 {display:none;}
+#param_div42 {display:none;}
+#param_div43 {display:none;}
+
+#param_div51 {display:none;}
+#param_div52 {display:none;}
+#param_div53 {display:none;}
+
+#clear_attachment {display:none;}
+
+.glyphicon {margin-right: 10px;}
+.ticks {display:none;}
+</style>
+
+<form id="mailForm" action="/mail/send_mail" method="POST">
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="input-group">
+        <span class="input-group-addon"><%=t(:mail_sender_name)%></span>
+        <input id="senderName" name="senderName" type="text" value=<%=current_user.username%> class="form-control" />  
+        <!-- <span class="input-group-addon"><%=t(:mail_sender_name_size_tip)%></span> -->
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%=t(:min_lv)%></span>
+        <input id="min_lv" name="min_lv" type="text" value="" class="form-control" />
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%=t(:max_lv)%></span>
+        <input id="max_lv" name="max_lv" type="text" value="" class="form-control" />
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%=t(:need_activity)%></span>
+        <input id="need_activity" name="need_activity" type="text" value="" class="form-control" />
+        </select>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%=t(:mail_send_type)%></span>
+        <select id="send_type" name="send_type" class="form-control">
+          <option value='all_mail' ''>
+            <%=t(:all_mail)%>
+          </option>
+          <option value='permanent_mail' ''>
+            <%=t(:permanent_mail)%>
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%=t(:mail_type)%></span>
+        <select id="type" name="type" class="form-control">
+          <option value='system' 'selected'>
+            <%=t(:mail_type_system)%>
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%=t(:mail_sub_type)%></span>
+        <select id="sub_type" name="sub_type" class="form-control">
+          <option value='normal' 'selected'>
+            <%=t(:normal)%>
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="row">
+    <div class="col-md-9">
+      <div class="input-group">
+        <span class="input-group-addon"><%=t(:mail_kind)%></span>
+        <input id="kind" name="kind" type="text" value="" class="form-control" />  
+        <span class="input-group-addon"><%=t(:mail_kind_size_tip)%></span>
+      </div>
+    </div>
+  </div> -->
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%=t(:start_time)%></span>
+        <%= text_field_tag :start_time, @start_time %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%=t(:end_time)%></span>
+        <%= text_field_tag :end_time, @end_time %>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+
+  <td><%=t :group_mail_by_pid%></td>
+  <td><input id="mail_by_pid" type="checkbox" onclick="onChooseSendType();" value=""/></td>
+
+  <div class="row">
+    <div class="col-md-10">
+      <div class="input-group">
+        <span class="input-group-addon"><%=t(:zones_tip)%></span>
+        <textarea id="zones" name="zones" type="text" class="form-control" rows=8></textarea>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-10">
+      <div class="input-group">
+        <span class="input-group-addon"><%=t(:pids_tip)%></span>
+        <textarea id="pids" name="pids" type="text" class="form-control" rows=8></textarea>
+        <span class="input-group-addon" ><%=t(:pids_example)%></span>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+
+  <div class="col-md-6">
+    <div class="input-group">
+      <span class="input-group-addon"><%=t(:mail_title_one)%></span>
+      <input id="title_one" name="title_one" type="text" value="" class="form-control" />  
+    </div>
+  </div>
+
+  <br/>
+  <br/>
+
+  <div class="col-md-6">
+    <div class="input-group">
+      <span class="input-group-addon"><%=t(:mail_title_two)%></span>
+      <input id="title_two" name="title_two" type="text" value="" class="form-control" />
+      <span class="input-group-addon"><%=t(:ignore_title_temporarily )%></span>
+    </div>
+  </div>
+
+  <br/>
+  <br/>
+
+  <div class="row">
+    <div class="col-md-10">
+      <div class="input-group">
+        <span class="input-group-addon"><%=t(:mail_content_text)%></span>
+        <textarea id="content_text" name="content_text" type="text" class="form-control" rows=8></textarea>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class=""><%=t :mail_attachment %></span>
+        <input id="give_type_name" name="give_type_name" type="text" class="" value="" placeHolder=""/>
+        <span id="give_type_tick" class="ticks glyphicon glyphicon-ok">
+      </div>
+    </div>
+
+    <div class="col-md-3" id="give_param_div1">
+      <div class="input-group">
+        <span id="give_param_label1" class=""><%=t :give_param1 %></span>
+        <input id="give_param_name1" name="give_param_name1" type="text" class="" value="" placeHolder=""/>
+        <span id="give_param_tick1" class="ticks glyphicon glyphicon-ok">
+      </div>
+    </div>
+
+    <div class="col-md-3" id="give_param_div2">
+      <div class="input-group">
+        <span id="give_param_label2" class=""><%=t :give_param2 %></span>
+        <input id="give_param_name2" name="give_param_name2" type="text" class="" value="" placeHolder=""/>
+        <span id="give_param_tick2" class="ticks glyphicon glyphicon-ok">
+      </div>
+    </div>
+
+    <div class="col-md-3" id="give_param_div3">
+      <div class="input-group">
+        <span id="give_param_label3" class=""><%=t :give_param3 %></span>
+        <input id="give_param_name3" name="give_param_name3" type="text" class="" value="" placeHolder=""/>
+        <span id="give_param_tick3" class="ticks glyphicon glyphicon-ok">
+      </div>
+    </div>
+
+    <div class="col-md-3" id="give_submit">
+      <div class="input-group">
+        <input id="add" onclick="addMail()" value='<%=t(:add_attachment)%>' readonly=true class="btn btn-success btn-sm" />
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="display: none;">
+  <!-- <div class="row"> -->
+    <input id="give_type" name="give_type" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="give_param1" name="give_param1" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="give_param2" name="give_param2" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="give_param3" name="give_param3" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+
+    <input id="hide_type1" name="hide_type1" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="hide_param11" name="hide_param11" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="hide_param12" name="hide_param12" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="hide_param13" name="hide_param13" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+
+    <input id="hide_type2" name="hide_type2" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="hide_param21" name="hide_param21" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="hide_param22" name="hide_param22" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="hide_param23" name="hide_param23" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+
+    <input id="hide_type3" name="hide_type3" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="hide_param31" name="hide_param31" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="hide_param32" name="hide_param32" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="hide_param33" name="hide_param33" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+
+    <input id="hide_type4" name="hide_type4" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="hide_param41" name="hide_param41" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="hide_param42" name="hide_param42" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="hide_param43" name="hide_param43" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+
+    <input id="hide_type5" name="hide_type5" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="hide_param51" name="hide_param51" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="hide_param52" name="hide_param52" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+    <input id="hide_param53" name="hide_param53" type="text" class="form-control" value="" placeHolder="" readonly=true/>
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3" id="param_div11">
+      <div class="input-group">
+        <span id="param_label11" class=""><%=t :param11 %></span>
+        <input id="param11" name="param11" type="text" class="" value="" placeHolder="" readonly=true/>
+      </div>
+    </div>
+
+    <div class="col-md-3" id="param_div12">
+      <div class="input-group">
+        <span id="param_label12" class=""><%=t :param12 %></span>
+        <input id="param12" name="param12" type="text" class="" value="" placeHolder="" readonly=true/>
+      </div>
+    </div>
+
+    <div class="col-md-3" id="param_div13">
+      <div class="input-group">
+        <span id="param_label13" class=""><%=t :param13 %></span>
+        <input id="param13" name="param13" type="text" class="" value="" placeHolder="" readonly=true/>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3" id="param_div21">
+      <div class="input-group">
+        <span id="param_label21" class=""><%=t :param21 %></span>
+        <input id="param21" name="param21" type="text" class="" value="" placeHolder="" readonly=true/>
+      </div>
+    </div>
+
+    <div class="col-md-3" id="param_div22">
+      <div class="input-group">
+        <span id="param_label22" class=""><%=t :param22 %></span>
+        <input id="param22" name="param22" type="text" class="" value="" placeHolder="" readonly=true/>
+      </div>
+    </div>
+
+    <div class="col-md-3" id="param_div23">
+      <div class="input-group">
+        <span id="param_label23" class=""><%=t :param23 %></span>
+        <input id="param23" name="param23" type="text" class="" value="" placeHolder="" readonly=true/>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3" id="param_div31">
+      <div class="input-group">
+        <span id="param_label31" class=""><%=t :param31 %></span>
+        <input id="param31" name="param31" type="text" class="" value="" placeHolder="" readonly=true/>
+      </div>
+    </div>
+
+    <div class="col-md-3" id="param_div32">
+      <div class="input-group">
+        <span id="param_label32" class=""><%=t :param32 %></span>
+        <input id="param32" name="param32" type="text" class="" value="" placeHolder="" readonly=true/>
+      </div>
+    </div>
+
+    <div class="col-md-3" id="param_div33">
+      <div class="input-group">
+        <span id="param_label33" class=""><%=t :param33 %></span>
+        <input id="param33" name="param33" type="text" class="" value="" placeHolder="" readonly=true/>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3" id="param_div41">
+      <div class="input-group">
+        <span id="param_label41" class=""><%=t :param41 %></span>
+        <input id="param41" name="param41" type="text" class="" value="" placeHolder="" readonly=true/>
+      </div>
+    </div>
+
+    <div class="col-md-3" id="param_div42">
+      <div class="input-group">
+        <span id="param_label42" class=""><%=t :param42 %></span>
+        <input id="param42" name="param42" type="text" class="" value="" placeHolder="" readonly=true/>
+      </div>
+    </div>
+
+    <div class="col-md-3" id="param_div43">
+      <div class="input-group">
+        <span id="param_label43" class=""><%=t :param43 %></span>
+        <input id="param43" name="param43" type="text" class="" value="" placeHolder="" readonly=true/>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3" id="param_div51">
+      <div class="input-group">
+        <span id="param_label51" class=""><%=t :param51 %></span>
+        <input id="param51" name="param51" type="text" class="" value="" placeHolder="" readonly=true/>
+      </div>
+    </div>
+
+    <div class="col-md-3" id="param_div52">
+      <div class="input-group">
+        <span id="param_label52" class=""><%=t :param52 %></span>
+        <input id="param52" name="param52" type="text" class="" value="" placeHolder="" readonly=true/>
+      </div>
+    </div>
+
+    <div class="col-md-3" id="param_div53">
+      <div class="input-group">
+        <span id="param_label53" class=""><%=t :param53 %></span>
+        <input id="param53" name="param53" type="text" class="" value="" placeHolder="" readonly=true/>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3" id="clear_attachment">
+    <div class="input-group">
+      <input id="clear" onclick="clearAttachMents()" value='<%=t(:clear_attachments)%>' readonly=true class="btn btn-success btn-sm" />
+    </div>
+  </div>
+
+  <br/>
+  <br/>
+  <br/>
+
+
+</form>
+
+<script type="text/javascript">
+  curIndex = 1
+  $('#start_time').datetimepicker();
+  $('#end_time').datetimepicker();
+
+  //KindEditor.ready(function(K) {
+  //              window.editor = K.create('#content');
+  //      });
+
+
+
+  <!-- 可用的编辑项，如发送物品，发送装备等 -->
+  var edits = [
+    { id: 'give_equip', value: '<%=t :equip %>', label: '<%=t :equip %>', params: [
+      { url: 'equip', name: '<%=t :equip_tid %>' }, { url: 'level', name: '<%=t :level %>' } ] },
+    { id: 'give_item', value: '<%=t :item %>', label: '<%=t :item %>', params: [
+      { url: 'item', name: '<%=t :item_tid %>' }, { url: 'num', name: '<%=t :count %>' } ] },
+    { id: 'give_garment', value: '<%=t :garment %>', label: '<%=t :garment %>', params: [
+      { url: 'garment', name: '<%=t :garment_tid %>' } ] },
+  ];
+  var selectedEditItem = null;
+  // document.getElementById("pids").readonly = true;
+  document.getElementById("pids").disabled = false;
+  document.getElementById("zones").disabled = true;
+  $('#zones').val('all');
+  document.getElementById("mail_by_pid").checked = true;
+
+  $(function () {
+    $('#give_type_name').autocomplete({
+      minLength: 0,
+      source: edits,
+      select: function( event, ui ) {
+        if (ui.item) {
+          selectedEditItem = ui.item;
+          initConfigCompletes();
+          $('#give_type').val(ui.item.id);
+          $('#give_type_tick').show();
+          console.log(11111)
+          nextItem(0);
+        }
+      },
+    }).focus(function(){
+      $('#give_type_tick').hide();
+      currentItem(0);
+      $(this).autocomplete('search');
+    });
+  });
+
+  function nextItem(idx) {
+    $('#give_param_tick' + idx).show();
+    if (selectedEditItem.params.length > idx) {
+      $('#give_param_label' + (idx + 1)).text(selectedEditItem.params[idx].name);
+      $('#give_param_div' + (idx + 1)).show();
+    } else {
+      $('#give_submit').show();
+    }
+  };
+
+  function currentItem(idx) {
+    for (i = 3; i > idx; --i) {
+      $('#give_param_tick' + i).hide();
+      $('#give_param_div' + i).hide();
+      $('#give_param_name' + i).val('');
+      $('#give_param' + i).val('');
+    }
+    $('#give_param_tick' + idx).hide();
+    $('#give_submit').hide();
+  }
+
+  function initConfigCompletes() {
+    $('[id^=give_param_name]').each(function() {
+      var id = $(this).attr('id');
+      var idx = parseInt(id.substring('give_param_name'.length));
+
+      if (selectedEditItem.params.length > idx - 1) {
+        var params = selectedEditItem.params[idx - 1];
+        console.log(params.url)
+        if (params.url == 'num') {
+          $(this).change(function () {
+          //$("#give_param_name2").change(function () {
+          //$("#give_param_name1").change(function () {
+            if (parseInt($(this).val()) > 0) {
+              $('#give_param' + idx).val(parseInt($(this).val()))
+              nextItem(idx);
+            } else {
+              currentItem(idx);
+            }
+          })
+        }
+        else {
+          if (params.url == 'level') {
+            $(this).change(function () {
+            //$("#give_param_name1").change(function () {
+              if ((parseInt($(this).val()) > 0) && parseInt($(this).val()) <= 70) {
+                $('#give_param' + idx).val(parseInt($(this).val()))
+                nextItem(idx);
+                //nextItem(1);
+                //$('#give_param_tick' + idx).show();
+                //$('#give_submit').show();
+              }
+              else {
+                currentItem(idx);
+              }
+            })
+          }
+          else {
+            $(this).configcomplete({
+              url: params.url,
+              select: function( event, ui ) {
+                if (ui.item) {
+                  $('#give_param' + idx).val(ui.item.id);
+                  nextItem(idx);
+                }
+              },
+            }).focus(function() {
+              currentItem(idx);
+              $(this).configcomplete('search');
+            });
+          }
+        }
+      }
+    });
+  }
+
+  function onChooseSendType(){
+    var byPid = document.getElementById("mail_by_pid").checked;
+    document.getElementById("pids").disabled = true;
+    document.getElementById("zones").disabled = true;
+    if (byPid)
+    {
+      $('#zones').val('all');
+      document.getElementById("pids").disabled = false;
+      document.getElementById("zones").disabled = true;
+    }
+    else
+    {
+      $('#pids').val('all');
+      document.getElementById("pids").disabled = true;
+      document.getElementById("zones").disabled = false;
+    }
+
+  }
+
+  function addMail(){
+    if (curIndex <= 5)
+    {
+      $('#attachment_div' + curIndex).show()
+      $('#hide_type' + curIndex).val($('#give_type').val())
+      filled = false
+      for (i = 1; i <= 3; i++)
+      {
+        if($('#give_param_label' + i).text() != "" && $('#give_param_name' + i).val() != "" && $('#give_param' + i).val() != "" && $('#give_type').val() != "")
+        {
+          filled = true
+          $('#param_div' + curIndex + i).show()
+          $('#param' + curIndex + i).val($('#give_param_name' + i).val())
+          $('#param_label' + curIndex + i).text($('#give_param_label' + i).text())
+          $('#hide_param' + curIndex + i).val($('#give_param' + i).val())
+        }
+      }
+
+      if(filled)
+      {
+          resetItems()
+          curIndex++
+          showClearAttachmentBtn(true)
+      }
+    }
+    else
+    {
+      alert("<%=t(:mail_attachment_full)%>")
+    }
+  }
+
+  function resetItems(){
+    $('#give_type').val("")
+    $('#give_type_name').val("")
+    $('#give_type_tick').hide()
+    $('#give_submit').hide()
+    for(i = 1; i <= 3; i++)
+    {
+      $('#give_param' + i).val("")
+      $('#give_param_div' + i).hide()
+      $('#give_param_tick' + i).hide()
+      $('#give_param_label' + i).text("")
+      $('#give_param_name' + i).val("")
+    }
+  }
+
+  function showClearAttachmentBtn(show){
+    if(show)
+    {
+      $('#clear_attachment').show()
+    }
+    else
+    {
+      $('#clear_attachment').hide()
+    }
+  }
+
+  function clearAttachMents(){
+    curIndex = 1
+    for(i = 1; i <= 3; i++)
+    {
+      $('#hide_type' + i).val("")
+      for(j = 1; j <= 3; j++)
+      {
+        $('#param_div' + i + j).hide()
+        $('#hide_param' + i + j).val("")
+        $('#param_label' + i + j).val("")
+        $('#param' + i + j).val("")
+      }
+    }
+    showClearAttachmentBtn(false)
+  }
+
+  function getData()
+  {
+    var byPid = document.getElementById("mail_by_pid").checked;
+    var zones = 'all';
+    var pids = 'all';
+    if (byPid)
+    {
+      pids = $("#pids").val();
+    }
+    else
+    {
+      zones = $("#zones").val();
+    }
+    var data = { 
+                "zones": zones,
+                "pids": pids,
+                "senderName": $("#senderName").val(),
+                "type": $('#type').val(),
+                "sub_type": $('#sub_type').val(),
+                // "kind": $('#kind').val(),
+                "send_type": $("#send_type").val(),
+                "need_activity": $('#need_activity').val(),
+                "content_text": $("#content_text").val(),
+                "title_one": $("#title_one").val(),
+                "title_two": $("#title_two").val(),
+                "hide_type1": $("#hide_type1").val(),
+                "hide_param11": $("#hide_param11").val(),
+                "hide_param12": $("#hide_param12").val(),
+                "hide_param13": $("#hide_param13").val(),
+                "hide_type2": $("#hide_type2").val(),
+                "hide_param21": $("#hide_param21").val(),
+                "hide_param22": $("#hide_param22").val(),
+                "hide_param23": $("#hide_param23").val(),
+                "hide_type3": $("#hide_type3").val(),
+                "hide_param31": $("#hide_param31").val(),
+                "hide_param32": $("#hide_param32").val(),
+                "hide_param33": $("#hide_param33").val(),
+                "hide_type4": $("#hide_type4").val(),
+                "hide_param41": $("#hide_param41").val(),
+                "hide_param42": $("#hide_param42").val(),
+                "hide_param43": $("#hide_param43").val(),
+                "hide_type5": $("#hide_type5").val(),
+                "hide_param51": $("#hide_param51").val(),
+                "hide_param52": $("#hide_param52").val(),
+                "hide_param53": $("#hide_param53").val(),
+                "start_time": $("#start_time").val(),
+                "end_time": $("#end_time").val(),
+                "min_lv": $("#min_lv").val(),
+                "max_lv": $("#max_lv").val(),
+              };
+    return JSON.stringify(data);
+  }
+</script>
+

@@ -1,0 +1,7 @@
+<h1><%=t :edit_zhaoxian %></h1>
+<%= form_for_hash @zhaoxian, 'zhaoxian', {:action => "create_zhaoxian"}, :method => :post, :class => "form" do |f| %>
+  <%= render :partial => "form", :object => f, :locals => { :zhaoxian => @zhaoxian } %>
+  <%= f.submit t(:save), :class => "btn btn-info" %>
+<% end %>
+<br />
+<%= link_to t(:zhaoxian_list_url), events_zhaoxian_list_url, :class => "btn btn-warning" %>

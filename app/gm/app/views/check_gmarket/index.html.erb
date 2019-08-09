@@ -1,0 +1,47 @@
+<h2><span class="glyphicon glyphicon-shopping-cart"></span><%=t :gmarket_check%></h2>
+
+<table class="table table-bordered table-striped table-hover">
+  <tr>
+    <th><%= t(:package_id) %></th>
+    <th><%= t(:redeem_request) %></th>
+    <th><%= t(:type_param) %></th>
+    <th><%= t(:purchase_type) %></th>
+    <th><%= t(:price) %></th>
+    <th><%= t(:sell_num) %></th>
+    <th><%= t(:items_list) %></th>
+  </tr>
+  <% for config in @configs %>
+  <tr>
+    <td><%= config.id %></td>
+    <td>
+    <% if config.type == 1 %>
+      <%= t(:vip_level) %>
+    <% elsif config.type == 2 %>
+      <%= t(:user_level) %>
+    <% else %>
+      <%= t(:campaign_progress) %>
+    <% end %>
+    </td>
+    <td><%= config.typeParam %></td>
+    <td>
+      <% if config.priceType == 1 %>
+        <%= t(:credit) %>
+      <% elsif config.priceType == 2 %>
+        <%= t(:yuanshen) %>
+      <% else %>
+        <%= t(:unrecognized) %>
+      <% end %>
+    </td>
+    <td><%= config.price %></td>
+    <td><%= config.maxNum %></td>
+    <td>
+      <% for item in config.items %>
+        <% if item %>
+          <%= "#{item[3]}-#{item[2]}x#{item[1]}" %>
+          <br/>
+        <% end %>
+      <% end %>
+    </td>
+  </tr>
+  <% end %>
+</table>

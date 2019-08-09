@@ -1,0 +1,13 @@
+<% eid ||= 'soulTid' %>
+<select id="<%= eid %>" name="<%= eid %>" class="form-control">
+  <% CocsProxy.instance.getUsableHeroes.sort_by{|k, v| k}.each do |tid, value| %>
+     <option value='<%= tid %>'>
+      <%=
+        name = GameConfig.strings[value['name']] || value['name']
+        grade = tid[1]
+        nameLoc = GameConfig.stringsLoc[value['name']] || value['name']
+        "#{tid}-#{grade}-#{name}-#{nameLoc}"
+      %>
+    </option>
+  <% end %>
+</select>

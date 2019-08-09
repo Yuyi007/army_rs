@@ -1,0 +1,163 @@
+<h4><span class="label label-info"><%=t :choose_zone%></span></h4>
+<%= render 'shared/zones' %>
+
+<br/>
+
+<div class="alert alert-danger">
+  <%=t :modify_notice%>
+</div>
+
+<div class="row">
+
+  <div class="col-md-4">
+    <div id="cantloss" class="well">
+      <form id="cantlossForm" action="/functions/cantloss/1" method="POST" class="form-inline">
+        <h3><%=t :cantloss%></h3>
+        <div class="checkbox">
+          <label>
+            <input id="cantlossEnabled" name="cantlossEnabled" type="checkbox" value="" />
+            <%=t :open%>
+          </label>
+        </div>
+        <input type="submit" value="<%=t :save%>" class="btn btn-danger" />
+      </form>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div id="arenabonus" class="well">
+      <h3><%=t :arenabonus%></h3>
+      <form id="arenabonusForm" action="/functions/arenabonus/1" method="POST">
+        <span><%=t :open%></span>
+        <input id="arenabonusEnabled" name="arenabonusEnabled" type="checkbox" value="" style="width:50px" />
+        <input type="submit" value="<%=t :save%>"  class="btn btn-danger" />
+      </form>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div id="yunbiao" class="well">
+      <h3><%=t :yunbiao%></h3>
+      <form id="yunbiaoForm" action="/functions/yunbiao" method="POST">
+        <span><%=t :ybiOS%></span>
+        <input id="ybIOSEnabled" name="ybIOSEnabled" type="checkbox" value="" style="width:50px" />
+        <span><%=t :ybAndroid%></span>
+        <input id="ybAndroidEnabled" name="ybAndroidEnabled" type="checkbox" value="" style="width:50px" />
+        <input type="submit" value="<%=t :save%>" class="btn btn-danger" />
+      </form>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+  /////////////////////////////////////////////
+  // common
+  //
+
+  $("#zone").change(onZoneChange);
+  onZoneChange(); // load event configs at zone 1
+
+  function onZoneChange()
+  {
+    var zoneIndex = $("#zone").val();
+    console.log("zone=" + zoneIndex);
+
+
+    $('#cantlossForm').attr('action', '/functions/cantloss/' + zoneIndex);
+    $('#arenabonusForm').attr('action', '/functions/arenabonus/' + zoneIndex);
+    $('#yunbiaoForm').attr('action', '/functions/yunbiao');
+
+    $('#cantloss').mask('读取中...');
+    $('#arenabonus').mask('读取中...');
+    $('#yunbiao').mask('读取中...');
+
+    checkCantLossOpen(zoneIndex, function(isOpened) {
+      $('#cantloss').unmask();
+      $("#cantlossEnabled").prop('checked', isOpened);
+    });
+
+    checkArenaBonusOpen(zoneIndex, function(isOpened) {
+      $('#arenabonus').unmask();
+      $("#arenabonusEnabled").prop('checked', isOpened);
+    });
+
+    checkYunbiaoOpen(function(isIOSOpen, isAndroidOpen) {
+      $('#yunbiao').unmask();
+      $("#ybIOSEnabled").prop('checked', isIOSOpen);
+      $("#ybAndroidEnabled").prop('checked', isAndroidOpen);
+    });
+  }
+
+  /////////////////////////////////////////////
+  // cantloss
+  //
+
+  ajaxSubmit($('#cantlossForm'));
+
+  function checkCantLossOpen(zone, callback) {
+    $.ajax({
+      type: 'GET',
+      url: '/functions/cantloss/' + zone
+    }).done(function(jsonData){
+      console.log(jsonData);
+      var isOpened = jsonData['opened'];
+      if (callback) {
+        callback(isOpened);
+      }
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+
+  /////////////////////////////////////////////
+  // arenabonus
+  //
+
+  ajaxSubmit($('#arenabonusForm'));
+
+  function checkArenaBonusOpen(zone, callback) {
+    $.ajax({
+      type: 'GET',
+      url: '/functions/arenabonus/' + zone
+    }).done(function(jsonData){
+      console.log(jsonData);
+      var isOpened = jsonData['opened'];
+      if (callback) {
+        callback(isOpened);
+      }
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+
+  /////////////////////////////////////////////
+  // yunbiao
+  //
+
+  ajaxSubmit($('#yunbiaoForm'));
+
+  function checkYunbiaoOpen(callback) {
+    $.ajax({
+      type: 'GET',
+      url: '/functions/yunbiao'
+    }).done(function(jsonData){
+      console.log(jsonData);
+      var isIOSpened = jsonData['ios'];
+      var isAndroidOpened = jsonData['android']
+      if (callback) {
+        callback(isIOSpened, isAndroidOpened);
+      }
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+
+</script>

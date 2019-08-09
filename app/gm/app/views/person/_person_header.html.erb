@@ -1,0 +1,11 @@
+<div class="row">
+  <div class="col-md-2">
+      <% if @person %>
+        <span><%=t :pid %>: <%= @person.pid %></span>
+      <%else%>
+        <span><%=t :person_no_person %></span>
+      <% end %>
+  </div>
+</div>
+
+<br/><br/>

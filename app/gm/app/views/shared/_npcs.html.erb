@@ -1,0 +1,9 @@
+<select id="npc" name="npc" class="form-control">
+  <% RsRails.get_config('npcs').each do |k, x| 
+      if x.direct_func && x.direct_func.tid == 'shop' 
+    %>
+    <option value='<%= k %>' <%= if params[:npc] == "#{k}" then 'selected' else '' end%>>
+      <%= "#{k}" %></option>
+  <% end 
+  end %>
+</select>

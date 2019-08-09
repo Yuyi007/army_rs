@@ -1,0 +1,399 @@
+<style>
+  .line_content {margin-left:20px;}
+</style>
+
+<div style='margin-top: 10px;'>
+  <div style='padding: 20px; margin-bottom: 20px; background-color:lightblue; vertical-align:middle'>
+
+    <h4><%=t :player_tools %></h4>
+
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-2">
+        <div class="input-group">
+          <span class='input-group-addon'><%=t :ID %></span>
+          <input type='text' name='uid' id='uid' value="" class="form-control"/>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="input-group">
+          <%= render 'shared/zones' %>
+        </div>
+      </div>
+    </div>
+    <br/>
+
+    <div class="row">
+      <div class="col-md-3">
+        <div class="input-group">
+          <span class='input-group-addon'><%=t :Item_tid %></span>
+          <%= render "shared/items" %>
+          <input type='text' name='item_id' id='item_id' value="" class="form-control"/>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="input-group">
+          <span class='input-group-addon'><%=t :Item_count %></span>
+          <input type='text' name='item_count' id='item_count' value="" class="form-control"/>
+        </div>
+      </div>
+      <div class="col-md-2"><input type="button" value="<%=t :send_item %>" class="btn btn-default" onClick="send_item();"/></div>
+    </div>
+    <br/>
+
+    <div class="row">
+        <div class="col-md-3">
+          <div class="input-group">
+            <span class='input-group-addon'><%=t :Equip_tid %></span>
+            <%= render "shared/equipments" %>
+            <input type='text' name='equip_id' id='equip_id' value="" class="form-control"/>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="input-group">
+            <span class='input-group-addon'><%=t :Equip_level %></span>
+            <input type='text' name='equip_level' id='equip_level' value="" class="form-control"/>
+          </div>
+        </div>
+        <div class="col-md-2"><input type="button" value="<%=t :send_equip %>" class="btn btn-default" onClick="send_equip();"/></div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-md-6">
+          <div class="input-group">
+            <span class='input-group-addon'><%=t :drop_id %></span>
+            <input type='text' name='drop_id' id='drop_id' value="" class="form-control"/>
+          </div>
+        </div>
+        <div class="col-md-2"><input type="button" value="<%=t :send_do_drop %>" class="btn btn-default" onClick="send_do_drop();"/></div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-md-2"><input type="button" value="<%=t :send_ability_items %>" class="btn btn-default" onClick="send_ability_items();"/></div>
+        <div class="col-md-2"><input type="button" value="<%=t :send_gift_items %>" class="btn btn-default" onClick="send_gift_items();"/></div>
+        <div class="col-md-2"><input type="button" value="<%=t :clear_bag %>" class="btn btn-warning" onClick="clear_bag();"/></div>
+        <div class="col-md-2"><input type="button" value="<%=t :reset_position %>" class="btn btn-warning" onClick="reset_position();"/></div>
+    </div>
+
+    <br/>
+
+    <div class="row">
+      <div class="col-md-3">
+        <div class="input-group">
+          <span class='input-group-addon'><%=t :credits %></span>
+          <input type='text' name='credits' id='credits' value="" class="form-control"/>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="input-group">
+          <span class='input-group-addon'><%=t :coins %></span>
+          <input type='text' name='coins' id='coins' value="" class="form-control"/>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="input-group">
+          <span class='input-group-addon'><%=t :money %></span>
+          <input type='text' name='money' id='money' value="" class="form-control"/>
+        </div>
+      </div>
+
+
+
+      <div class="col-md-2"><input type="button" value="<%=t :set_credit %>" class="btn btn-default" onClick="set_credit();"/></div>
+
+    </div>
+
+    <br/>
+
+    <div class="row">
+
+      <div class="col-md-3">
+        <div class="input-group">
+          <span class='input-group-addon'><%=t :energy %></span>
+          <input type='text' name='energy' id='energy' value="" class="form-control"/>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <input type="button" value="<%=t :set_energy %>" class="btn btn-default" onClick="set_energy();"/>
+      </div>
+
+    </div>
+
+    <br/>
+
+    <div class="row">
+
+      <div class="col-md-2">
+        <!-- <input type="button" value="<%=t :send_debug_suit %>" class="btn btn-default" onClick="send_debug_suit();"/> -->
+      </div>
+
+    </div>
+
+
+    <div class="row">
+
+      <div class="col-md-2">
+        <input type="button" value="<%=t :notify_upload_log %> <%=t :lua_script_desc %>" class="btn btn-default" onClick="notify_upload_log();"/>
+      </div>
+
+    </div>
+
+    <textarea id="lua_script" name="lua_script" type="text" class="form-control" rows=1></textarea>
+
+    <textarea id="uploaded_log" name="uploaded_log" type="text" class="form-control" rows=8></textarea>
+
+    <div class="row">
+
+      <div class="col-md-2">
+        <input type="button" value="<%=t :show_auto_log %>" class="btn btn-default" onClick="show_auto_log();"/>
+      </div>
+
+    </div>
+
+    <textarea id="client_auto_log" name="client_auto_log" type="text" class="form-control" rows=8></textarea>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+function selectItem()
+{
+  $("#item_id").val($("#item_select").val());
+  $("#share_items").hide();
+}
+
+function showItems()
+{
+  // alert("show items");
+  $("#share_items").show();
+
+}
+
+function selectEquip()
+{
+  $("#equip_id").val($("#equip_select").val());
+  $("#share_equipments").hide();
+}
+
+function showEquips()
+{
+  // alert("show equips")
+  $("#share_equipments").show();
+}
+
+$("#item_select").change(selectItem)
+$("#item_id").focus(showItems)
+$("#share_items").hide();
+
+$("#equip_select").change(selectEquip)
+$("#equip_id").focus(showEquips)
+$("#share_equipments").hide();
+
+
+function post_request(url, data)
+{
+  $.ajax({
+      type: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: url,
+      data: JSON.stringify(data)
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('alter success~', 'green')
+        window.location.href = "/test_assist/player_tools/";
+      }
+      else
+      {
+        showStatus('alter error, may this user or sub_type not exist', 'red')
+      }
+
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+}
+
+function post_request2(url, data)
+{
+  $.ajax({
+      type: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: url,
+      data: JSON.stringify(data)
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        $("textarea#uploaded_log").val(json.uploaded_log);
+      }
+      else
+      {
+        showStatus('alter error, may this user or sub_type not exist', 'red')
+      }
+
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+}
+
+function post_request3(url, data)
+{
+  $.ajax({
+      type: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: url,
+      data: JSON.stringify(data)
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        $("textarea#client_auto_log").val(json.client_auto_log);
+      }
+      else
+      {
+        showStatus('alter error, may this user or sub_type not exist', 'red')
+      }
+
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+}
+
+function send_item()
+{
+  var url = '/test_assist/send_item';
+  var data = {
+    "uid" : $("#uid") .val(),
+    "zone": $("#zone") .val(),
+    "tid": $("#item_id").val(),
+    "item_count": $("#item_count").val()
+  };
+  post_request(url, data);
+}
+
+function send_equip()
+{
+  var url = '/test_assist/send_equip';
+  var data = {
+    "uid" : $("#uid") .val(),
+    "zone": $("#zone") .val(),
+    "tid": $("#equip_id").val(),
+    "equip_level": $("#equip_level").val()
+  };
+  post_request(url, data);
+}
+
+function send_do_drop()
+{
+  var url = '/test_assist/send_do_drop';
+  var data = {
+    "uid" : $("#uid") .val(),
+    "zone": $("#zone") .val(),
+    "tid": $("#drop_id").val()
+  };
+  post_request(url, data);
+}
+
+function send_ability_items()
+{
+  var url = '/test_assist/send_ability_items';
+  var data = {
+    "uid" : $("#uid") .val(),
+    "zone": $("#zone") .val(),
+  };
+  post_request(url, data);
+}
+
+function send_gift_items()
+{
+  var url = '/test_assist/send_gift_items';
+  var data = {
+    "uid" : $("#uid") .val(),
+    "zone": $("#zone") .val(),
+  };
+  post_request(url, data);
+}
+
+function clear_bag()
+{
+  var url = '/test_assist/clear_bag';
+  var data = {
+    "uid" : $("#uid") .val(),
+    "zone": $("#zone") .val()
+  };
+  post_request(url, data);
+}
+
+function reset_position()
+{
+  var url = '/test_assist/reset_position';
+  var data = {
+    "uid" : $("#uid") .val(),
+    "zone": $("#zone") .val()
+  };
+  post_request(url, data);
+}
+
+
+function set_credit()
+{
+  var url = '/test_assist/set_credit';
+  var data = {
+    "uid" : $("#uid") .val(),
+    "zone": $("#zone") .val(),
+    "credits": $("#credits").val(),
+    "coins": $("#coins").val(),
+    "money": $("#money").val()
+  };
+  post_request(url, data);
+}
+
+function set_energy()
+{
+  var url = '/test_assist/set_energy';
+  var data = {
+    "uid" : $("#uid") .val(),
+    "zone": $("#zone") .val(),
+    "energy": $("#energy").val()
+  };
+  post_request(url, data);
+}
+
+function send_debug_suit()
+{
+  var url = '/test_assist/send_debug_suit';
+  var data = {
+    "uid" : $("#uid") .val(),
+    "zone": $("#zone") .val()
+  };
+  post_request(url, data);
+}
+
+function notify_upload_log()
+{
+  $("#uploaded_log").val('');
+
+  var url = '/test_assist/notify_upload_log';
+  var data = {
+    "uid" : $("#uid") .val(),
+    "zone": $("#zone") .val(),
+    "lua_script": $("#lua_script") .val(),
+  };
+  post_request2(url, data);
+}
+
+function show_auto_log()
+{
+  $("#client_auto_log").val('');
+
+  var url = '/test_assist/show_auto_log';
+  var data = {
+    "uid" : $("#uid") .val(),
+    "zone": $("#zone") .val(),
+  };
+  post_request3(url, data);
+}
+
+</script>

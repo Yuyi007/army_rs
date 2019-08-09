@@ -1,0 +1,92 @@
+<p>
+<b><%=t :email %>:</b>
+<%=h @user.email %>
+</p>
+
+<p>
+<b><%=t :username %>:</b>
+<%=h @user.username %>
+</p>
+
+<p>
+<b><%=t :verified %>:</b>
+<%=h @user.verified %>
+</p>
+
+<p>
+<b><%=t :active %>:</b>
+<%=h @user.active %>
+</p>
+
+<p>
+<b><%=t :permissions %>:</b>
+<% @role = @user.role_name %>
+<%=h @role %>
+&nbsp;&nbsp;
+<span style='color: #888'>
+<%=h RolesHelper.ROLE_DESC[@role] %>
+</span>
+</p>
+
+<p>
+<b><%=t :login_count %>:</b>
+<%=h @user.login_count %>
+</p>
+
+<p>
+<b><%=t :failed_login_count %>:</b>
+<%=h @user.failed_login_count %>
+</p>
+
+<p>
+<b><%=t :last_request_at %>:</b>
+<%=h @user.last_request_at %>
+</p>
+
+<p>
+<b><%=t :last_login_at %>:</b>
+<%=h @user.last_login_at %>
+</p>
+
+<p>
+<b><%=t :last_login_ip %>:</b>
+<%=h @user.last_login_ip %>
+</p>
+
+<p>
+<b><%=t :current_login_at %>:</b>
+<%=h @user.current_login_at %>
+</p>
+
+<p>
+<b><%=t :current_login_ip %>:</b>
+<%=h @user.current_login_ip %>
+</p>
+
+<p>
+<b><%=t :created_at %>:</b>
+<%=h @user.created_at %>
+</p>
+
+<p>
+<b><%=t :updated_at %>:</b>
+<%=h @user.updated_at %>
+</p>
+
+<% if @user.can_edit_by? current_user %>
+  <%= link_to t(:edit_account), edit_site_user_super_url(@user.id) %>
+<% end %>
+
+<div>
+<%= link_to t(:permissions), edit_site_user_role_url(@user.id), {:class => "btn btn-warning"} %>
+<%= link_to t(:suspend), edit_site_user_active_url(@user.id), {:class => "btn btn-danger"} %>
+</div>
+
+<% unless @user.verified %>
+  <form action='<%= deliver_verification_instructions_url(@user.id) %>' method='POST' style='margin-top: 4px;'>
+    <input class='btn btn-success' type='submit' value='<%=t :deliver_verification_instructions %>' />
+  </form>
+  <form action='<%= skip_verification_url(@user.id) %>' method='POST' style='margin-top: 4px;'>
+    <input class='btn btn-danger' type='submit' value='<%=t :skip_verification %>' />
+  </form>
+<% end %>

@@ -1,0 +1,9 @@
+<div style='text-align:center;'>
+  <h1 style='margin-left:auto;margin-right:auto;'><%=t :welcome_to %></h1>
+  <h2 style='margin-left:auto;margin-right:auto;'>
+    <% if current_user %>
+    <% else %>
+    <%= link_to t(:login), new_user_session_url %>
+    <% end %>
+  </h2>
+</div>

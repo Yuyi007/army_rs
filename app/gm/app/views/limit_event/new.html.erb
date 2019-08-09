@@ -1,0 +1,7 @@
+<h1><%=t :create_limit_event %></h1>
+<%= form_for_hash @limit_event, 'limit_event', {:action => "create"}, :method => :post, :class => "form" do |f| %>
+  <%= render :partial => "form", :object => f, :locals => { :limit_event => @limit_event } %>
+  <%= f.submit t(:save), :class => "btn btn-info" %>
+<% end %>
+<br />
+<%= link_to t(:limit_event_list_url), limit_event_list_url, :class => "btn btn-warning" %>

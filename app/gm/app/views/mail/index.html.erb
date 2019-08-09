@@ -1,0 +1,27 @@
+<form id="mailForm" action="/mail/send_mail" method="POST">
+  <div class="row">
+    <div class="col-md-5">
+      <div class="input-group">
+        <span class="input-group-addon"><%=t(:send_message)%></span>
+        <input id="mailText" name="mailText" type="text" value="" class="form-control" />
+      </div>
+    </div>
+    <div class="col-md-2">
+      <%= render 'shared/zones' %>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%=t(:player_id)%></span>
+        <input id="userId" name="userId" type="text" class="form-control" />
+      </div>
+    </div>
+    <div class="col-md-2">
+      <input type="submit" value='<%=t(:send_mail)%>' class="btn btn-warning" />
+    </div>
+  </div>
+</form>
+
+<script type="text/javascript">
+  ajaxSubmit($('#mailForm'));
+</script>
+

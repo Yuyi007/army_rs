@@ -1,0 +1,15 @@
+<!-- _koujueParts.html.erb -->
+
+<% eid ||= 'koujuePartTid' %>
+<select id="<%= eid %>" name="<%= eid %>" class="form-control">
+  <% CocsProxy.instance.getGameConfig('items').each do |tid, value| %>
+    <% if tid =~ /^I[J].+/ %>
+       <option value='<%= tid %>'>
+        <%= 
+          name = GameConfig.strings[value['name']] || value['name'] 
+          "#{name}"
+        %>
+      </option>
+    <% end%>
+  <% end %>
+</select>

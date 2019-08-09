@@ -1,0 +1,18 @@
+<%= render "shared/error_messages", :target => @user %>
+
+<p>
+<%= form_edit.label :email %><br />
+<%= form_edit.text_field :email, :class => "form-control", :placeholder => "Email address", :readonly => true %>
+</p>
+<p>
+<%= form_edit.label :username %><br />
+<%= form_edit.text_field :username, :class => "form-control", :placeholder => "User name" %>
+</p>
+<p>
+<%= form_edit.label :password, form_edit.object.new_record? ? nil : "Change password" %><br />
+<%= form_edit.password_field :password, :class => "form-control", :placeholder => "Password" %>
+</p>
+<p>
+<%= form_edit.label :password_confirmation %><br />
+<%= form_edit.password_field :password_confirmation, :class => "form-control", :placeholder => "Confirm password" %>
+</p>

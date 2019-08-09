@@ -1,0 +1,14 @@
+<%= render "shared/error_messages", :target => @user %>
+
+<p>
+<%= form.label :name %><br />
+<%= form.select :name, options_for_select([[(t :online_warn), :online_warn]]) %>
+</p>
+<p>
+<%= form.label :receivers %> <span><%= t(:receivers) %></span><br />
+<%= form.text_field :receivers, :class => "form-control", :placeholder => "Receivers" %>
+</p>
+<p>
+<%= form.label :enabled %><br />
+<%= form.check_box :enabled, :class => "form-control", :placeholder => "Enabled" %>
+</p>

@@ -1,0 +1,187 @@
+<style>
+  .line_content {margin-left:20px;}
+</style>
+
+<div style='margin-top: 10px;'>
+<li><h4><%=t :quest_tools %></h4></li>
+  <div class="row">
+    <div class="col-md-2">
+      <div class="input-group">
+        <span class='input-group-addon'><%=t :ID %></span>
+        <input type='text' name='uid' id='uid' value="" class="form-control"/>
+      </div>
+    </div>
+
+    <div class="col-md-2">
+      <div class="input-group">
+        <%= render 'shared/zones' %>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+
+        <span class='input-group-addon'><%=t :quest_id %> </span>
+        <input type='text' name='qid_main' id='qid_main' value="" class="form-control"/>
+        <%= render "shared/main_quest" %>
+      </div>
+    </div>
+    <div class="col-md-3"><input type="button" value="<%=t :send_main_quest %>" class="btn btn-default" onClick="send_main_quest();"/>
+    </div>
+  </div>
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class='input-group-addon'><%=t :quest_id %></span>
+        <input type='text' name='qid_branch' id='qid_branch' value="" class="form-control"/>
+        <%= render "shared/branch_quest" %>
+      </div>
+    </div>
+    <div class="col-md-3"><input type="button" value="<%=t :send_branch_quest %>" class="btn btn-default" onClick="send_branch_quest();"/>
+    </div>
+  </div>
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class='input-group-addon'><%=t :story_id %></span>
+        <input type='text' name='pid_story' id='pid_story' value="" class="form-control"/>
+      </div>
+    </div>
+    <div class="col-md-3"><input type="button" value="<%=t :send_story_quest %>" class="btn btn-default" onClick="send_story_quest();"/>
+    </div>
+  </div>
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3"><input type="button" value="<%=t :reset_quests %>" class="btn btn-default" onClick="reset_quests();"/>
+    </div>
+  </div>
+
+  <br/>
+  <div class="row">
+    <div class="col-md-3"><input type="button" value="<%=t :unlock_all %>" class="btn btn-default" onClick="unlock_all();"/>
+    </div>
+  </div>
+  <br/>
+</div>
+
+<script type="text/javascript">
+
+function select_main_quest()
+{
+  $("#qid_main").val($("#main_quest_select").val());
+  $("#share_main_quest").hide();
+}
+
+function show_main_quests()
+{
+  // alert("show main_quests")
+  $("#share_main_quest").show();
+}
+
+$("#main_quest_select").change(select_main_quest)
+$("#qid_main").focus(show_main_quests)
+$("#share_main_quest").hide();
+
+
+function select_branch_quest()
+{
+  $("#qid_branch").val($("#branch_quest_select").val());
+  $("#share_branch_quest").hide();
+}
+
+function show_branch_quests()
+{
+  // alert("show branch_quests")
+  $("#share_branch_quest").show();
+}
+
+$("#branch_quest_select").change(select_branch_quest)
+$("#qid_branch").focus(show_branch_quests)
+$("#share_branch_quest").hide();
+
+
+  function post_reqest(url, data)
+  {
+    $.ajax({
+        type: 'post',
+        contentType: 'application/json',
+        dataType: 'json',
+        url: url,
+        data: JSON.stringify(data)
+      }).done(function(json){
+        if(json && json['success'])
+        {
+          showStatus('alter success~', 'green')
+          window.location.href = "/test_assist/quest_tools/";
+        }
+        else
+        {
+          showStatus('alter error, may this user or sub_type not exist', 'red')
+        }
+
+      }).fail(function(xhr, status){
+        showStatus('Something wrong!', 'red');
+      });
+  }
+
+  function send_main_quest()
+  {
+    var url = '/test_assist/set_main_quest';
+    var data = {
+      "uid" : $("#uid") .val(),
+      "zone": $("#zone") .val(),
+      "qid": $("#qid_main").val()
+    };
+    post_reqest(url, data);
+  }
+
+  function send_branch_quest()
+  {
+    var url = '/test_assist/add_branch_quest';
+    var data = {
+      "uid" : $("#uid") .val(),
+      "zone": $("#zone") .val(),
+      "qid": $("#qid_branch").val()
+    };
+    post_reqest(url, data);
+  }
+
+  function send_story_quest()
+  {
+    var url = '/test_assist/add_story_quest';
+    var data = {
+      "uid" : $("#uid") .val(),
+      "zone": $("#zone") .val(),
+      "pid": $("#pid_story").val()
+    };
+    post_reqest(url, data);
+  }
+
+  function reset_quests()
+  {
+    var url = '/test_assist/reset_all_quest';
+    var data = {
+      "uid" : $("#uid") .val(),
+      "zone": $("#zone") .val()
+    };
+    post_reqest(url, data);
+  }
+
+  function unlock_all()
+  {
+    var url = '/test_assist/unlock_all';
+    var data = {
+      "uid" : $("#uid") .val(),
+      "zone": $("#zone") .val()
+    };
+    post_reqest(url, data);
+  }
+</script>

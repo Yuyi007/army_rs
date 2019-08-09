@@ -1,0 +1,50 @@
+<table class="table table-striped table-bordered table-hover">
+  <tr>
+    <th><%=t :person_pid %></th>
+    <th><%=t :person_pname %></th>
+    <th><%=t :person_hid %></th>
+    <th><%=t :person_total_likes %></th>
+    <th><%=t :person_b_like %></th>
+    <th><%=t :person_b_reply %></th>
+  </tr>
+  <% if @page && @page.data %>
+    <% @page.data.each_with_index do|person, i| %>
+      <tr>
+        <th><%= person.pid %></th>
+        <th><%= person.pname %></th>
+        <th><%= person.hid %></th>
+        <th><%= person.total_likes %></th>
+        <th><%= person.b_like %></th>
+        <th><%= person.b_reply %></th>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
+
+<div class='pager'>
+  <div class="pagination">
+    <% if not @page.nil? %>
+      <%= render partial: 'person_choose_page', locals: { txt: t(:first_page), page: 1} %>
+      <% if @page.curPage.to_i > 1 %>
+        <%= render partial: 'person_choose_page', locals: { txt: t(:previous_page), page: @page.curPage.to_i - 1} %>
+      <% else %>
+        <span class="previous_page disabled"><%=t :previous_page %></span>
+      <% end %>
+      <% @page.pages.each do |p| %>
+        <% if p.to_i <= @page.curPage.to_i + 4 or p.to_i >= @page.curPage.to_i - 4 %>
+          <% if p.to_i == @page.curPage.to_i %>
+            <em class="current"><%= p %></em>
+          <% else %>
+            <%= render partial: 'person_choose_page', locals: { txt: p.to_s, page: p} %>
+          <% end %>
+        <% end %>
+      <% end %>
+      <% if @page.curPage.to_i < @page.pageNum.to_i %>
+        <%= render partial: 'person_choose_page', locals: { txt: t(:next_page), page: @page.curPage.to_i + 1} %>
+      <% else %>
+        <span class="next_page disabled"><%=t :next_page %></span>
+      <% end %>
+      <%= render partial: 'person_choose_page', locals: { txt: t(:last_page), page: @page.pageNum.to_i} %>
+    <% end %>
+  </div>
+</div>

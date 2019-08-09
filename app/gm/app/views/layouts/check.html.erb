@@ -1,0 +1,30 @@
+<% content_for :check do %>
+
+  <div class="btn-group btn-group-sm">
+    <a href="<%= check_payment_item_packages_index_path %>" class="btn btn-info" id="paymentItem_link">
+      <span class="glyphicon glyphicon-gift"></span>
+      <%= t(:paymentitems_check) %>
+    </a>
+    <a href="<%= check_gmarket_index_path %>" class="btn btn-info" id="gmarket_link">
+      <span class="glyphicon glyphicon-shopping-cart"></span>
+      <%= t(:gmarket_check) %>
+    </a>
+    <a href="<%= check_credit_rank_bonus_index_path %>" class="btn btn-info" id="credit_link">
+      <span class="glyphicon glyphicon-credit-card"></span>
+      <%= t(:credit_event_bonus_check) %>
+    </a>
+  </div>
+
+  <hr/>
+
+  <%= yield %>
+
+  <% if @active %>
+    <script>
+    $("#" + "<%= @active %>").removeClass("btn-info")
+    $("#" + "<%= @active %>").addClass("btn-warning")
+    </script>
+  <% end %>
+
+<% end %>
+<%= render template: "layouts/main" %>

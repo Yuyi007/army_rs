@@ -1,0 +1,9 @@
+<h1><%=t :edit_wulin %></h1>
+
+<%= form_for @wulin, :url => { :action => "update"}, :method => :put, :class => "form" do |f| %>
+  <%= render :partial => "form", :object => f, :locals => { :wulin => @wulin } %>
+  <%= f.submit t(:save), :class => "btn btn-info" %>
+<% end %>
+
+<br />
+<%= link_to t(:view_wulin), wldh_url(@wulin.id), :class => "btn btn-warning" %>

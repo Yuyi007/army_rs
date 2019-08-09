@@ -1,0 +1,28 @@
+<div class="row">
+	<div class="col-md-4">
+	  <%= render partial: 'shared/heroes', locals: { eid: 'modifyXiulianHeroTid' } %>
+	</div>
+	<div class="col-md-3">
+		<select id="modifyXiulianAttr" name="modifyZhuweiAttr" class="form-control">
+			<option value='hp'><%= GameConfig.strings['hp'] %></option>
+			<option value='ap'><%= GameConfig.strings['ap'] %></option>
+			<option value='mp'><%= GameConfig.strings['mp'] %></option>
+			<option value='dex'><%= GameConfig.strings['dex'] %></option>
+			<option value='dp'><%= GameConfig.strings['dp'] %></option>
+			<option value='hr'><%= GameConfig.strings['hr'] %></option>
+			<option value='dr'><%= GameConfig.strings['dr'] %></option>
+			<option value='chr'><%= GameConfig.strings['chr'] %></option>
+			<option value='crr'><%= GameConfig.strings['crr'] %></option>
+			<option value='cm'><%= GameConfig.strings['cm'] %></option>
+			<option value='skill_add_rate'><%= GameConfig.strings['skill_add_rate'] %></option>
+			<option value='skill_add_ap'><%= GameConfig.strings['skill_add_ap'] %></option>
+			<option value='absorb_add_rate'><%= GameConfig.strings['absorb_add_rate'] %></option>
+			<option value='absorb_add_dp'><%= GameConfig.strings['absorb_add_dp'] %></option>									
+			<option value='absorb_del_rate'><%= GameConfig.strings['absorb_del_rate'] %></option>
+			<option value='absorb_del_dp'><%= GameConfig.strings['absorb_del_dp'] %></option>
+		</select>
+	</div>
+	<div class="col-md-3">
+		<input id="modifyXiulianCount" name="modifyXiulianCount" class="form-control" />
+	</div>
+</div>

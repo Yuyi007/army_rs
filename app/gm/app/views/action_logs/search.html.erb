@@ -1,0 +1,156 @@
+<style>
+.success { color: green; }
+.fail { color: red; }
+.search { margin-bottom: 20px; }
+.search1 { margin-bottom: 5px; margin-top: 5px;}
+</style>
+
+<%= form_tag '/action_logs/search', :method => 'get', :class => "form" do %>
+
+  <div class='row'>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:player_id) %></span>
+        <%= text_field_tag :player_id, params[:player_id], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:zone) %></span>
+        <%= text_field_tag :zone, params[:zone], :class => "form-control" %>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:type) %></span>
+        <%= text_field_tag :t, params[:t], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:param1) %></span>
+        <%= text_field_tag :param1, params[:param1], :class => "form-control" %>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:param2) %></span>
+        <%= text_field_tag :param2, params[:param2], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:param3) %></span>
+        <%= text_field_tag :param3, params[:param3], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:param5) %></span>
+        <%= text_field_tag :param4, params[:param4], :class => "form-control" %>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:param5) %></span>
+        <%= text_field_tag :param5, params[:param5], :class => "form-control" %>
+      </div>
+    </div>
+   <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:param6) %></span>
+        <%= text_field_tag :param6, params[:param6], :class => "form-control" %>
+      </div>
+    </div>
+
+  </div>
+
+
+  <br/>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:created_at) %></span>
+        <%= text_field_tag :created_at_s, params[:created_at_s], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= text_field_tag :created_at_e, params[:created_at_e], :class => "form-control" %>
+    </div>
+    <div class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon"><%= t(:num_per_page) %></span>
+        <%= text_field_tag :per_page, params[:per_page], :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= submit_tag t(:search), :class => "btn btn-info" %>
+      <a href='/action_logs/manage' class='btn btn-info'><%=t :manage %></a>
+    </div>
+  </div>
+<% end %>
+
+<br/>
+
+<table class="table table-striped table-bordered table-hover">
+
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+  <col />
+
+  <tr>
+    <th><%= sortable "player_id", params %></th>
+    <th><%= sortable "zone", params %></th>
+    <th><%= sortable "t", params %></th>
+    <th><%= sortable "param1", params %></th>
+    <th><%= sortable "param2", params %></th>
+    <th><%= sortable "param3", params %></th>
+    <th><%= sortable "param4", params %></th>
+    <th><%= sortable "param5", params %></th>
+    <th><%= sortable "param6", params %></th>
+    <th><%= sortable "created_at", params %></th>
+  </tr>
+
+  <% for log in @logs %>
+  <tr>
+    <td>
+      <% if log.player_id and log.player_id.to_s.length %>
+        <%= link_to log.player_id, data_raw_url( :id => log.player_id, :zone => log.zone ) %>
+      <% end %>
+    </td>
+    <td><%= log.zone %></td>
+    <td><%= log.t %></td>
+    <td><%= log.param1 %></td>
+    <td><%= log.param2 %></td>
+    <td><%= log.param3 %></td>
+    <td><%= log.param4 %></td>
+    <td><%= log.param5 %></td>
+    <td><%= log.param6 %></td>
+    <td><%= TimeHelper.gen_date_time_sec(log.created_at) %></td>
+  </tr>
+  <% end %>
+
+</table>
+
+<div>
+<%= will_paginate @logs %>
+</div>
+
+<script type='text/javascript'>
+  $('#created_at_s').datetimepicker();
+  $('#created_at_e').datetimepicker();
+</script>

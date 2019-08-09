@@ -1,0 +1,4 @@
+$("#<%= escape_javascript(params[:id]) %>").remove()
+$("#message_id").empty()
+$("#message_id").show()
+$("#message_id").append('<div class="alert alert-success"><%= escape_javascript("Reject request ##{params[:id]} successfully!") %></div>')

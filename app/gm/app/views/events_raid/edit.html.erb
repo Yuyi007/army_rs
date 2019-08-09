@@ -1,0 +1,70 @@
+<h1><%= t(:edit_raidevent) %></h1>
+<br/>
+<a href='/events_raid/list/'><%=t :list_raid_events%></a>
+<br/>
+<br/>
+<%= render :partial => "form", :locals => { :zone => @zone } %>
+
+<input type="button" onclick="saveEvent()" value="<%=t :save%>">
+
+<script type="text/javascript">
+function loadEvent(zone, callback)
+{
+  $.ajax({
+      type: 'GET',
+      url: '/events_raid/getEvent/' + zone
+    }).done(function(json){
+      console.log(json);
+      if(json)
+      {
+        if (callback) {
+        callback(json);
+        }
+      }
+      else
+      {
+        showStatus('Load event failed!', 'red');
+      }
+      
+    }).fail(function(xhr, status){
+      showStatus('Load event failed!', 'red');
+    });
+}
+
+function firstLoad()
+{
+  var zone = <%= @zone %>
+  loadEvent(zone, setData)
+}
+
+function saveEvent()
+{
+  $.ajax({
+      type: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: '/events_raid/save',
+      data: getData()
+    }).done(function(json){
+      console.log(json);
+      if(json && json['success'])
+      {
+        showStatus('create success~', 'green')
+        window.location.href = "/events_raid/list/";
+      }
+      else if(json)
+      {
+        showStatus(json['reason'], 'red')
+      }
+      else
+      {
+        showStatus('create error', 'red')
+      }
+      
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'red');
+    });
+}
+
+firstLoad();
+</script>

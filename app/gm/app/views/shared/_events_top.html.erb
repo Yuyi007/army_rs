@@ -1,0 +1,53 @@
+<div class="alert alert-danger"><%=t :modify_notice%></div>
+
+<h4><span class="label label-info"><%=t :choose_zone%></span><h4>
+<%= render 'shared/zones' %>
+
+<hr/>
+
+<script type="text/javascript">
+function copyZone(url,tozoneName)
+  {
+    $.ajax({
+      type: 'POST',
+      url: url +  $("#zone").val() + "/copy",
+      data: { 
+              "tozones":$("#"+tozoneName).val(),
+            }
+    }).done(function(json){
+      if(json && json['success'])
+      {
+        showStatus('save success~', 'success')
+      }
+      else if(json)
+      {
+        showStatus(parseError(json), 'red')
+      }
+      else
+      {
+        showStatus('save error!', 'red')
+      }
+    }).fail(function(xhr, status){
+      showStatus('Something wrong!', 'fail');
+    });
+  }
+
+  function toText(){
+    $('#json').val(JSON.stringify(getTable(), null));
+  }
+
+  function toDisplay(){
+    var data = JSON.parse($('#json').val())
+    for(var name in data){
+      if(typeof(data[name]) == 'function'){
+        //
+      }else{
+        if($('#'.concat(name)).attr('type') == 'checkbox'){
+          $('#'.concat(name)).prop('checked', data[name]);
+        }else{
+          $('#'.concat(name)).val(data[name]);
+        }
+      }
+    }
+  }
+</script>

@@ -1,0 +1,53 @@
+<%= form_for(@grant_record) do |f| %>
+  <% if @grant_record.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@grant_record.errors.count, "error") %> prohibited this grant_record from being saved:</h2>
+
+      <ul>
+      <% @grant_record.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :site_user_id %><br />
+    <%= f.number_field :site_user_id %>
+  </div>
+  <div class="field">
+    <%= f.label :action %><br />
+    <%= f.text_field :action %>
+  </div>
+  <div class="field">
+    <%= f.label :success %><br />
+    <%= f.check_box :success %>
+  </div>
+  <div class="field">
+    <%= f.label :target_id %><br />
+    <%= f.text_field :target_id %>
+  </div>
+  <div class="field">
+    <%= f.label :target_zone %><br />
+    <%= f.text_field :target_zone %>
+  </div>
+  <div class="field">
+    <%= f.label :item_id %><br />
+    <%= f.text_field :item_id %>
+  </div>
+  <div class="field">
+    <%= f.label :item_amount %><br />
+    <%= f.number_field :item_amount %>
+  </div>
+  <div class="field">
+    <%= f.label :reason %><br />
+    <%= f.text_area :reason %>
+  </div>
+  <div class="field">
+    <%= f.label :status %><br />
+    <%= f.text_field :status %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
