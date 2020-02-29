@@ -4,7 +4,7 @@ source "https://gems.ruby-china.com"
 ####################
 # for Data server
 gem "libv8"
-gem "rake", '12.3.2'
+gem "rake", '12.3.3'
 gem "iconv"
 gem "eventmachine", "1.0.6"
 gem "redis", "~> 3.0.1"
